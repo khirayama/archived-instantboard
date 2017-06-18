@@ -1,4 +1,4 @@
-# Instant + text = Instaboard (TBD)
+# Instantboard (TBD)
 
 ## Naming
 

@@ -2,9 +2,9 @@ const path = require('path');
 const webpack = require('webpack');
 
 module.exports = {
-  entry: './src/index.tsx',
+  entry: './src/client.tsx',
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, 'dist', 'public'),
     filename: 'bundle.js'
   },
   resolve: {
@@ -17,7 +17,9 @@ module.exports = {
   module: {
     rules: [{
       test: [/\.ts?$/, /\.tsx?$/],
-      loader: "ts-loader",
+      loader: 'ts-loader?' + JSON.stringify({
+        configFileName: './tsconfig.client.json',
+      }),
     }],
   },
   devtool: 'inline-source-map',

@@ -1,8 +1,4 @@
 import Store from './libs/circuit';
+import reducer from './reducers';
 
-const initialState = {};
-const reducer = (state: any, action: any) => {
-  return state;
-};
-
-export default new Store(initialState, reducer);
+export default new Store({}, reducer);

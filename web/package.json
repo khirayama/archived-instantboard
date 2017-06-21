@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "axios": "^0.16.1",
+    "browser-cookies": "^1.1.0",
     "classnames": "^2.2.5",
     "concurrently": "^3.4.0",
     "cookie-parser": "^1.4.3",

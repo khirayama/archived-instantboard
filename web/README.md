@@ -1,4 +1,4 @@
-# Web Client
+# Instantboard Web Client
 
 ## Screen Spec
 

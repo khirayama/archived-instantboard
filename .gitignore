@@ -2,6 +2,7 @@
 
 /api/node_modules
 /api/npm-debug.log
+/api/sequelize-meta.json
 
 /web/node_modules
 /web/npm-debug.log

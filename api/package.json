@@ -1,0 +1,33 @@
+{
+  "name": "instantboard-api-server",
+  "version": "1.0.0",
+  "description": "instantboard api server",
+  "main": "src/index.js",
+  "repository": {},
+  "author": "khirayama",
+  "license": "MIT",
+  "engines": {
+    "node": "^8.0.0",
+    "npm": "^5.0.0"
+  },
+  "scripts": {
+    "dev": "nodemon src/index.js",
+    "db:create": "mysql -u root < migrations/db.sql",
+    "db:migrate": "sequelize db:migrate --config migrations/config.js",
+    "migration:create": "sequelize migration:create --name",
+    "lint": "eslint --ignore-path ../.gitignore src",
+    "lint:fix": "eslint --ignore-path ../.gitignore --fix src"
+  },
+  "dependencies": {
+    "axios": "^0.16.2",
+    "body-parser": "^1.17.1",
+    "eslint": "^3.19.0",
+    "eslint-config-xo-space": "^0.16.0",
+    "express": "^4.15.2",
+    "jwt-simple": "^0.5.1",
+    "mysql": "^2.13.0",
+    "nodemon": "^1.11.0",
+    "sequelize": "^3.30.4",
+    "sequelize-cli": "^2.7.0"
+  }
+}

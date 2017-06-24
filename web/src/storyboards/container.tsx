@@ -23,13 +23,18 @@ interface IContainerState {
 }
 
 export default class Container<IContainerProps, IContainerState> extends React.Component<any, any> {
+  private updateState: any;
+
   constructor(props: any) {
     super(props);
 
     this.state = Object.assign({
       initializing: false,
     }, props.store.getState());
+
+    this.updateState = this._updateState.bind(this);
   }
+
   public componentWillMount() {
     if (isBrowser()) {
       this.setState({initializing: true});
@@ -54,7 +59,7 @@ export default class Container<IContainerProps, IContainerState> extends React.C
 
     store.removeChangeListener(this.updateState);
   }
-  private updateState() {
+  private _updateState() {
     const store = this.props.store;
 
     this.setState(store.getState());

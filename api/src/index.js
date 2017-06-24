@@ -62,11 +62,9 @@ function requireAuthorization(req, res, next) {
 }
 
 function loginStatusHandler(req, res) {
-  const connectedStatus = {
-    status: loginStatuses.CONNECTED,
-  };
   const notAuthorizedStatus = {
     status: loginStatuses.NOT_AUTHORIZED,
+    user: null,
   };
 
   const accessToken = extractAccessTokenFromHeader(req.headers.authorization);
@@ -81,7 +79,16 @@ function loginStatusHandler(req, res) {
     return;
   }
 
-  res.json(connectedStatus);
+  User.findById(payload.sub).then(user => {
+    res.json({
+      status: loginStatuses.CONNECTED,
+      user,
+    });
+  }).catch(() => {
+    res.status(401).send({
+      error: 'Invalid access token.',
+    });
+  });
 }
 
 function createTokenHandler(req, res) {

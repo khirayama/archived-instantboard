@@ -4,11 +4,11 @@
 
 import {segueTypes} from '../libs/web-storyboard/constants';
 
-import LoginStoryboard from '../storyboards/login-storyboard';
-import NewUserStoryboard from '../storyboards/new-user-storyboard';
-import MainStoryboard from '../storyboards/main-storyboard';
-import TaskStoryboard from '../storyboards/task-storyboard';
 import LabelStoryboard from '../storyboards/label-storyboard';
+import LoginStoryboard from '../storyboards/login-storyboard';
+import MainStoryboard from '../storyboards/main-storyboard';
+import NewUserStoryboard from '../storyboards/new-user-storyboard';
+import TaskStoryboard from '../storyboards/task-storyboard';
 
 import {
   initializeMainStoryboard,

@@ -106,12 +106,14 @@ function createTokenHandler(req, res) {
 }
 
 function fetchCurrentUser(req, res) {
-  if (req.user) {
-    res.json(req.user);
+  const user = req.user || null;
+
+  if (user === null) {
+    res.status(401).send({
+      error: 'Need to set access token to header.Authorization as Bearer.',
+    });
   }
-  res.status(401).send({
-    error: 'Need to set access token to header.Authorization as Bearer.',
-  });
+  res.json(req.user);
 }
 
 // Router

@@ -105,8 +105,13 @@ function createTokenHandler(req, res) {
   });
 }
 
-function createPostHandler(req, res) {
-  res.json({userId: req.userId});
+function fetchCurrentUser(req, res) {
+  if (req.user) {
+    res.json(req.user);
+  }
+  res.status(401).send({
+    error: 'Need to set access token to header.Authorization as Bearer.',
+  });
 }
 
 // Router
@@ -116,7 +121,7 @@ router.use('/api', new express.Router()
   .use('/v1', new express.Router()
     .get('/login-status', loginStatusHandler)
     .post('/tokens', createTokenHandler)
-    .post('/posts', [requireAuthorization], createPostHandler)
+    .get('/users/current', [requireAuthorization], fetchCurrentUser)
   )
 );
 

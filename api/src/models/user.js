@@ -1,12 +1,17 @@
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define('User', {
+    uid: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     provider: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    uid: {
+    username: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
     },
     createdAt: {
       type: DataTypes.DATE,

@@ -1,11 +1,11 @@
-import * as React from 'react';
 import * as PropTypes from 'prop-types';
+import * as React from 'react';
 
 import {Link} from '../../libs/web-storyboard/link';
 
-import Container from '../container';
 import {createToken} from '../../action-creators';
 import {setAccessToken} from '../../utils';
+import Container from '../container';
 
 declare const window: any;
 
@@ -25,7 +25,7 @@ export default class LoginStoryboard extends Container<any, any> {
       window.FB.AppEvents.logPageView();
     };
 
-    (function (d, s, id) {
+    ((d, s, id) => {
       const fjs = d.getElementsByTagName(s)[0];
       if (d.getElementById(id)) {
         return;

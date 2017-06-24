@@ -5,7 +5,7 @@ import {BackLink} from '../../libs/web-storyboard/back-link';
 import Container from '../container';
 
 export default class ProfileStoryboard extends Container<any, any> {
-  private propTypes = {};
+  public static propTypes = {};
 
   public render() {
     return (

@@ -38,6 +38,7 @@ export default class LoginStoryboard extends Container<any, any> {
       }
     })(document, 'script', 'facebook-jssdk');
   }
+
   public handleClickLoginWithFacebook() {
     window.FB.login((res: any) => {
       const provider = 'facebook';
@@ -50,9 +51,9 @@ export default class LoginStoryboard extends Container<any, any> {
       }).then(({accessToken, user}) => {
         if (accessToken) {
           setAccessToken(accessToken);
-          if (this.state.user && this.state.user.username) {
+          if (user.username) {
             this.context.move('/');
-          } else {
+          } else if (!user.username) {
             this.context.move('/users/new');
           }
         }

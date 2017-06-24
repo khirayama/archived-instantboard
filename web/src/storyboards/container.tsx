@@ -48,10 +48,7 @@ export default class Container<IContainerProps, IContainerState> extends React.C
         this.setState({initializing: false});
       });
     }
-  }
-  public componentDidMount() {
     const store = this.props.store;
-
     store.addChangeListener(this.updateState);
   }
   public componentWillUnmount() {

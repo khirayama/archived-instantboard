@@ -45,5 +45,5 @@ export const User = {
         resolve(data);
       }).catch((err) => logger.info(err));
     });
-  }
+  },
 };

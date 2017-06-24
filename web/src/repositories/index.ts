@@ -32,3 +32,18 @@ export const Token = {
     });
   },
 };
+
+// User
+export const User = {
+  get: (accessToken: string) => {
+    return new Promise((resolve) => {
+      req.get('/users/current', {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }).then(({data}) => {
+        resolve(data);
+      }).catch((err) => logger.info(err));
+    });
+  }
+};

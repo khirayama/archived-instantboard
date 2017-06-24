@@ -1,5 +1,8 @@
-import {LoginStatus} from '../repositories';
-import {Token} from '../repositories';
+import {
+  LoginStatus,
+  Token,
+  User,
+} from '../repositories';
 
 function initializeMainStoryboard(params: any, args: any, payload: any) {
   return new Promise((resolve) => {
@@ -17,7 +20,10 @@ function initializeMainStoryboard(params: any, args: any, payload: any) {
 function createToken(params: {provider: string; uid: string; }) {
   return new Promise((resolve) => {
     Token.create(params).then(({accessToken}) => {
-      resolve(accessToken);
+      User.get(accessToken).then((res) => {
+        console.log(res);
+        resolve(accessToken);
+      });
     });
   });
 }

@@ -33,11 +33,11 @@ export default class Navigator extends React.Component<any, any> {
 
   constructor(props: any) {
     super(props);
+    let currentHistory = null;
 
     this.nav = this.loadNav(props.path);
 
-    const currentHistory: IHistory = this.getCurrentHistory();
-
+    currentHistory = this.getCurrentHistory();
     // Reset: root storyboard || currentHistory.path !== path || currentBrowserHistory.length !== window.history.length
     if (
       this.props.router.isRootStoryboard(props.path) ||
@@ -46,6 +46,8 @@ export default class Navigator extends React.Component<any, any> {
     ) {
       this.resetNav();
     }
+
+    currentHistory = this.getCurrentHistory();
     if (
       !currentHistory ||
       (currentHistory.path !== props.path)
@@ -84,8 +86,8 @@ export default class Navigator extends React.Component<any, any> {
   }
 
   public render() {
-    const history: IHistory = this.getCurrentHistory();
-    const storyboard: any = history.storyboard;
+    const currentHistory: IHistory = this.getCurrentHistory();
+    const storyboard: any = currentHistory.storyboard;
 
     return (
       <section className="navigator">

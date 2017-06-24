@@ -56,10 +56,6 @@ export default class LoginStoryboard extends Container<any, any> {
   public render() {
     return (
       <section className="storyboard">
-        <ul>
-          <li><Link href="/profile">Profile</Link></li>
-          <li><Link href="/posts">Posts</Link></li>
-        </ul>
         <div onClick={() => this.handleClickLoginWithFacebook()}>Login with Facebook</div>
       </section>
     );

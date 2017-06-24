@@ -51,8 +51,12 @@ app.use(cookieParser());
 
 app.get([
   '/login',
+  '/users/new',
   '/',
-  '/profile',
+  '/tasks/new',
+  '/tasks/:id/edit',
+  '/labels/new',
+  '/labels/:id/edit',
 ], (req, res) => {
 
   const initialState: any = {

@@ -6,10 +6,6 @@ const reducer = (state: any, action: any) => {
         newState.isAuthenticated = action.isAuthenticated;
         break;
       }
-      case '__INITIALIZE_PROFILE_STORYBOARD': {
-        newState.isAuthenticated = action.isAuthenticated;
-        break;
-      }
       default: {
         break;
       }

@@ -11,7 +11,12 @@ export default class MainStoryboard extends Container<any, any> {
     return (
       <section className="storyboard">
         <h1>MainStoryboard</h1>
-        <Link href="/profile">Profile</Link>
+        <div>
+          <Link href="/tasks/new">New Tasks</Link>
+        </div>
+        <div>
+          <Link href="/labels/new">New Labels</Link>
+        </div>
       </section>
     );
   }

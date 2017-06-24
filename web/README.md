@@ -4,15 +4,12 @@
 
 ### Login
 
-- Link:User
-- Link:Main(UnregisteredUser)
+- Link:NewUser|Main
 
-### User
+### NewUser
 
 - Form:User
   - Input:User.name
-  - Input:User.sex
-  - Input:User.birthday
 
 ### Main
 
@@ -24,7 +21,8 @@
 - Tab:Link:(!Labels) ? Task : Label
 - Tab:
   - List:Notification
-- Tab:Link:Profile
+- Tab:
+  - View:Profile
 
 ### Task
 

@@ -2,8 +2,8 @@
 
 ## Database
 
-- users(id / uid / provider / name / sex? / birthday? / created_at / updated_at)
-- labels(id / user_id / name / priority / created_at / updated_at)
+- users(id / uid / provider / username / created_at / updated_at)
+- labels(id / user_id / name / priority / visibled / created_at / updated_at)
 - tasks(id / user_id / label_id / content / priority / completed / created_at / updated_at)
 - requests(id / user_id / label_id / status / created_at / updated_at)
 
@@ -11,8 +11,12 @@
 
 - `/api`
   - `/v1`
+    - `/tokens`
+      - `/` POST: create token
     - `/users`
-      - `/?shared=true` GET: fetch shaed user
+      - `/current` GET: fetch current user
+      - `/current` PUT: update current user
+      - `/?shared=true` GET: fetch shaed users
     - `/tasks`
       - `/` GET: fetch tasks
       - `/` PUT: update tasks

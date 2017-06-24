@@ -123,6 +123,23 @@ function fetchCurrentUser(req, res) {
   res.json(req.user);
 }
 
+function updateCurrentUser(req, res) {
+  const user = req.user || null;
+  const username = req.body.username;
+
+  User.findById(user.id).then(user => {
+    user.update({username}).then(() => {
+      res.status(200).send();
+    }).catch((err) => {
+      if (err.errors[0].message === 'username must be unique') {
+        res.status(400).send({error: 'Already existed.'});
+      }
+    });
+  }).catch(() => {
+    res.status(400).send({error: 'Invalid access token.'});
+  });
+}
+
 // Router
 const router = new express.Router('');
 
@@ -130,7 +147,10 @@ router.use('/api', new express.Router()
   .use('/v1', new express.Router()
     .get('/login-status', loginStatusHandler)
     .post('/tokens', createTokenHandler)
-    .get('/users/current', [requireAuthorization], fetchCurrentUser)
+    .use('/users', new express.Router()
+      .get('/current', [requireAuthorization], fetchCurrentUser)
+      .put('/current', [requireAuthorization], updateCurrentUser)
+    )
   )
 );
 
@@ -139,6 +159,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
   next();
 });
 app.use(router);

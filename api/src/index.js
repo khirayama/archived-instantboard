@@ -130,7 +130,7 @@ function updateCurrentUser(req, res) {
   User.findById(user.id).then(user => {
     user.update({username}).then(() => {
       res.status(200).send();
-    }).catch((err) => {
+    }).catch(err => {
       if (err.errors[0].message === 'username must be unique') {
         res.status(400).send({error: 'Already existed.'});
       }

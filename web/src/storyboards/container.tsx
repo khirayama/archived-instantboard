@@ -23,8 +23,9 @@ interface IContainerState {
 }
 
 export default class Container<IContainerProps, IContainerState> extends React.Component<any, any> {
-  private updateState: any;
   protected accessToken: any;
+
+  private updateState: any;
 
   constructor(props: any) {
     super(props);

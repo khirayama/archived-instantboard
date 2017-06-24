@@ -55,7 +55,7 @@ function createToken(params: {provider: string; uid: string; }, payload: any) {
   });
 }
 
-function updateUser(params: {username: string;}, payload: any) {
+function updateUser(params: {username: string; }, payload: any) {
   return new Promise((resolve, reject) => {
     User.update(payload.accessToken, params).then((res) => {
       payload.dispatch({

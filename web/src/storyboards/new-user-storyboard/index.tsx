@@ -40,9 +40,14 @@ export default class NewUserStoryboard extends Container<any, any> {
     return (
       <section className="storyboard">
         <h1>NewUserStoryboard</h1>
-        <input type="text" value={this.state.username} onChange={(event) => {this.handleChangeUsername(event)}} placeholder="Username" />
+        <input
+          type="text"
+          value={this.state.username}
+          onChange={(event) => {this.handleChangeUsername(event); }}
+          placeholder="Username"
+        />
         <p>{(this.state.user.errors.length) ? this.state.user.errors.join(', ') : null}</p>
-        <div onClick={() => {this.handleClickRegisterButton()}}>Start!</div>
+        <div onClick={() => {this.handleClickRegisterButton(); }}>Start!</div>
       </section>
     );
   }

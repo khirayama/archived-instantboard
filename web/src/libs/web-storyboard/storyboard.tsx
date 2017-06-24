@@ -45,11 +45,11 @@ export default class Storyboard extends React.Component<IStoryboardProps, any> {
 
     return (
       <section
-        ref={(el) => this.setStoryboard(el)}
+        ref={(el: HTMLElement) => this.setStoryboard(el)}
         className="storyboard"
         >
         <section
-          ref={(el) => this.setContent(el)}
+          ref={(el: HTMLElement) => this.setContent(el)}
           className="storyboard-content"
           >{element}</section>
       </section>

@@ -1,4 +1,6 @@
 import Store from './libs/circuit';
 import reducer from './reducers';
 
-export default new Store({}, reducer);
+declare const window: any;
+
+export default new Store(window.state, reducer);

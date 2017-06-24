@@ -17,6 +17,14 @@ const reducer = (state: any, action: any) => {
         newState.user = action.user;
         break;
       }
+      case '__UPDATE_USER': {
+        newState.user = Object.assign({}, state.user, action.user);
+        break;
+      }
+      case '__FAILURE_UPDATE_USER': {
+        newState.user.errors.push(action.error);
+        break;
+      }
       default: {
         break;
       }

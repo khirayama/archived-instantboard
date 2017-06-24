@@ -24,6 +24,7 @@ interface IContainerState {
 
 export default class Container<IContainerProps, IContainerState> extends React.Component<any, any> {
   private updateState: any;
+  protected accessToken: any;
 
   constructor(props: any) {
     super(props);
@@ -38,8 +39,9 @@ export default class Container<IContainerProps, IContainerState> extends React.C
   public componentWillMount() {
     if (isBrowser()) {
       this.setState({initializing: true});
+      this.accessToken = extractAccessToken();
       this.props.initialize(window.location.pathname, {
-        accessToken: extractAccessToken(),
+        accessToken: this.accessToken,
         dispatch: this.props.store.dispatch.bind(this.props.store),
       }).then((result: any) => {
         if (result.title) {

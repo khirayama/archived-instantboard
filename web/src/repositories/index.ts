@@ -10,14 +10,14 @@ const req = axios.create({
 // Login status
 export const LoginStatus = {
   get: (accessToken: string) => {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       req.get('/login-status', {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       }).then(({data}) => {
         resolve(data);
-      }).catch((err) => logger.info(err));
+      }).catch((err) => reject(err));
     });
   },
 };
@@ -25,10 +25,10 @@ export const LoginStatus = {
 // Token
 export const Token = {
   create: (params: any) => {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       req.post('/tokens', params).then(({data}) => {
         resolve(data);
-      }).catch((err) => logger.info(err));
+      }).catch((err) => reject(err));
     });
   },
 };
@@ -36,14 +36,25 @@ export const Token = {
 // User
 export const User = {
   get: (accessToken: string) => {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       req.get('/users/current', {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       }).then(({data}) => {
         resolve(data);
-      }).catch((err) => logger.info(err));
+      }).catch((err) => reject(err));
+    });
+  },
+  update: (accessToken: string, params: any) => {
+    return new Promise((resolve, reject) => {
+      req.put('/users/current', params, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }).then(({data}) => {
+        resolve(data);
+      }).catch((err) => reject(err));
     });
   },
 };

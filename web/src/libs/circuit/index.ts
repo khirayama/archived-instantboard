@@ -8,6 +8,10 @@ export default class Store {
   private shouldChangeDispatch: (currentState: any, nextState: any) => boolean = (() => true);
 
   constructor(state: any, reducer: any, options: any = {}) {
+    if (state) {
+      this.state = state;
+    }
+
     if (reducer) {
       this.reducer = reducer;
     }

@@ -5,23 +5,27 @@ module.exports = {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true,
-        allowNull: false
-      },
-      provider: {
-        type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
       },
       uid: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
+      },
+      provider: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      username: {
+        type: Sequelize.STRING,
+        allowNull: true,
       },
       created_at: {
         type: Sequelize.DATE,
-        allowNull: false
+        allowNull: false,
       },
       updated_at: {
         type: Sequelize.DATE,
-        allowNull: false
+        allowNull: false,
       }
     }, {
       charset: 'utf8mb4',

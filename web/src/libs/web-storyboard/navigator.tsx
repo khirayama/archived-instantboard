@@ -90,7 +90,7 @@ export default class Navigator extends React.Component<any, any> {
     const storyboard: any = currentHistory.storyboard;
 
     return (
-      <section className="navigator">
+      <section className="web-storyboard-navigator">
         <ReactTransitionGroup>
           <Storyboard
             {...this.props}

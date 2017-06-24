@@ -12,6 +12,7 @@ import LabelStoryboard from '../storyboards/label-storyboard';
 
 import {
   initializeMainStoryboard,
+  initializeNewUserStoryboard,
 } from '../action-creators';
 
 const StoryboardKeys = {
@@ -59,7 +60,7 @@ const storyboards = [{
   path: '/users/new',
   options: {
     args: null,
-    initialize: null,
+    initialize: initializeNewUserStoryboard,
     title: 'Register | Instantboard',
   },
 }, {

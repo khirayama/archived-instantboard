@@ -45,10 +45,16 @@ export default class LoginStoryboard extends Container<any, any> {
       createToken({
         provider,
         uid,
-      }).then((accessToken: string) => {
+      }, {
+        dispatch: this.props.store.dispatch.bind(this.props.store),
+      }).then(({accessToken, user}) => {
         if (accessToken) {
           setAccessToken(accessToken);
-          this.context.move('/');
+          if (this.state.user && this.state.user.username) {
+            this.context.move('/');
+          } else {
+            this.context.move('/users/new');
+          }
         }
       });
     });

@@ -72,6 +72,8 @@ app.get([
     const state = store.getState();
     if (!state.isAuthenticated && req.path !== '/login') {
       res.redirect('/login');
+    } else if (state.isAuthenticated && !state.user.username && req.path !== '/users/new') {
+      res.redirect('/users/new');
     } else {
       res.send(
         template(

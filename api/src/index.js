@@ -5,6 +5,15 @@ const jwt = require('jwt-simple');
 
 const {User} = require('./models');
 
+const {
+  fetchCurrentUserHandler,
+  updateCurrentUserHandler,
+} = require('./handlers/user-handlers');
+
+const {
+  createTokenHandler,
+} = require('./handlers/token-handlers');
+
 const app = express();
 const server = http.createServer(app);
 
@@ -38,7 +47,6 @@ function checkAccessToken(accessToken) {
   }
 }
 
-// Handlers
 function requireAuthorization(req, res, next) {
   const accessToken = extractAccessTokenFromHeader(req.headers.authorization);
   const payload = checkAccessToken(accessToken);
@@ -61,6 +69,7 @@ function requireAuthorization(req, res, next) {
   });
 }
 
+// Handlers
 function loginStatusHandler(req, res) {
   const notAuthorizedStatus = {
     status: loginStatuses.NOT_AUTHORIZED,
@@ -91,56 +100,6 @@ function loginStatusHandler(req, res) {
   });
 }
 
-function createTokenHandler(req, res) {
-  const provider = req.body.provider;
-  const uid = req.body.uid;
-
-  User.findOrCreate({
-    where: {provider, uid},
-    defaults: {provider, uid},
-  }).spread(user => {
-    const now = new Date();
-    const expires = now.setYear(now.getFullYear() + 1);
-
-    // Ref: [JA] https://hiyosi.tumblr.com/post/70073770678/jwt%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6%E7%B0%A1%E5%8D%98%E3%81%AB%E3%81%BE%E3%81%A8%E3%82%81%E3%81%A6%E3%81%BF%E3%81%9F
-    const accessToken = jwt.encode({
-      sub: user.id,
-      exp: expires,
-      iat: now.getTime(),
-    }, SECRET_KEY);
-    res.json({accessToken});
-  });
-}
-
-function fetchCurrentUser(req, res) {
-  const user = req.user || null;
-
-  if (user === null) {
-    res.status(401).send({
-      error: 'Need to set access token to header.Authorization as Bearer.',
-    });
-  }
-  res.json(req.user);
-}
-
-function updateCurrentUser(req, res) {
-  const user = req.user || null;
-  const username = req.body.username;
-
-  User.findById(user.id).then(user => {
-    user.update({username}).then(() => {
-      res.status(200).send();
-    }).catch(err => {
-      if (err.errors[0].message === 'username must be unique') {
-        res.status(400).send({error: 'Already existed.'});
-      }
-    });
-  }).catch(() => {
-    res.status(400).send({error: 'Invalid access token.'});
-  });
-}
-
-// Router
 const router = new express.Router('');
 
 router.use('/api', new express.Router()
@@ -148,8 +107,8 @@ router.use('/api', new express.Router()
     .get('/login-status', loginStatusHandler)
     .post('/tokens', createTokenHandler)
     .use('/users', new express.Router()
-      .get('/current', [requireAuthorization], fetchCurrentUser)
-      .put('/current', [requireAuthorization], updateCurrentUser)
+      .get('/current', [requireAuthorization], fetchCurrentUserHandler)
+      .put('/current', [requireAuthorization], updateCurrentUserHandler)
     )
   )
 );

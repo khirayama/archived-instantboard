@@ -10,10 +10,7 @@ import MainStoryboard from '../storyboards/main-storyboard';
 import NewUserStoryboard from '../storyboards/new-user-storyboard';
 import TaskStoryboard from '../storyboards/task-storyboard';
 
-import {
-  initializeMainStoryboard,
-  initializeNewUserStoryboard,
-} from '../action-creators';
+import {fetchInitialData} from '../action-creators';
 
 const StoryboardKeys = {
   LoginStoryboard: 'Login Storyboard',
@@ -23,7 +20,7 @@ const StoryboardKeys = {
   LabelStoryboard: 'Label Storyboard',
 };
 
-const segues = [{
+export const segues = [{
   from: StoryboardKeys.LoginStoryboard,
   to: StoryboardKeys.NewUserStoryboard,
   type: segueTypes.show,
@@ -45,13 +42,11 @@ const segues = [{
   type: segueTypes.temporary,
 }];
 
-const storyboards = [{
+export const storyboards = [{
   key: StoryboardKeys.LoginStoryboard,
   component: LoginStoryboard,
   path: '/login',
   options: {
-    args: null,
-    initialize: null,
     title: 'Login | Instantboard',
   },
 }, {
@@ -59,8 +54,14 @@ const storyboards = [{
   component: NewUserStoryboard,
   path: '/users/new',
   options: {
-    args: null,
-    initialize: initializeNewUserStoryboard,
+    initialize: (pramas: any, args: any, payload: any) => {
+      return new Promise((resolve) => {
+        fetchInitialData(payload.dispatch, {
+          accessToken: payload.accessToken,
+        });
+        resolve();
+      });
+    },
     title: 'Register | Instantboard',
   },
 }, {
@@ -69,8 +70,13 @@ const storyboards = [{
   component: MainStoryboard,
   path: '/',
   options: {
-    args: null,
-    initialize: initializeMainStoryboard,
+    initialize: (pramas: any, args: any, payload: any) => {
+      return new Promise((resolve) => {
+        fetchInitialData(payload.dispatch, {
+          accessToken: payload.accessToken,
+        }).then(resolve);
+      });
+    },
     title: 'Instantboard',
   },
 }, {
@@ -78,8 +84,13 @@ const storyboards = [{
   component: TaskStoryboard,
   path: '/tasks/new',
   options: {
-    args: null,
-    initialize: initializeMainStoryboard,
+    initialize: (pramas: any, args: any, payload: any) => {
+      return new Promise((resolve) => {
+        fetchInitialData(payload.dispatch, {
+          accessToken: payload.accessToken,
+        }).then(resolve);
+      });
+    },
     title: 'New task | Instantboard',
   },
 }, {
@@ -87,8 +98,13 @@ const storyboards = [{
   component: TaskStoryboard,
   path: '/tasks/:id/edit',
   options: {
-    args: null,
-    initialize: initializeMainStoryboard,
+    initialize: (pramas: any, args: any, payload: any) => {
+      return new Promise((resolve) => {
+        fetchInitialData(payload.dispatch, {
+          accessToken: payload.accessToken,
+        }).then(resolve);
+      });
+    },
     title: 'Edit task | Instantboard',
   },
 }, {
@@ -96,8 +112,13 @@ const storyboards = [{
   component: LabelStoryboard,
   path: '/labels/new',
   options: {
-    args: null,
-    initialize: initializeMainStoryboard,
+    initialize: (pramas: any, args: any, payload: any) => {
+      return new Promise((resolve) => {
+        fetchInitialData(payload.dispatch, {
+          accessToken: payload.accessToken,
+        }).then(resolve);
+      });
+    },
     title: 'New label | Instantboard',
   },
 }, {
@@ -105,13 +126,13 @@ const storyboards = [{
   component: LabelStoryboard,
   path: '/labels/:id/edit',
   options: {
-    args: null,
-    initialize: initializeMainStoryboard,
+    initialize: (pramas: any, args: any, payload: any) => {
+      return new Promise((resolve) => {
+        fetchInitialData(payload.dispatch, {
+          accessToken: payload.accessToken,
+        }).then(resolve);
+      });
+    },
     title: 'Edit label | Instantboard',
   },
 }];
-
-export {
-  segues,
-  storyboards,
-};

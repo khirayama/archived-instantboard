@@ -44,10 +44,6 @@ const server = http.createServer(app);
 
 const port = process.env.PORT || 3000;
 const host = process.env.HOST || '127.0.0.1';
-const loginStatuses = {
-  NOT_AUTHORIZED: 'not_authorized',
-  CONNECTED: 'connected',
-};
 
 function extractAccessTokenFromHeader(authorizationString = '') {
   return authorizationString.replace(/^Bearer/, '').trim();
@@ -93,42 +89,10 @@ function requireAuthorization(req, res, next) {
   });
 }
 
-// Handlers
-function loginStatusHandler(req, res) {
-  const notAuthorizedStatus = {
-    status: loginStatuses.NOT_AUTHORIZED,
-    user: null,
-  };
-
-  const accessToken = extractAccessTokenFromHeader(req.headers.authorization);
-  if (!accessToken) {
-    res.json(notAuthorizedStatus);
-    return;
-  }
-
-  const payload = checkAccessToken(accessToken);
-  if (payload === null) {
-    res.json(notAuthorizedStatus);
-    return;
-  }
-
-  User.findById(payload.sub).then(user => {
-    res.json({
-      status: loginStatuses.CONNECTED,
-      user,
-    });
-  }).catch(() => {
-    res.status(401).send({
-      error: 'Invalid access token.',
-    });
-  });
-}
-
 const router = new express.Router('');
 
 router.use('/api', new express.Router()
   .use('/v1', new express.Router()
-    .get('/login-status', loginStatusHandler)
     .post('/tokens', createTokenHandler)
     .use('/users', new express.Router()
       .get('/current', [requireAuthorization], fetchCurrentUserHandler)

@@ -1,0 +1,88 @@
+const {Task} = require('../models');
+
+function indexTaskHandler(req, res) {
+  Task.findAll({
+    where: {userId: req.user.id},
+    order: [['labelId', 'ASC'], ['priority', 'ASC']],
+  }).then(tasks => {
+    res.json(tasks);
+  });
+}
+
+function createTaskHandler(req, res) {
+  Task.count({
+    where: {
+      userId: req.user.id,
+      labelId: req.body.labelId,
+    },
+  }).then(count => {
+    Task.create({
+      userId: req.user.id,
+      labelId: req.body.labelId,
+      content: req.body.content,
+      priority: count,
+      completed: false,
+    }).then(task => {
+      res.json(task);
+    });
+  });
+}
+
+function updateTaskHandler(req, res) {
+  Task.findById(req.params.id).then(task => {
+    task.update({
+      labelId: (req.body.labelId === undefined) ? task.labelId : req.body.labelId,
+      content: (req.body.content === undefined) ? task.content : req.body.content,
+      priority: (req.body.priority === undefined) ? task.priority : req.body.priority,
+      completed: (req.body.completed === undefined) ? task.completed : req.body.completed,
+    }).then(() => {
+      res.json(task);
+    });
+  });
+}
+
+function destroyTaskHandler(req, res) {
+  Task.findById(req.params.id).then(task => {
+    Task.findAll({
+      where: {
+        userId: req.user.id,
+        labelId: task.labelId,
+        priority: {
+          $gt: task.priority,
+        },
+      },
+    }).then(tasks => {
+      tasks.forEach(task_ => {
+        task_.update({priority: task_.priority - 1});
+      });
+    });
+
+    task.destroy().then(destroyedTask => {
+      res.json(destroyedTask);
+    });
+  });
+}
+
+function updateTasksHandler(req, res) {
+  const tasks = req.body;
+
+  tasks.forEach(newTask => {
+    Task.findById(newTask.id).then(task => {
+      task.update({
+        labelId: (newTask.labelId === undefined) ? task.labelId : newTask.labelId,
+        content: (newTask.content === undefined) ? task.content : newTask.content,
+        priority: (newTask.priority === undefined) ? task.priority : newTask.priority,
+        completed: (newTask.completed === undefined) ? task.completed : newTask.completed,
+      });
+    });
+  });
+  res.json();
+}
+
+module.exports = {
+  indexTaskHandler,
+  createTaskHandler,
+  updateTaskHandler,
+  destroyTaskHandler,
+  updateTasksHandler,
+};

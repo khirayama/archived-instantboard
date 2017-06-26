@@ -26,12 +26,10 @@ export default class NewUserStoryboard extends Container<any, any> {
   }
 
   public handleClickRegisterButton() {
-    updateUser({
+    const dispatch = this.props.store.dispatch.bind(this.props.store);
+    updateUser(dispatch, {
       username: this.state.username,
-    }, {
-      accessToken: this.accessToken,
-      dispatch: this.props.store.dispatch.bind(this.props.store),
-    }).then(() => {
+    }, {accessToken: this.accessToken}).then(() => {
       this.context.move('/');
     });
   }

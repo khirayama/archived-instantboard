@@ -70,6 +70,7 @@ app.get([
     dispatch: store.dispatch.bind(store),
   }).then((result: any) => {
     const state = store.getState();
+
     if (!state.isAuthenticated && req.path !== '/login') {
       res.redirect('/login');
     } else if (state.isAuthenticated && !state.user.username && req.path !== '/users/new') {

@@ -41,14 +41,13 @@ export default class LoginStoryboard extends Container<any, any> {
 
   public handleClickLoginWithFacebook() {
     window.FB.login((res: any) => {
+      const dispatch = this.props.store.dispatch.bind(this.props.store);
       const provider = 'facebook';
       const uid = res.authResponse.userID;
-      createToken({
+      createToken(dispatch, {
         provider,
         uid,
-      }, {
-        dispatch: this.props.store.dispatch.bind(this.props.store),
-      }).then(({accessToken, user}) => {
+      }).then(({accessToken, user}: {accessToken: string, user: any}) => {
         if (accessToken) {
           setAccessToken(accessToken);
           if (user.username) {

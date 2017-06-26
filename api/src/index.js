@@ -16,6 +16,29 @@ const {
   createTokenHandler,
 } = require('./handlers/token-handlers');
 
+const {
+  indexTaskHandler,
+  updateTasksHandler,
+  createTaskHandler,
+  updateTaskHandler,
+  destroyTaskHandler,
+} = require('./handlers/task-handlers');
+
+const {
+  indexLabelHandler,
+  updateLabelsHandler,
+  createLabelHandler,
+  updateLabelHandler,
+  destroyLabelHandler,
+} = require('./handlers/label-handlers');
+
+const {
+  indexRequestHandler,
+  createRequestHandler,
+  updateRequestHandler,
+  destroyRequestHandler,
+} = require('./handlers/request-handlers');
+
 const app = express();
 const server = http.createServer(app);
 
@@ -110,6 +133,26 @@ router.use('/api', new express.Router()
     .use('/users', new express.Router()
       .get('/current', [requireAuthorization], fetchCurrentUserHandler)
       .put('/current', [requireAuthorization], updateCurrentUserHandler)
+    )
+    .use('/tasks', new express.Router()
+      .get('/', [requireAuthorization], indexTaskHandler)
+      .put('/', [requireAuthorization], updateTasksHandler)
+      .post('/', [requireAuthorization], createTaskHandler)
+      .put('/:id', [requireAuthorization], updateTaskHandler)
+      .delete('/:id', [requireAuthorization], destroyTaskHandler)
+    )
+    .use('/labels', new express.Router()
+      .get('/', indexLabelHandler)
+      .put('/', updateLabelsHandler)
+      .post('/', createLabelHandler)
+      .put('/:id', updateLabelHandler)
+      .delete('/:id', destroyLabelHandler)
+    )
+    .use('/request', new express.Router()
+      .get('/', indexRequestHandler)
+      .post('/', createRequestHandler)
+      .put('/:id', updateRequestHandler)
+      .delete('/:id', destroyRequestHandler)
     )
   )
 );

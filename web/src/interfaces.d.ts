@@ -11,11 +11,5 @@ interface IState {
   isAuthenticated: boolean;
   user: any;
   tasks: any[];
-}
-
-interface IAction {
-  type: string;
-  isAuthenticated: boolean;
-  user: any|null;
-  tasks: any[];
+  labels: any[];
 }

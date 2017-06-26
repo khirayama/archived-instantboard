@@ -61,6 +61,9 @@ app.get([
 
   const initialState: any = {
     isAuthenticated: false,
+    user: null,
+    tasks: [],
+    labels: [],
   };
   const router = new Router(segues, storyboards);
   const store = new Store(initialState, reducer);

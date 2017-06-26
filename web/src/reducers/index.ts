@@ -1,4 +1,4 @@
-const reducer = (state: IState, action: IAction) => {
+const reducer = (state: IState, action: any) => {
   const newState: IState = Object.assign({}, state);
 
   if (action) {
@@ -18,22 +18,14 @@ const reducer = (state: IState, action: IAction) => {
       case '__CREATE_TOKEN': {
         newState.isAuthenticated = action.isAuthenticated;
         newState.user = action.user;
-
-        newState.tasks = newState.tasks;
         break;
       }
       case '__UPDATE_USER': {
         newState.user = Object.assign({}, state.user, action.user);
-
-        newState.isAuthenticated = newState.isAuthenticated;
-        newState.tasks = newState.tasks;
         break;
       }
       case '__FAILURE_UPDATE_USER': {
         newState.user = action.user;
-
-        newState.isAuthenticated = newState.isAuthenticated;
-        newState.tasks = newState.tasks;
         break;
       }
       default: {

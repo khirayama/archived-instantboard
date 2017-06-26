@@ -1,5 +1,7 @@
 const jwt = require('jwt-simple');
 
+const {SECRET_KEY} = require('../constants');
+
 const {User} = require('../models');
 
 function createTokenHandler(req, res) {

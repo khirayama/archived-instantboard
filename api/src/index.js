@@ -3,6 +3,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const jwt = require('jwt-simple');
 
+const {SECRET_KEY} = require('./constants');
+
 const {User} = require('./models');
 
 const {
@@ -19,7 +21,6 @@ const server = http.createServer(app);
 
 const port = process.env.PORT || 3000;
 const host = process.env.HOST || '127.0.0.1';
-const SECRET_KEY = 'asdfghjkl';
 const loginStatuses = {
   NOT_AUTHORIZED: 'not_authorized',
   CONNECTED: 'connected',

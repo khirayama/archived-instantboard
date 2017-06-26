@@ -1,7 +1,7 @@
 interface IStoryboardOptions {
-  args: any;
-  initialize: any;
-  title: any;
+  args?: any;
+  initialize?: any;
+  title?: any;
 }
 
 interface IStoryboard {

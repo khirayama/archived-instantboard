@@ -14,6 +14,13 @@ export default class TaskStoryboard extends Container<any, any> {
 
     this.state = Object.assign({}, this.state, {
       content: '',
+      labelId: null,
+    });
+  }
+
+  public handleChangeLabelSelect(event: any) {
+    this.setState({
+      labelId: event.currentTarget.value.trim(),
     });
   }
 
@@ -26,7 +33,7 @@ export default class TaskStoryboard extends Container<any, any> {
   public handleClickCreateButton(event: any) {
     const dispatch = this.props.store.dispatch.bind(this.props.store);
     createTask(dispatch, {
-      labelId: 0,
+      labelId: this.state.labelId,
       content: this.state.content,
     }, {accessToken: this.accessToken});
   }
@@ -37,6 +44,9 @@ export default class TaskStoryboard extends Container<any, any> {
         <h1>TaskStoryboard</h1>
         <BackLink>Back</BackLink>
         <div>
+          <select onChange={(event) => this.handleChangeLabelSelect(event)}>
+            {this.state.labels.map((label, index) => <option value={label.id} key={index}>{label.name}</option)}
+          </select>
           <input onChange={(event) => this.handleChangeContentInput(event)}></input>
         </div>
         <div onClick={(event) => this.handleClickCreateButton(event)}>Create task</div>

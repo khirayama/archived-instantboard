@@ -98,3 +98,19 @@ export const Label = {
     });
   },
 };
+
+// Request
+export const Request = {
+  req: axios.create({
+    baseURL: 'http://localhost:3000/api/v1/requires',
+  }),
+  fetch: (options: IRequestOptions) => {
+    return new Promise((resolve, reject) => {
+      Request.req.get('/', {
+        headers: {Authorization: `Bearer ${options.accessToken}`},
+      }).then(({data}) => {
+        resolve(data);
+      }).catch((err: any) => reject(err));
+    });
+  },
+};

@@ -3,6 +3,7 @@ import {
   Task,
   Token,
   User,
+  Request,
 } from '../repositories';
 
 // Utils
@@ -41,10 +42,13 @@ export function fetchInitialData(dispatch: (action: any) => void, options: any) 
       Task.fetch(options),
       Label.fetch(options),
       Label.fetchSharedLabel(options),
+      Request.fetch(options),
     ]).then((values) => {
       const user: any = values[0];
       const tasks: any = values[1];
       const labels: any = values[2];
+      const sharedLabels: any = value[3];
+      const requests: any = value[4];
 
       const action = {
         type: '__FETCH_INITIAL_DATA',

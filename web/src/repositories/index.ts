@@ -19,7 +19,7 @@ export const User = {
   req: axios.create({
     baseURL: 'http://localhost:3000/api/v1/users',
   }),
-  get: (options: IRequestOptions) => {
+  find: (options: IRequestOptions) => {
     return new Promise((resolve, reject) => {
       User.req.get('/current', {
         headers: {Authorization: `Bearer ${options.accessToken}`},
@@ -44,7 +44,7 @@ export const Task = {
   req: axios.create({
     baseURL: 'http://localhost:3000/api/v1/tasks',
   }),
-  all: (options: IRequestOptions) => {
+  fetch: (options: IRequestOptions) => {
     return new Promise((resolve, reject) => {
       Task.req.get('/', {
         headers: {Authorization: `Bearer ${options.accessToken}`},
@@ -69,10 +69,20 @@ export const Label = {
   req: axios.create({
     baseURL: 'http://localhost:3000/api/v1/labels',
   }),
-  all: (options: IRequestOptions) => {
+  fetch: (options: IRequestOptions) => {
     return new Promise((resolve, reject) => {
       Label.req.get('/', {
         headers: {Authorization: `Bearer ${options.accessToken}`},
+      }).then(({data}) => {
+        resolve(data);
+      }).catch((err: any) => reject(err));
+    });
+  },
+  fetchSharedLabel: (options: IRequestOptions) => {
+    return new Promise((resolve, reject) => {
+      Label.req.get('/', {
+        headers: {Authorization: `Bearer ${options.accessToken}`},
+        params: {shared: true}
       }).then(({data}) => {
         resolve(data);
       }).catch((err: any) => reject(err));

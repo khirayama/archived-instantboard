@@ -37,9 +37,10 @@ function mapLabel(label: any) {
 export function fetchInitialData(dispatch: (action: any) => void, options: any) {
   return new Promise((resolve, reject) => {
     Promise.all([
-      User.get(options),
-      Task.all(options),
-      Label.all(options),
+      User.find(options),
+      Task.fetch(options),
+      Label.fetch(options),
+      Label.fetchSharedLabel(options),
     ]).then((values) => {
       const user: any = values[0];
       const tasks: any = values[1];
@@ -69,7 +70,7 @@ export function fetchInitialData(dispatch: (action: any) => void, options: any) 
 export function createToken(dispatch: (action: any) => void, params: {provider: string; uid: string; }) {
   return new Promise((resolve) => {
     Token.create(params).then(({accessToken}) => {
-      User.get({accessToken}).then((user: any) => {
+      User.find({accessToken}).then((user: any) => {
         const action = {
           type: '__CREATE_TOKEN',
           isAuthenticated: true,

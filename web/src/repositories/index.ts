@@ -63,3 +63,28 @@ export const Task = {
     });
   },
 };
+
+// Label
+export const Label = {
+  req: axios.create({
+    baseURL: 'http://localhost:3000/api/v1/labels',
+  }),
+  all: (options: IRequestOptions) => {
+    return new Promise((resolve, reject) => {
+      Label.req.get('/', {
+        headers: {Authorization: `Bearer ${options.accessToken}`},
+      }).then(({data}) => {
+        resolve(data);
+      }).catch((err: any) => reject(err));
+    });
+  },
+  create: (params: {name: string; }, options: IRequestOptions) => {
+    return new Promise((resolve, reject) => {
+      Label.req.post('/', params, {
+        headers: {Authorization: `Bearer ${options.accessToken}`},
+      }).then((res: any) => {
+        resolve(res.data);
+      }).catch((err: any) => reject(err));
+    });
+  },
+};

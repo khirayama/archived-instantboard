@@ -7,6 +7,7 @@ const reducer = (state: IState, action: any) => {
         newState.isAuthenticated = action.isAuthenticated;
         newState.user = action.user;
         newState.tasks = action.tasks;
+        newState.labels = action.labels;
         break;
       }
       case '__FAILURE_FETCH_INITIAL_DATA': {

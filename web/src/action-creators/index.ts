@@ -1,4 +1,5 @@
 import {
+  Label,
   Task,
   Token,
   User,
@@ -24,19 +25,35 @@ function mapTask(task: any) {
   };
 }
 
+function mapLabel(label: any) {
+  return {
+    id: label.id,
+    name: label.name,
+    priority: label.priority,
+    errors: [],
+  };
+}
+
 export function fetchInitialData(dispatch: (action: any) => void, options: any) {
   return new Promise((resolve, reject) => {
-    User.get(options).then((user: any) => {
-      Task.all(options).then((tasks: any) => {
-        const action = {
-          type: '__FETCH_INITIAL_DATA',
-          isAuthenticated: true,
-          user: mapUser(user),
-          tasks: tasks.map((task: any) => mapTask(task)),
-        };
-        dispatch(action);
-        resolve();
-      });
+    Promise.all([
+      User.get(options),
+      Task.all(options),
+      Label.all(options),
+    ]).then((values) => {
+      const user: any = values[0];
+      const tasks: any = values[1];
+      const labels: any = values[2];
+
+      const action = {
+        type: '__FETCH_INITIAL_DATA',
+        isAuthenticated: true,
+        user: mapUser(user),
+        tasks: tasks.map((task: any) => mapTask(task)),
+        labels: labels.map((label: any) => mapLabel(label)),
+      };
+      dispatch(action);
+      resolve();
     }).catch(() => {
       const action = {
         type: '__FAILURE_FETCH_INITIAL_DATA',
@@ -94,5 +111,16 @@ export function createTask(
 ) {
   return new Promise((resolve, reject) => {
     Task.create(params, options);
+  });
+}
+
+// Label
+export function createLabel(
+  dispatch: (action: any) => void,
+  params: {name: string; },
+  options: any,
+) {
+  return new Promise((resolve, reject) => {
+    Label.create(params, options);
   });
 }

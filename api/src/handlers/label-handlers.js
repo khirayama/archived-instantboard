@@ -10,7 +10,7 @@ function indexLabelHandler(req, res) {
     }).then(requests => {
       const labelIds = requests.map(request => request.labelId);
       Label.findAll({
-        where: {labelId: labelIds},
+        where: {id: labelIds},
         order: [['priority', 'ASC']],
       }).then(labels => {
         res.json(labels);

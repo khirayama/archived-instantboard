@@ -27,13 +27,19 @@ function indexLabelHandler(req, res) {
 }
 
 function createLabelHandler(req, res) {
-  Label.create({
-    userId: req.user.id,
-    name: req.body.name,
-    priority: req.body.priority,
-    visibled: true,
-  }).then(label => {
-    res.json(label);
+  Label.count({
+    where: {
+      userId: req.user.id,
+    },
+  }).then(count => {
+    Label.create({
+      userId: req.user.id,
+      name: req.body.name,
+      priority: count,
+      visibled: true,
+    }).then(label => {
+      res.json(label);
+    });
   });
 }
 

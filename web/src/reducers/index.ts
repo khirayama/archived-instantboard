@@ -29,6 +29,21 @@ const reducer = (state: IState, action: any) => {
         newState.user = action.user;
         break;
       }
+      // Labels
+      case '__CREATE_LABEL': {
+        newState.labels.push(action.label);
+        break;
+      }
+      case '__DELETE_LABEL': {
+        newState.labels = state.labels.filter(label => {
+          return (label.id !== action.labelId);
+        });
+        break;
+      }
+      case '__SORT_LABEL': {
+        newState.labels = action.labels;
+        break;
+      }
       default: {
         break;
       }

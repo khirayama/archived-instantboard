@@ -26,10 +26,10 @@ const {
 
 const {
   indexLabelHandler,
-  updateLabelsHandler,
   createLabelHandler,
   updateLabelHandler,
   destroyLabelHandler,
+  sortLabelHandler,
 } = require('./handlers/label-handlers');
 
 const {
@@ -109,10 +109,10 @@ router.use('/api', new express.Router()
     )
     .use('/labels', new express.Router()
       .get('/', [requireAuthorization], indexLabelHandler)
-      .put('/', [requireAuthorization], updateLabelsHandler)
       .post('/', [requireAuthorization], createLabelHandler)
       .put('/:id', [requireAuthorization], updateLabelHandler)
       .delete('/:id', [requireAuthorization], destroyLabelHandler)
+      .put('/:id/sort', [requireAuthorization], sortLabelHandler)
     )
     .use('/requests', new express.Router()
       .get('/', [requireAuthorization], indexRequestHandler)

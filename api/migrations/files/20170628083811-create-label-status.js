@@ -1,6 +1,6 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('labels', {
+    return queryInterface.createTable('label_statuses', {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -11,9 +11,18 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false
       },
-      name: {
-        type: Sequelize.TEXT,
+      label_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
+      priority: {
+        type: Sequelize.INTEGER,
         allowNull: false,
+      },
+      visibled: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: true,
       },
       created_at: {
         type: Sequelize.DATE,
@@ -29,6 +38,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('labels');
+    return queryInterface.dropTable('label_statuses');
   }
 };

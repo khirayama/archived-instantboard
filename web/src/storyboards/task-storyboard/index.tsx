@@ -45,7 +45,7 @@ export default class TaskStoryboard extends Container<any, any> {
         <BackLink>Back</BackLink>
         <div>
           <select onChange={(event) => this.handleChangeLabelSelect(event)}>
-            {this.state.labels.map((label, index) => <option value={label.id} key={index}>{label.name}</option)}
+            {this.state.labels.map((label: any, index: number) => <option value={label.id} key={index}>{label.name}</option>)}
           </select>
           <input onChange={(event) => this.handleChangeContentInput(event)}></input>
         </div>

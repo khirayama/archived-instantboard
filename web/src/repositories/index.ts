@@ -102,7 +102,7 @@ export const Label = {
 // Request
 export const Request = {
   req: axios.create({
-    baseURL: 'http://localhost:3000/api/v1/requires',
+    baseURL: 'http://localhost:3000/api/v1/requests',
   }),
   fetch: (options: IRequestOptions) => {
     return new Promise((resolve, reject) => {

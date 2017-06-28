@@ -1,13 +1,23 @@
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define('Label', {
+  return sequelize.define('LabelStatus', {
     userId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       field: 'user_id',
     },
-    name: {
-      type: DataTypes.TEXT,
+    labelId: {
+      type: DataTypes.INTEGER,
       allowNull: false,
+      field: 'label_id',
+    },
+    priority: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    visibled: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true,
     },
     createdAt: {
       type: DataTypes.DATE,
@@ -20,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     charset: 'utf8mb4',
     collate: 'utf8mb4_general_ci',
-    tableName: 'labels',
+    tableName: 'label_statuses',
     timestamps: true,
     underscored: true,
   });

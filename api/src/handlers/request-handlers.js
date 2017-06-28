@@ -25,9 +25,10 @@ function updateRequestHandler(req, res) {
       request.update({
         status: req.body.status,
       }).then(() => {
-        res.json(label);
+        res.json(request);
       });
     }
+    res.json(request);
   });
 }
 

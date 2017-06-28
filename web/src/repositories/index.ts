@@ -78,19 +78,36 @@ export const Label = {
       }).catch((err: any) => reject(err));
     });
   },
-  fetchSharedLabel: (options: IRequestOptions) => {
-    return new Promise((resolve, reject) => {
-      Label.req.get('/', {
-        headers: {Authorization: `Bearer ${options.accessToken}`},
-        params: {shared: true}
-      }).then(({data}) => {
-        resolve(data);
-      }).catch((err: any) => reject(err));
-    });
-  },
   create: (params: {name: string; }, options: IRequestOptions) => {
     return new Promise((resolve, reject) => {
       Label.req.post('/', params, {
+        headers: {Authorization: `Bearer ${options.accessToken}`},
+      }).then((res: any) => {
+        resolve(res.data);
+      }).catch((err: any) => reject(err));
+    });
+  },
+  update: (id: number, params: {visibled: boolean; }, options: IRequestOptions) => {
+    return new Promise((resolve, reject) => {
+      Label.req.put(`/${id}`, params, {
+        headers: {Authorization: `Bearer ${options.accessToken}`},
+      }).then((res: any) => {
+        resolve(res.data);
+      }).catch((err: any) => reject(err));
+    });
+  },
+  delete: (id: number, options: IRequestOptions) => {
+    return new Promise((resolve, reject) => {
+      Label.req.delete(`/${id}`, {
+        headers: {Authorization: `Bearer ${options.accessToken}`},
+      }).then((res: any) => {
+        resolve(res.data);
+      }).catch((err: any) => reject(err));
+    });
+  },
+  sort: (id: number, to: number, options: IRequestOptions) => {
+    return new Promise((resolve, reject) => {
+      Label.req.put(`/${id}/sort`, {priority: to}, {
         headers: {Authorization: `Bearer ${options.accessToken}`},
       }).then((res: any) => {
         resolve(res.data);

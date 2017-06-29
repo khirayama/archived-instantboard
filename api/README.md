@@ -37,3 +37,12 @@
       - `/` POST: create request
       - `/:id` PUT: update request
       - `/:id` DELETE: delete request
+
+# Test
+
+```
+$ npm run db:create
+$ NODE_ENV=test npm run db:migrate
+$ NODE_ENV=test npm run dev
+$ NODE_ENV=test npm test
+```

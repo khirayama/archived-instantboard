@@ -27,7 +27,7 @@ module.exports = {
       collate: 'utf8mb4_general_ci',
     },
     migrationStorage: 'json',
-    migrationStoragePath: 'sequelize-meta.json',
+    migrationStoragePath: 'sequelize-meta.test.json',
     define: {
       charset: 'utf8mb4',
       collate: 'utf8mb4_general_ci',

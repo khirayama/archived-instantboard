@@ -3,6 +3,7 @@
 /api/node_modules
 /api/npm-debug.log
 /api/sequelize-meta.json
+/api/sequelize-meta.test.json
 
 /web/node_modules
 /web/npm-debug.log

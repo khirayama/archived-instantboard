@@ -11,13 +11,16 @@
     "npm": "^5.0.0"
   },
   "scripts": {
-    "dev": "nodemon src/index.js",
+    "dev": "nodemon src/index.js --ignore test",
     "db:create": "mysql -u root < migrations/db.sql",
     "db:migrate": "sequelize db:migrate --config migrations/config.js --migrations-path migrations/files",
+    "db:seed": "node test/fixtures",
     "migration:create": "sequelize migration:create --config migrations/config.js --name",
     "lint": "eslint --ignore-path ../.gitignore src",
     "lint:fix": "eslint --ignore-path ../.gitignore --fix src",
-    "check": "npm-check-updates"
+    "check": "npm-check-updates",
+    "test": "NODE_ENV=test ava",
+    "test:watch": "NODE_ENV=test ava -w"
   },
   "dependencies": {
     "body-parser": "^1.17.1",
@@ -30,5 +33,16 @@
     "npm-check-updates": "^2.12.0",
     "sequelize": "^4.2.0",
     "sequelize-cli": "^2.7.0"
+  },
+  "devDependencies": {
+    "ajv": "^5.2.0",
+    "ava": "^0.20.0",
+    "axios": "^0.16.2",
+    "uuid": "^3.1.0"
+  },
+  "ava": {
+    "files": [
+      "test/**/*.test.js"
+    ]
   }
 }

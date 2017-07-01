@@ -12,7 +12,7 @@ function indexRequestHandler(req, res) {
 function createRequestHandler(req, res) {
   Request.create({
     userId: req.user.id,
-    sharedUserId: req.body.sharedUserId,
+    memberId: req.body.memberId,
     labelId: req.body.labelId,
   }).then(request => {
     res.json(request);

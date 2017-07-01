@@ -11,7 +11,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false
       },
-      shared_user_id: {
+      member_id: {
         type: Sequelize.INTEGER,
         allowNull: false
       },

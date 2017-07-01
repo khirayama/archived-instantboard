@@ -1,14 +1,14 @@
 const {Label, Task, Request, LabelStatus, User} = require('../models');
 
-function _getSharedUsers(labelId, requests, users) {
-  const sharedUsers = [];
+function _getMembers(labelId, requests, users) {
+  const members = [];
   for (let j = 0; j < requests.length; j++) {
     const request = requests[j];
     if (labelId === request.labelId) {
       for (let k = 0; k < users.length; k++) {
         const user = users[k];
-        if (user.id === request.sharedUserId || user.id === request.userId) {
-          sharedUsers.push({
+        if (user.id === request.memberId || user.id === request.userId) {
+          members.push({
             id: user.id,
             username: user.username,
             requestStatus: request.status,
@@ -17,7 +17,7 @@ function _getSharedUsers(labelId, requests, users) {
       }
     }
   }
-  return sharedUsers;
+  return members;
 }
 
 function _indexLabel(userId) {
@@ -38,7 +38,7 @@ function _indexLabel(userId) {
         const labels = values[0];
         const requests = values[1];
 
-        const userIds = requests.map(request => request.sharedUserId).filter(sharedUserId => (sharedUserId !== userId));
+        const userIds = requests.map(request => request.memberId).filter(memberId => (memberId !== userId));
         User.findAll({
           where: {id: userIds},
         }).then(users => {
@@ -54,7 +54,7 @@ function _indexLabel(userId) {
                   visibled: labelStatus.visibled,
                   createdAt: label.createdAt,
                   updatedAt: label.updatedAt,
-                  sharedUsers: _getSharedUsers(label.id, requests, users),
+                  members: _getMembers(label.id, requests, users),
                 };
               }
             }
@@ -90,40 +90,15 @@ function _createLabel(userId, labelName, userNames = []) {
         return;
       }
 
-      const requests = users.map(user => {
-        return {
-          userId,
-          sharedUserId: user.id,
-          labelId: label.id,
-          status: 'pending',
-        };
-      });
-
-      Promise.all([
-        LabelStatus.create({
-          userId,
-          labelId: label.id,
-          priority: count,
-          visibled: true,
-        }),
-        Request.bulkCreate(requests),
-      ]).then(() => {
-        const createdLabel = {
-          id: label.id,
-          name: label.name,
-          priority: count,
-          visibled: true,
-          createdAt: label.createdAt,
-          updatedAt: label.updatedAt,
-          sharedUsers: users.map(user => {
-            return {
-              id: user.id,
-              username: user.username,
-              requestStatus: 'pending',
-            };
-          }),
-        };
-        resolve(createdLabel);
+      LabelStatus.create({
+        userId,
+        labelId: label.id,
+        priority: count,
+        visibled: true,
+      }).then(() => {
+        _showLabel(userId, label.id).then(createdLabel => {
+          resolve(createdLabel);
+        });
       });
     });
   });
@@ -143,7 +118,7 @@ function _showLabel(userId, labelId) {
       Request.findAll({
         where: {labelId: label.id},
       }).then(requests => {
-        const userIds = requests.map(request => request.sharedUserId).filter(sharedUserId => (sharedUserId !== userId));
+        const userIds = requests.map(request => request.memberId).filter(memberId => (memberId !== userId));
 
         User.findAll({
           where: {id: userIds},
@@ -155,7 +130,7 @@ function _showLabel(userId, labelId) {
             visibled: labelStatus.visibled,
             createdAt: labelStatus.createdAt,
             updatedAt: labelStatus.updatedAt,
-            sharedUsers: _getSharedUsers(label.id, requests, users),
+            members: _getMembers(label.id, requests, users),
           };
           resolve(newLabel);
         });

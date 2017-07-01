@@ -26,6 +26,7 @@ const {
 
 const {
   indexLabelHandler,
+  showLabelHandler,
   createLabelHandler,
   updateLabelHandler,
   destroyLabelHandler,
@@ -109,6 +110,7 @@ router.use('/api', new express.Router()
     )
     .use('/labels', new express.Router()
       .get('/', [requireAuthorization], indexLabelHandler)
+      .get('/:id', [requireAuthorization], showLabelHandler)
       .post('/', [requireAuthorization], createLabelHandler)
       .put('/:id', [requireAuthorization], updateLabelHandler)
       .delete('/:id', [requireAuthorization], destroyLabelHandler)

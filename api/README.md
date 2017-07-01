@@ -15,26 +15,26 @@
     - `/tokens`
       - `/` POST: create token
     - `/users`
-      - `/current` GET: fetch current user
+      - `/current` GET: show current user
       - `/current` PUT: update current user
-      - `/?shared=true` GET: fetch shared users
     - `/tasks`
-      - `/` GET: fetch tasks
-      - `/` PUT: update tasks
+      - `/` GET: index task
       - `/` POST: create task
-      - `/:id` GET: fetch task
+      - `/:id` GET: show task
       - `/:id` PUT: update task
       - `/:id` DELETE: delete task
+      - `/:id/sort` PUT: sort task
     - `/labels`
-      - `/` GET: fetch labels
+      - `/` GET: index label
       - `/` POST: create label
       - `/:id` GET: show label
       - `/:id` PUT: update label
       - `/:id` DELETE: delete label
       - `/:id/sort` PUT: sort label
     - `/requests`
-      - `/` GET: fetch requests
+      - `/` GET: index request
       - `/` POST: create request
+      - `/:id` GET: show request
       - `/:id` PUT: update request
       - `/:id` DELETE: delete request
 

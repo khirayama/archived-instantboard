@@ -20,7 +20,7 @@ function _getSharedUsers(labelId, requests, users) {
   return sharedUsers;
 }
 
-function _fetchLabels(userId) {
+function _indexLabel(userId) {
   return new Promise(resolve => {
     LabelStatus.findAll({
       where: {userId},
@@ -129,7 +129,7 @@ function _createLabel(userId, labelName, userNames = []) {
   });
 }
 
-function _fetchLabel(userId, labelId) {
+function _showLabel(userId, labelId) {
   return new Promise(resolve => {
     Promise.all([
       Label.findById(labelId),
@@ -182,7 +182,7 @@ function _updateLabel(userId, labelId, newLabel = {}) {
           visibled: (newLabel.visibled !== undefined && newLabel.visibled !== labelStatus.visibled) ? newLabel.visibled : labelStatus.visibled,
         }),
       ]).then(() => {
-        _fetchLabel(userId, label.id).then(updatedLabel => {
+        _showLabel(userId, label.id).then(updatedLabel => {
           resolve(updatedLabel);
         });
       });
@@ -193,7 +193,7 @@ function _updateLabel(userId, labelId, newLabel = {}) {
 function _destroyLabel(userId, labelId) {
   return new Promise(resolve => {
     Promise.all([
-      _fetchLabel(userId, labelId),
+      _showLabel(userId, labelId),
       Label.findById(labelId),
     ]).then(values => {
       const destroyedLabel = values[0];
@@ -203,13 +203,12 @@ function _destroyLabel(userId, labelId) {
       Promise.all([
         new Promise(resolve_ => {
           LabelStatus.findAll({
-            where: {
-              labelId: label.id,
-            },
+            where: {labelId: label.id},
           }).then(labelStatuses => {
             let count = 0;
 
             labelStatuses.forEach(labelStatus => {
+              // Decrement
               LabelStatus.findAll({
                 where: {
                   userId: labelStatus.userId,
@@ -218,10 +217,9 @@ function _destroyLabel(userId, labelId) {
                   },
                 },
               }).then(labelStatuses => {
-                labelStatuses.forEach(labelStatus_ => {
-                  labelStatus_.update({priority: labelStatus_.priority - 1});
-                });
+                labelStatuses.forEach(labelStatus_ => labelStatus_.increment({priority: -1}));
               });
+
               labelStatus.destroy().then(() => {
                 count += 1;
                 if (count === labelStatuses.length) {
@@ -246,14 +244,62 @@ function _destroyLabel(userId, labelId) {
   });
 }
 
+function _sortLabel(userId, labelId, priority) {
+  return new Promise(resolve => {
+    LabelStatus.findOne({
+      where: {userId, labelId},
+    }).then(labelStatus => {
+      if (labelStatus.priority < priority) {
+        LabelStatus.findAll({
+          where: {
+            userId,
+            priority: {
+              $gt: labelStatus.priority,
+              $lte: priority,
+            },
+          },
+        }).then(labelStatuses => {
+          labelStatuses.forEach(labelStatus_ => {
+            labelStatus_.update({priority: labelStatus_.priority - 1});
+          });
+          labelStatus.update({priority}).then(() => {
+            _indexLabel(userId).then(labels => {
+              resolve(labels);
+            });
+          });
+        });
+      } else if (labelStatus.priority > priority) {
+        LabelStatus.findAll({
+          where: {
+            userId,
+            priority: {
+              $gte: priority,
+              $lt: labelStatus.priority,
+            },
+          },
+        }).then(labelStatuses => {
+          labelStatuses.forEach(labelStatus_ => {
+            labelStatus_.update({priority: labelStatus_.priority + 1});
+          });
+          labelStatus.update({priority}).then(() => {
+            _indexLabel(userId).then(labels => {
+              resolve(labels);
+            });
+          });
+        });
+      }
+    });
+  });
+}
+
 function indexLabelHandler(req, res) {
-  _fetchLabels(req.user.id).then(labels => {
+  _indexLabel(req.user.id).then(labels => {
     res.json(labels);
   });
 }
 
 function showLabelHandler(req, res) {
-  _fetchLabel(req.user.id, req.params.id).then(label => {
+  _showLabel(req.user.id, req.params.id).then(label => {
     res.json(label);
   });
 }
@@ -283,63 +329,18 @@ function destroyLabelHandler(req, res) {
 }
 
 function sortLabelHandler(req, res) {
-  LabelStatus.findOne({
-    where: {
-      labelId: req.params.id,
-      userId: req.user.id,
-    },
-  }).then(labelStatus => {
-    const priority = req.body.priority;
-
-    if (labelStatus.priority < priority) {
-      LabelStatus.findAll({
-        where: {
-          userId: req.user.id,
-          priority: {
-            $gt: labelStatus.priority,
-            $lte: priority,
-          },
-        },
-      }).then(labelStatuses => {
-        labelStatuses.forEach(labelStatus_ => {
-          labelStatus_.update({priority: labelStatus_.priority - 1});
-        });
-        labelStatus.update({priority}).then(() => {
-          _fetchLabels(req.user.id).then(labels => {
-            res.json(labels);
-          });
-        });
-      });
-    } else if (labelStatus.priority > priority) {
-      LabelStatus.findAll({
-        where: {
-          userId: req.user.id,
-          priority: {
-            $gte: priority,
-            $lt: labelStatus.priority,
-          },
-        },
-      }).then(labelStatuses => {
-        labelStatuses.forEach(labelStatus_ => {
-          labelStatus_.update({priority: labelStatus_.priority + 1});
-        });
-        labelStatus.update({priority}).then(() => {
-          _fetchLabels(req.user.id).then(labels => {
-            res.json(labels);
-          });
-        });
-      });
-    }
+  _sortLabel(req.user.id, req.params.id, req.body.priority).then(labels => {
+    res.json(labels);
   });
 }
 
 module.exports = {
-  _getSharedUsers,
-  _fetchLabel,
-  _fetchLabels,
+  _indexLabel,
+  _showLabel,
   _createLabel,
   _updateLabel,
   _destroyLabel,
+  _sortLabel,
   indexLabelHandler,
   showLabelHandler,
   createLabelHandler,

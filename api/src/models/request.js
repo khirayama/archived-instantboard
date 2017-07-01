@@ -1,3 +1,4 @@
+/* eslint new-cap: 0 */
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define('Request', {
     userId: {

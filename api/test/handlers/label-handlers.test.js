@@ -7,11 +7,12 @@ const {SECRET_KEY} = require('../../src/constants');
 const models = require('../../src/models');
 const {_createToken} = require('../../src/handlers/token-handlers');
 const {
-  _fetchLabel,
-  _fetchLabels,
+  _showLabel,
+  _indexLabel,
   _createLabel,
   _updateLabel,
   _destroyLabel,
+  _sortLabel,
 } = require('../../src/handlers/label-handlers');
 
 const labelResponseSchema = require('../schemes/label-response-scheme');
@@ -32,13 +33,10 @@ test.cb.beforeEach(t => {
       };
     });
     t.end();
-  }).catch(() => {
-    t.fail('Need run api server. For example, `NODE_ENV=test npm run dev` and so on.');
-    t.end();
   });
 });
 
-test.cb('_fetchLabels > fetch labels', t => {
+test.cb('_indexLabel > fetch labels', t => {
   const user = t.context.users[0];
   const user2 = t.context.users[1];
 
@@ -48,7 +46,7 @@ test.cb('_fetchLabels > fetch labels', t => {
       _createLabel(user.id, `Test label ${user.id}`).then(resolve);
     });
   }).then(() => {
-    _fetchLabels(user.id).then(labels => {
+    _indexLabel(user.id).then(labels => {
       t.true(ajv.validate({
         type: 'array',
         items: labelResponseSchema,
@@ -79,7 +77,7 @@ test.cb('fetchCurrentUserHandler', t => {
       where: {sharedUserId: user.id, status: 'pending'},
     }).then(request => {
       request.accept().then(() => {
-        _fetchLabels(user.id).then(labels => {
+        _indexLabel(user.id).then(labels => {
           t.true(ajv.validate({
             type: 'array',
             items: labelResponseSchema,
@@ -157,7 +155,7 @@ test.cb('updateLabelHandler > update name', t => {
     _updateLabel(user.id, label.id, {
       name: `Updated label ${user.id}`,
     }).then(() => {
-      _fetchLabel(user.id, label.id).then(label => {
+      _showLabel(user.id, label.id).then(label => {
         t.true(ajv.validate(labelResponseSchema, label));
         t.is(label.name, `Updated label ${user.id}`);
         t.is(label.priority, 0);
@@ -175,7 +173,7 @@ test.cb('updateLabelHandler > update visibled', t => {
     _updateLabel(user.id, label.id, {
       visibled: false,
     }).then(() => {
-      _fetchLabel(user.id, label.id).then(label => {
+      _showLabel(user.id, label.id).then(label => {
         t.true(ajv.validate(labelResponseSchema, label));
         t.is(label.name, `Test label ${user.id}`);
         t.is(label.priority, 0);
@@ -189,22 +187,101 @@ test.cb('updateLabelHandler > update visibled', t => {
 test.cb('destroyLabelHandler', t => {
   const user = t.context.users[0];
 
-  _createLabel(user.id, `Test label ${user.id}`).then(label => {
-    _fetchLabels(user.id).then(labels => {
-      t.true(ajv.validate({
-        type: 'array',
-        items: labelResponseSchema,
-      }, labels));
-      t.is(labels.length, 1);
+  new Promise(resolve => {
+    _createLabel(user.id, `Test label ${user.id}`).then(label => {
+      _indexLabel(user.id).then(labels => {
+        t.true(ajv.validate({
+          type: 'array',
+          items: labelResponseSchema,
+        }, labels));
+        t.is(labels.length, 1);
 
-      _destroyLabel(user.id, label.id).then(destroyedLabel => {
-        t.true(ajv.validate(labelResponseSchema, destroyedLabel));
-
-        _fetchLabels(user.id).then(labels_ => {
-          t.is(labels_.length, 0);
-          t.end();
+        _destroyLabel(user.id, label.id).then(destroyedLabel => {
+          t.true(ajv.validate(labelResponseSchema, destroyedLabel));
+          resolve();
         });
       });
     });
+  }).then(() => {
+    _indexLabel(user.id).then(labels_ => {
+      t.is(labels_.length, 0);
+      t.end();
+    });
+  });
+});
+
+test.cb('destroyLabelHandler', t => {
+  const user = t.context.users[0];
+
+  new Promise(resolve => {
+    _createLabel(user.id, `Test label ${user.id}`).then(label1 => {
+      _createLabel(user.id, `Test label ${user.id}`).then(label2 => {
+        _destroyLabel(user.id, label1.id).then(destroyedLabel => {
+          t.true(ajv.validate(labelResponseSchema, destroyedLabel));
+          resolve(label2);
+        });
+      });
+    });
+  }).then(label2 => {
+    _indexLabel(user.id).then(labels_ => {
+      t.is(labels_.length, 1);
+      t.is(labels_[0].priority, 0);
+      t.is(labels_[0].name, label2.name);
+      t.end();
+    });
+  });
+});
+
+test.cb('sortLabelHandler', t => {
+  const user = t.context.users[0];
+
+  new Promise(resolve => {
+    _createLabel(user.id, '0').then(label => {
+      _createLabel(user.id, '1').then(() => {
+        _createLabel(user.id, '2').then(() => {
+          _sortLabel(user.id, label.id, 2).then(resolve);
+        });
+      });
+    });
+  }).then(labels => {
+    t.is(labels.length, 3);
+    t.true(ajv.validate({
+      type: 'array',
+      items: labelResponseSchema,
+    }, labels));
+    t.is(labels[0].priority, 0);
+    t.is(labels[0].name, '1');
+    t.is(labels[1].priority, 1);
+    t.is(labels[1].name, '2');
+    t.is(labels[2].priority, 2);
+    t.is(labels[2].name, '0');
+    t.end();
+  });
+});
+
+test.cb('sortLabelHandler', t => {
+  const user = t.context.users[0];
+
+  new Promise(resolve => {
+    _createLabel(user.id, '0').then(() => {
+      _createLabel(user.id, '1').then(() => {
+        _createLabel(user.id, '2').then(label => {
+          _sortLabel(user.id, label.id, 0).then(resolve);
+        });
+      });
+    });
+  }).then(labels => {
+    t.is(labels.length, 3);
+    t.true(ajv.validate({
+      type: 'array',
+      items: labelResponseSchema,
+    }, labels));
+    t.is(labels[0].priority, 0);
+    t.is(labels[0].name, '2');
+    t.is(labels[1].priority, 1);
+    t.is(labels[1].name, '0');
+    t.is(labels[2].priority, 2);
+    t.is(labels[2].name, '1');
+    t.end();
   });
 });

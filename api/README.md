@@ -38,11 +38,25 @@
       - `/:id` PUT: update request
       - `/:id` DELETE: delete request
 
-# Test
+## Test
 
 ```
+# initialize
 $ npm run db:create
 $ NODE_ENV=test npm run db:migrate
+
+# run test
+$ npm test
+```
+
+## E2E Test
+
+```
+# initialize
+$ npm run db:create
+$ NODE_ENV=test npm run db:migrate
+
+# run test
 $ NODE_ENV=test npm run dev
-$ NODE_ENV=test npm test
+$ npm run test:e2e
 ```

@@ -1,61 +1,245 @@
 const {Label, Task, Request, LabelStatus, User} = require('../models');
 
-function fetchLabels(userId) {
+function _getSharedUsers(labelId, requests, users) {
+  const sharedUsers = [];
+  for (let j = 0; j < requests.length; j++) {
+    const request = requests[j];
+    if (labelId === request.labelId) {
+      for (let k = 0; k < users.length; k++) {
+        const user = users[k];
+        if (user.id === request.sharedUserId || user.id === request.userId) {
+          sharedUsers.push({
+            id: user.id,
+            username: user.username,
+            requestStatus: request.status,
+          });
+        }
+      }
+    }
+  }
+  return sharedUsers;
+}
+
+function _fetchLabels(userId) {
   return new Promise(resolve => {
     LabelStatus.findAll({
       where: {userId},
       order: [['priority', 'ASC']],
     }).then(labelStatuses => {
       const labelIds = labelStatuses.map(labelStatus => labelStatus.labelId);
-      Label.findAll({
-        where: {id: labelIds},
-      }).then(labels => {
-        const labelIds = labels.map(label => label.id);
+      Promise.all([
+        Label.findAll({
+          where: {id: labelIds},
+        }),
         Request.findAll({
-          where: {
-            labelId: labelIds,
-            status: 'accepted',
-          },
-        }).then(requests => {
-          const userIds = requests.map(request => request.sharedUserId);
-          User.findAll({
-            where: {
-              id: userIds,
-            },
-          }).then(users => {
-            const labels_ = labelStatuses.map(labelStatus => {
-              for (let i = 0; i < labels.length; i++) {
-                const label = labels[i];
-                if (label.id === labelStatus.labelId) {
-                  const newLabel = {
-                    id: label.id,
-                    name: label.name,
-                    priority: labelStatus.priority,
-                    visibled: labelStatus.visibled,
-                    createdAt: label.createdAt,
-                    updatedAt: label.updatedAt,
-                    sharedUsers: [],
-                  };
-                  for (let j = 0; j < requests.length; j++) {
-                    const request = requests[j];
-                    if (label.id === request.labelId) {
-                      for (let k = 0; k < users.length; k++) {
-                        const user = users[k];
-                        if (user.id === request.sharedUserId) {
-                          newLabel.sharedUsers.push({
-                            id: user.id,
-                            username: user.username,
-                          });
-                        }
-                      }
-                    }
-                  }
-                  return newLabel;
-                }
+          where: {labelId: labelIds},
+        }),
+      ]).then(values => {
+        const labels = values[0];
+        const requests = values[1];
+
+        const userIds = requests.map(request => request.sharedUserId).filter(sharedUserId => (sharedUserId !== userId));
+        User.findAll({
+          where: {id: userIds},
+        }).then(users => {
+          const labels_ = labelStatuses.map(labelStatus => {
+            let newLabel = {};
+            for (let i = 0; i < labels.length; i++) {
+              const label = labels[i];
+              if (label.id === labelStatus.labelId) {
+                newLabel = {
+                  id: label.id,
+                  name: label.name,
+                  priority: labelStatus.priority,
+                  visibled: labelStatus.visibled,
+                  createdAt: label.createdAt,
+                  updatedAt: label.updatedAt,
+                  sharedUsers: _getSharedUsers(label.id, requests, users),
+                };
               }
-            });
-            resolve(labels_);
+            }
+            return newLabel;
           });
+          resolve(labels_);
+        });
+      });
+    });
+  });
+}
+
+function _createLabel(userId, labelName, userNames = []) {
+  return new Promise((resolve, reject) => {
+    Promise.all([
+      User.findAll({
+        where: {username: userNames},
+      }),
+      Label.create({
+        userId,
+        name: labelName,
+      }),
+      LabelStatus.count({
+        where: {userId},
+      }),
+    ]).then(values => {
+      const users = values[0];
+      const label = values[1];
+      const count = values[2];
+
+      if (users.length !== userNames.length) {
+        reject(new Error('Include not existed user'));
+        return;
+      }
+
+      const requests = users.map(user => {
+        return {
+          userId,
+          sharedUserId: user.id,
+          labelId: label.id,
+          status: 'pending',
+        };
+      });
+
+      Promise.all([
+        LabelStatus.create({
+          userId,
+          labelId: label.id,
+          priority: count,
+          visibled: true,
+        }),
+        Request.bulkCreate(requests),
+      ]).then(() => {
+        const createdLabel = {
+          id: label.id,
+          name: label.name,
+          priority: count,
+          visibled: true,
+          createdAt: label.createdAt,
+          updatedAt: label.updatedAt,
+          sharedUsers: users.map(user => {
+            return {
+              id: user.id,
+              username: user.username,
+              requestStatus: 'pending',
+            };
+          }),
+        };
+        resolve(createdLabel);
+      });
+    });
+  });
+}
+
+function _fetchLabel(userId, labelId) {
+  return new Promise(resolve => {
+    Promise.all([
+      Label.findById(labelId),
+      LabelStatus.findOne({
+        where: {userId, labelId},
+      }),
+    ]).then(values => {
+      const label = values[0];
+      const labelStatus = values[1];
+
+      Request.findAll({
+        where: {labelId: label.id},
+      }).then(requests => {
+        const userIds = requests.map(request => request.sharedUserId).filter(sharedUserId => (sharedUserId !== userId));
+
+        User.findAll({
+          where: {id: userIds},
+        }).then(users => {
+          const newLabel = {
+            id: label.id,
+            name: label.name,
+            priority: labelStatus.priority,
+            visibled: labelStatus.visibled,
+            createdAt: labelStatus.createdAt,
+            updatedAt: labelStatus.updatedAt,
+            sharedUsers: _getSharedUsers(label.id, requests, users),
+          };
+          resolve(newLabel);
+        });
+      });
+    });
+  });
+}
+
+function _updateLabel(userId, labelId, newLabel = {}) {
+  return new Promise(resolve => {
+    Promise.all([
+      Label.findById(labelId),
+      LabelStatus.findOne({
+        where: {userId, labelId},
+      }),
+    ]).then(values => {
+      const label = values[0];
+      const labelStatus = values[1];
+
+      Promise.all([
+        label.update({name: newLabel.name || label.name}),
+        labelStatus.update({
+          priority: (newLabel.priority !== undefined && newLabel.priority !== labelStatus.priority) ? newLabel.priority : labelStatus.priority,
+          visibled: (newLabel.visibled !== undefined && newLabel.visibled !== labelStatus.visibled) ? newLabel.visibled : labelStatus.visibled,
+        }),
+      ]).then(() => {
+        _fetchLabel(userId, label.id).then(updatedLabel => {
+          resolve(updatedLabel);
+        });
+      });
+    });
+  });
+}
+
+function _destroyLabel(userId, labelId) {
+  return new Promise(resolve => {
+    Promise.all([
+      _fetchLabel(userId, labelId),
+      Label.findById(labelId),
+    ]).then(values => {
+      const destroyedLabel = values[0];
+      const label = values[1];
+
+      // Remove LabelStatus, Task, Request
+      Promise.all([
+        new Promise(resolve_ => {
+          LabelStatus.findAll({
+            where: {
+              labelId: label.id,
+            },
+          }).then(labelStatuses => {
+            let count = 0;
+
+            labelStatuses.forEach(labelStatus => {
+              LabelStatus.findAll({
+                where: {
+                  userId: labelStatus.userId,
+                  priority: {
+                    $gt: labelStatus.priority,
+                  },
+                },
+              }).then(labelStatuses => {
+                labelStatuses.forEach(labelStatus_ => {
+                  labelStatus_.update({priority: labelStatus_.priority - 1});
+                });
+              });
+              labelStatus.destroy().then(() => {
+                count += 1;
+                if (count === labelStatuses.length) {
+                  resolve_();
+                }
+              });
+            });
+          });
+        }),
+        Task.destroy({
+          where: {labelId: label.id},
+        }),
+        Request.destroy({
+          where: {labelId: label.id},
+        }),
+      ]).then(() => {
+        label.destroy().then(() => {
+          resolve(destroyedLabel);
         });
       });
     });
@@ -63,172 +247,38 @@ function fetchLabels(userId) {
 }
 
 function indexLabelHandler(req, res) {
-  fetchLabels(req.user.id).then(labels => {
+  _fetchLabels(req.user.id).then(labels => {
     res.json(labels);
   });
 }
 
+function showLabelHandler(req, res) {
+  _fetchLabel(req.user.id, req.params.id).then(label => {
+    res.json(label);
+  });
+}
+
 function createLabelHandler(req, res) {
-  const users = req.body.users || [];
-
-  User.findAll({
-    where: {
-      username: users,
-    },
-  }).then(users_ => {
-    if (users_.length === users.length) {
-      Label.create({
-        userId: req.user.id,
-        name: req.body.name,
-      }).then(label => {
-        LabelStatus.count({
-          where: {
-            userId: req.user.id,
-          },
-        }).then(count => {
-          LabelStatus.create({
-            userId: req.user.id,
-            labelId: label.id,
-            priority: count,
-            visibled: true,
-          });
-          const sharedUsers = users_.map(user => {
-            Request.create({
-              userId: req.user.id,
-              sharedUserId: user.id,
-              labelId: label.id,
-              status: 'pending',
-            });
-
-            return {
-              id: user.id,
-              username: user.username,
-              requestStatus: 'pending',
-            };
-          });
-          res.json({
-            id: label.id,
-            name: label.name,
-            priority: count,
-            visibled: true,
-            createdAt: label.createdAt,
-            updatedAt: label.updatedAt,
-            sharedUsers: sharedUsers,
-          });
-        });
-      });
-    } else {
-      res.status(400);
-    }
+  _createLabel(req.user.id, req.body.name, req.body.users).then(label => {
+    res.json(label);
+  }).catch(err => {
+    res.status(400).send(err.message);
   });
 }
 
 function updateLabelHandler(req, res) {
-  Label.findById(req.params.id).then(label => {
-    label.update({name: req.body.name || label.name}).then(() => {
-      LabelStatus.findOne({
-        where: {
-          userId: req.user.id,
-          labelId: label.id,
-        },
-      }).then(labelStatus => {
-        console.log(req.body);
-        labelStatus.update({
-          priority: (req.body.priority !== undefined && req.body.priority !== labelStatus.priority) ? req.body.priority : labelStatus.priority,
-          visibled: (req.body.visibled !== undefined && req.body.visibled !== labelStatus.visibled) ? req.body.visibled : labelStatus.visibled,
-        }).then(labelStatus_ => {
-          Request.findAll({
-            where: {
-              labelId: label.id,
-              status: 'accepted',
-            },
-          }).then(requests => {
-            const userIds = requests.map(request => request.sharedUserId);
-            User.findAll({
-              where: {
-                id: userIds,
-              },
-            }).then(users => {
-              const newLabel = {
-                id: label.id,
-                name: label.name,
-                priority: labelStatus_.priority,
-                visibled: labelStatus_.visibled,
-                createdAt: label.createdAt,
-                updatedAt: label.updatedAt,
-                sharedUsers: [],
-              };
-              for (let j = 0; j < requests.length; j++) {
-                const request = requests[j];
-                if (label.id === request.labelId) {
-                  for (let k = 0; k < users.length; k++) {
-                    const user = users[k];
-                    if (user.id === request.sharedUserId) {
-                      newLabel.sharedUsers.push({
-                        id: user.id,
-                        username: user.username,
-                        requestStatus: request.status,
-                      });
-                    }
-                  }
-                }
-              }
-              res.json(newLabel);
-            });
-          });
-        });
-      });
-    });
+  _updateLabel(req.user.id, req.params.id, {
+    name: req.body.name,
+    priority: req.body.priority,
+    visibled: req.body.visibled,
+  }).then(label => {
+    res.json(label);
   });
 }
 
 function destroyLabelHandler(req, res) {
-  Label.findById(req.params.id).then(label => {
-    LabelStatus.findAll({
-      where: {
-        labelId: label.id,
-      }
-    }).then(labelStatuses => {
-      labelStatuses.forEach(labelStatus => {
-        LabelStatus.findAll({
-          where: {
-            userId: labelStatus.userId,
-            priority: {
-              $gt: labelStatus.priority,
-            },
-          },
-        }).then(labelStatuses => {
-          labelStatuses.forEach(labelStatus_ => {
-            labelStatus_.update({priority: labelStatus_.priority - 1});
-          });
-        });
-        labelStatus.destroy();
-      });
-    });
-
-    Task.findAll({
-      where: {
-        labelId: label.id,
-      },
-    }).then(tasks => {
-      tasks.forEach(task => {
-        task.destroy();
-      });
-    });
-
-    Request.findAll({
-      where: {
-        labelId: label.id,
-      },
-    }).then(requests => {
-      requests.forEach(request => {
-        request.destroy();
-      });
-    });
-
-    label.destroy().then(destroyedLabel => {
-      res.json(destroyedLabel.id);
-    });
+  _destroyLabel(req.user.id, req.params.id).then(() => {
+    res.status(204).send();
   });
 }
 
@@ -255,7 +305,7 @@ function sortLabelHandler(req, res) {
           labelStatus_.update({priority: labelStatus_.priority - 1});
         });
         labelStatus.update({priority}).then(() => {
-          fetchLabels(req.user.id).then(labels => {
+          _fetchLabels(req.user.id).then(labels => {
             res.json(labels);
           });
         });
@@ -274,7 +324,7 @@ function sortLabelHandler(req, res) {
           labelStatus_.update({priority: labelStatus_.priority + 1});
         });
         labelStatus.update({priority}).then(() => {
-          fetchLabels(req.user.id).then(labels => {
+          _fetchLabels(req.user.id).then(labels => {
             res.json(labels);
           });
         });
@@ -284,7 +334,14 @@ function sortLabelHandler(req, res) {
 }
 
 module.exports = {
+  _getSharedUsers,
+  _fetchLabel,
+  _fetchLabels,
+  _createLabel,
+  _updateLabel,
+  _destroyLabel,
   indexLabelHandler,
+  showLabelHandler,
   createLabelHandler,
   updateLabelHandler,
   destroyLabelHandler,

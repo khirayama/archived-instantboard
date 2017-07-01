@@ -17,7 +17,7 @@
     - `/users`
       - `/current` GET: fetch current user
       - `/current` PUT: update current user
-      - `/?shared=true` GET: fetch shaed users
+      - `/?shared=true` GET: fetch shared users
     - `/tasks`
       - `/` GET: fetch tasks
       - `/` PUT: update tasks
@@ -27,11 +27,11 @@
       - `/:id` DELETE: delete task
     - `/labels`
       - `/` GET: fetch labels
-      - `/` PUT: update labels
       - `/` POST: create label
-      - `/:id` GET: fetch label
+      - `/:id` GET: show label
       - `/:id` PUT: update label
       - `/:id` DELETE: delete label
+      - `/:id/sort` PUT: sort label
     - `/requests`
       - `/` GET: fetch requests
       - `/` POST: create request

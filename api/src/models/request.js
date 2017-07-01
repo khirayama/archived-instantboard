@@ -34,5 +34,25 @@ module.exports = (sequelize, DataTypes) => {
     tableName: 'requests',
     timestamps: true,
     underscored: true,
+    instanceMethods: {
+      accept() {
+        return new Promise(resolve => {
+          this.update({status: 'accepted'}).then(() => {
+            const LabelStatus = sequelize.models.LabelStatus;
+            LabelStatus.count({
+              where: {userId: this.sharedUserId},
+            }).then(count => {
+              LabelStatus.create({
+                userId: this.sharedUserId,
+                labelId: this.labelId,
+                priority: count,
+                visibled: true,
+              });
+              resolve();
+            });
+          });
+        });
+      },
+    },
   });
 };

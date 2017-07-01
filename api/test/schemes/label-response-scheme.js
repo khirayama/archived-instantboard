@@ -39,10 +39,10 @@ const labelResponseSchema = {
       items: sharedUser,
     },
     createdAt: {
-      type: 'string',
+      type: ['string', 'object'],
     },
     updatedAt: {
-      type: 'string',
+      type: ['string', 'object'],
     },
   },
 };

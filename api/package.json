@@ -15,11 +15,12 @@
     "db:create": "mysql -u root < migrations/db.sql",
     "db:migrate": "sequelize db:migrate --config migrations/config.js --migrations-path migrations/files",
     "migration:create": "sequelize migration:create --config migrations/config.js --name",
-    "lint": "eslint --ignore-path ../.gitignore src",
-    "lint:fix": "eslint --ignore-path ../.gitignore --fix src",
+    "lint": "eslint --ignore-path ../.gitignore src test",
+    "lint:fix": "eslint --ignore-path ../.gitignore --fix src test",
     "check": "npm-check-updates",
-    "test": "NODE_ENV=test ava",
-    "test:watch": "NODE_ENV=test ava -w"
+    "test": "NODE_ENV=test ava test/**/*.test.js !test/e2e/**/*.test.js",
+    "test:watch": "NODE_ENV=test ava -w test/**/*.test.js !test/e2e/**/*.test.js",
+    "test:e2e": "NODE_ENV=test ava test/e2e/**/*.test.js"
   },
   "dependencies": {
     "body-parser": "^1.17.1",

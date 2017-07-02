@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define('LabelStatus', {
+  const LabelStatus = sequelize.define('LabelStatus', {
     userId: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -34,4 +34,6 @@ module.exports = (sequelize, DataTypes) => {
     timestamps: true,
     underscored: true,
   });
+
+  return LabelStatus;
 };

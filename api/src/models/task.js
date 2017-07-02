@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define('Task', {
+  const Task = sequelize.define('Task', {
     userId: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -38,4 +38,6 @@ module.exports = (sequelize, DataTypes) => {
     timestamps: true,
     underscored: true,
   });
+
+  return Task;
 };

@@ -1,15 +1,15 @@
 /* eslint new-cap: 0 */
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define('Request', {
+  const Request = sequelize.define('Request', {
     userId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       field: 'user_id',
     },
-    sharedUserId: {
+    memberId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      field: 'shared_user_id',
+      field: 'member_id',
     },
     labelId: {
       type: DataTypes.INTEGER,
@@ -41,10 +41,10 @@ module.exports = (sequelize, DataTypes) => {
           this.update({status: 'accepted'}).then(() => {
             const LabelStatus = sequelize.models.LabelStatus;
             LabelStatus.count({
-              where: {userId: this.sharedUserId},
+              where: {userId: this.memberId},
             }).then(count => {
               LabelStatus.create({
-                userId: this.sharedUserId,
+                userId: this.memberId,
                 labelId: this.labelId,
                 priority: count,
                 visibled: true,
@@ -56,4 +56,6 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
   });
+
+  return Request;
 };

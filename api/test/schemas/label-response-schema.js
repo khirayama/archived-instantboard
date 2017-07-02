@@ -1,4 +1,4 @@
-const sharedUser = {
+const memberSchema = {
   type: 'object',
   required: ['id', 'username', 'requestStatus'],
   properties: {
@@ -20,7 +20,7 @@ const labelResponseSchema = {
     'id',
     'priority',
     'visibled',
-    'sharedUsers',
+    'members',
     'createdAt',
     'updatedAt',
   ],
@@ -34,9 +34,9 @@ const labelResponseSchema = {
     visibled: {
       type: 'boolean',
     },
-    sharedUsers: {
+    members: {
       type: 'array',
-      items: sharedUser,
+      items: memberSchema,
     },
     createdAt: {
       type: ['string', 'object'],

@@ -38,7 +38,7 @@
 - Button:createLabel
 - Form:Label
   - Input:searchUser
-    - focus:sharedUserHistroy
+    - focus:memberHistroy
   - Input:Label.name
 
 ### Profile

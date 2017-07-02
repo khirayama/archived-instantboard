@@ -1,20 +1,22 @@
 const http = require('http');
 const express = require('express');
 const bodyParser = require('body-parser');
-const jwt = require('jwt-simple');
-
-const {SECRET_KEY} = require('./constants');
 
 const {User} = require('./models');
 
 const {
-  fetchCurrentUserHandler,
-  updateCurrentUserHandler,
-} = require('./handlers/user-handlers');
+  extractAccessTokenFromHeader,
+  checkAccessToken,
+} = require('./utils');
 
 const {
   createTokenHandler,
 } = require('./handlers/token-handlers');
+
+const {
+  showCurrentUserHandler,
+  updateCurrentUserHandler,
+} = require('./handlers/user-handlers');
 
 const {
   indexTaskHandler,
@@ -46,28 +48,6 @@ const server = http.createServer(app);
 const port = process.env.PORT || 3000;
 const host = process.env.HOST || '127.0.0.1';
 
-function extractAccessTokenFromHeader(authorizationString = '') {
-  return authorizationString.replace(/^Bearer/, '').trim();
-}
-
-function checkAccessToken(accessToken) {
-  try {
-    if (!accessToken) {
-      return null;
-    }
-    const payload = jwt.decode(accessToken, SECRET_KEY);
-    const now = new Date().getTime();
-
-    if (!payload || payload.exp < now) {
-      return null;
-    }
-
-    return payload;
-  } catch (err) {
-    return null;
-  }
-}
-
 function requireAuthorization(req, res, next) {
   const accessToken = extractAccessTokenFromHeader(req.headers.authorization);
   const payload = checkAccessToken(accessToken);
@@ -98,7 +78,7 @@ router.use('/api', new express.Router()
       .post('/', createTokenHandler)
     )
     .use('/users', new express.Router()
-      .get('/current', [requireAuthorization], fetchCurrentUserHandler)
+      .get('/current', [requireAuthorization], showCurrentUserHandler)
       .put('/current', [requireAuthorization], updateCurrentUserHandler)
     )
     .use('/tasks', new express.Router()

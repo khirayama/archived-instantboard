@@ -1,26 +1,14 @@
+const {errorMessages} = require('../constants');
 const {User} = require('../models');
 
-function _updateCurrentUser(userId, username) {
-  return new Promise((resolve, reject) => {
-    User.findById(userId).then(user => {
-      user.update({username}).then(() => {
-        resolve();
-      }).catch(err => {
-        if (err.errors[0].message === 'username must be unique') {
-          reject(new Error('Already existed'));
-        }
-      });
-    }).catch(() => {
-      reject(new Error('Invalid access token'));
-    });
-  });
-}
-
-function fetchCurrentUserHandler(req, res) {
+function showCurrentUserHandler(req, res) {
   const user = req.user || null;
 
   if (user === null) {
-    res.status(401).send('Need to set access token to header.Authorization as Bearer');
+    res.status(401).json({
+      message: errorMessages.NO_ACCESS_TOKEN,
+    });
+    return;
   }
   res.json(req.user);
 }
@@ -29,14 +17,25 @@ function updateCurrentUserHandler(req, res) {
   const user = req.user || null;
   const username = req.body.username;
 
-  _updateCurrentUser(user.id, username).then(() => {
-    res.status(200).send();
+  User.update({username}, {
+    where: {id: user.id},
+    individualHooks: true,
+  }).spread((count, users) => {
+    const user_ = users[0].dataValues;
+    res.status(200).json(user_);
   }).catch(err => {
-    res.status(400).send(err.message);
+    let code = 500;
+    let message = errorMessages.UNKNOWN_ERROR;
+
+    if (err.errors && err.errors[0].message === 'username must be unique') {
+      code = 400;
+      message = errorMessages.ALREADY_EXISTED_USER;
+    }
+    res.status(code).json({message});
   });
 }
 
 module.exports = {
-  fetchCurrentUserHandler,
+  showCurrentUserHandler,
   updateCurrentUserHandler,
 };

@@ -61,6 +61,7 @@ test.cb('updateCurrentUserHandler > set username without error', t => {
   }).then(user => {
     req.user = user.dataValues;
     req.body.username = `test user ${uuid()}`;
+
     updateCurrentUserHandler(req, res);
   });
 });
@@ -88,6 +89,7 @@ test.cb('updateCurrentUserHandler > set username with error', t => {
   }).then(users => {
     req.user = users[1].dataValues;
     req.body.username = `test user ${uid}`;
+
     updateCurrentUserHandler(req, res);
   });
 });

@@ -1,4 +1,4 @@
-const memberSchema = {
+const memberResponseSchema = {
   type: 'object',
   required: ['id', 'username', 'requestStatus'],
   properties: {
@@ -36,7 +36,7 @@ const labelResponseSchema = {
     },
     members: {
       type: 'array',
-      items: memberSchema,
+      items: memberResponseSchema,
     },
     createdAt: {
       type: ['string', 'object'],
@@ -46,4 +46,14 @@ const labelResponseSchema = {
     },
   },
 };
-module.exports = labelResponseSchema;
+
+const labelsResponseSchema = {
+  type: 'array',
+  items: labelResponseSchema,
+};
+
+module.exports = {
+  memberResponseSchema,
+  labelResponseSchema,
+  labelsResponseSchema,
+};

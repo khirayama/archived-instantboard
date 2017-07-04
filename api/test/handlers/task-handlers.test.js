@@ -7,7 +7,7 @@ const uuid = require('uuid/v4');
 const {createRequest, createResponse} = require('../mock');
 
 // Src modules
-const {User, Label, LabelStatus, Task, Request} = require('../../src/models');
+const {User, Label, LabelStatus, Task} = require('../../src/models');
 const {taskResponseSchema, tasksResponseSchema} = require('../schemas/task-response-schema');
 const {
   indexTaskHandler,
@@ -37,7 +37,7 @@ test.cb('indexTaskHandler > work single task without error', t => {
           userId: user.id,
           labelId: label.id,
           content: 'Test Task',
-        }).then(task => {
+        }).then(() => {
           resolve(user);
         });
       });
@@ -72,12 +72,12 @@ test.cb('indexTaskHandler > work multi tasks without error', t => {
           userId: user.id,
           labelId: label.id,
           content: 'Test Task',
-        }).then(task => {
+        }).then(() => {
           Task.createWithPriority({
             userId: user.id,
             labelId: label.id,
             content: 'Test Task',
-          }).then(task => {
+          }).then(() => {
             resolve(user);
           });
         });
@@ -125,12 +125,12 @@ test.cb('indexTaskHandler > work multi tasks without error', t => {
               userId: user.id,
               labelId: label.id,
               content: 'Test Task',
-            }).then(task => {
+            }).then(() => {
               Task.createWithPriority({
                 userId: user.id,
                 labelId: label.id,
                 content: 'Test Task',
-              }).then(task => {
+              }).then(() => {
                 resolve(user);
               });
             });
@@ -393,13 +393,12 @@ test.cb('updateTaskHandler > work without error', t => {
     t.true(task.completed);
     t.true(ajv.validate(taskResponseSchema, task));
 
-    // TODO: split
     Label.findAllFromStatus({
       where: {userId: task.userId},
     }).then(labels => {
       const labelIds = labels.map(label => label.id);
       Task.findAll({
-        where: {labelId: labelIds}
+        where: {labelId: labelIds},
       }).then(tasks => {
         const labelTasks = tasks.filter(task_ => task_.labelId !== task.labelId);
         const label2Tasks = tasks.filter(task_ => task_.labelId === task.labelId);
@@ -489,7 +488,7 @@ test.cb('destroyTaskHandler > work without error', t => {
     }).then(labels => {
       const labelIds = labels.map(label => label.id);
       Task.findAll({
-        where: {labelId: labelIds}
+        where: {labelId: labelIds},
       }).then(tasks => {
         t.is(tasks.length, 1);
         t.is(tasks[0].priority, 0);

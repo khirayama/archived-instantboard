@@ -198,6 +198,18 @@ module.exports = (sequelize, DataTypes) => {
 
     return new Promise(resolve => {
       Label.findByIdAndUser(labelId, userId).then(cachedLabel => {
+        LabelStatus.findAll({
+          where: {
+            userId,
+            priority: {
+              $gt: cachedLabel.priority,
+            },
+          },
+        }).then(labelStatuses => {
+          labelStatuses.forEach(labelStatus => {
+            labelStatus.update({priority: labelStatus.priority - 1});
+          });
+        });
         LabelStatus.destroy({
           where: {labelId, userId},
         }).then(() => {

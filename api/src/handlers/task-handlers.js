@@ -1,13 +1,18 @@
-const {Task} = require('../models');
+const {Label, Task} = require('../models');
 
 function indexTaskHandler(req, res) {
   const userId = req.user.id;
 
-  Task.findAll({
+  Label.findAllFromStatus({
     where: {userId},
-    order: [['labelId', 'ASC'], ['priority', 'ASC']],
-  }).then(tasks => {
-    res.json(tasks);
+  }).then(labels => {
+    const labelIds = labels.map(label => label.id);
+    Task.findAll({
+      where: {labelId: labelIds},
+      order: [['priority', 'ASC']],
+    }).then(tasks => {
+      res.json(tasks);
+    });
   });
 }
 
@@ -16,22 +21,16 @@ function createTaskHandler(req, res) {
   const labelId = req.body.labelId;
   const content = req.body.content;
 
-  Task.count({
-    where: {userId, labelId},
-  }).then(count => {
-    Task.create({
-      userId,
-      labelId,
-      content,
-      priority: count,
-      completed: false,
-    }).then(task => {
-      res.json(task);
-    });
+  Task.createWithPriority({
+    userId,
+    labelId,
+    content,
+  }).then(task => {
+    res.json(task);
   });
 }
 
-function showTaskHandler() {
+function showTaskHandler(req, res) {
   const taskId = req.params.id;
 
   Task.findById(taskId).then(task => {
@@ -40,17 +39,51 @@ function showTaskHandler() {
 }
 
 function updateTaskHandler(req, res) {
+  const userId = req.user.id;
   const taskId = req.params.id;
+  const labelId = req.body.labelId;
+  const content = req.body.content;
+  const completed = req.body.completed;
 
   Task.findById(taskId).then(task => {
-    // TODO: Change labelId
-    task.update({
-      labelId: req.body.labelId,
-      content: req.body.content,
-      completed: req.body.completed,
-    }).then(() => {
-      res.json(task);
-    });
+    if (labelId && labelId !== task.labelId) {
+      Promise.all([
+        Task.count({
+          where: {userId, labelId},
+        }),
+        Task.findAll({
+          where: {
+            userId,
+            labelId: task.labelId,
+            priority: {
+              $gt: task.priority,
+            },
+          },
+        }),
+      ]).then(values => {
+        const count = values[0];
+        const tasks = values[1];
+
+        tasks.forEach(task_ => {
+          task_.update({priority: task_.priority - 1});
+        });
+
+        task.update({
+          content,
+          completed,
+          priority: count,
+        }).then(() => {
+          res.json(task);
+        });
+      });
+    } else {
+      task.update({
+        content: (content === undefined) ? task.content : content,
+        completed: (completed === undefined) ? task.completed : completed,
+      }).then(() => {
+        res.json(task);
+      });
+    }
   });
 }
 
@@ -102,8 +135,8 @@ function sortTaskHandler(req, res) {
           Task.findAll({
             where: {userId},
             order: [['priority', 'ASC']],
-          }).then(taks_ => {
-            res.json(task_);
+          }).then(tasks_ => {
+            res.json(tasks_);
           });
         });
       });
@@ -121,7 +154,7 @@ function sortTaskHandler(req, res) {
           task_.update({priority: task_.priority + 1});
         });
         task.update({priority}).then(() => {
-          Task.findAllFromStatus({
+          Task.findAll({
             where: {userId},
             order: [['priority', 'ASC']],
           }).then(tasks_ => {

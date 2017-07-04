@@ -1,56 +1,70 @@
 const {Label} = require('../models');
 
 function indexLabelHandler(req, res) {
+  const userId = req.user.id;
+
   Label.findAllFromStatus({
-    where: {userId: req.user.id},
+    where: {userId},
     order: [['priority', 'ASC']],
   }).then(labels => {
     res.json(labels);
   });
 }
 
-function showLabelHandler(req, res) {
-  Label.findByIdAndUser(req.params.id, req.user.id).then(label => {
-    res.json(label);
-  });
-}
-
 function createLabelHandler(req, res) {
-  Label.createWithStatus({
-    userId: req.user.id,
-    name: req.body.name,
-  }).then(label => {
+  const userId = req.user.id;
+  const name = req.body.name;
+
+  Label.createWithStatus({userId, name}).then(label => {
     res.json(label);
   }).catch(err => {
     res.status(400).send(err.message);
   });
 }
 
+function showLabelHandler(req, res) {
+  const userId = req.user.id;
+  const labelId = req.params.id;
+
+  Label.findByIdAndUser(labelId, userId).then(label => {
+    res.json(label);
+  });
+}
+
 function updateLabelHandler(req, res) {
-  Label.updateWithStatus(req.params.id, req.user.id, {
-    name: req.body.name,
-    visibled: req.body.visibled,
-  }).then(label => {
+  const userId = req.user.id;
+  const labelId = req.params.id;
+  const name = req.body.name;
+  const visibled = req.body.visibled;
+
+  Label.updateWithStatus(labelId, userId, {name, visibled}).then(label => {
     res.json(label);
   });
 }
 
 function destroyLabelHandler(req, res) {
-  Label.destroyByUser(req.params.id, req.user.id).then(label => {
+  const userId = req.user.id;
+  const labelId = req.params.id;
+
+  Label.destroyByUser(labelId, userId).then(label => {
     res.status(204).json(label);
   });
 }
 
 function sortLabelHandler(req, res) {
-  Label.sort(req.params.id, req.user.id, req.body.priority).then(labels => {
+  const userId = req.user.id;
+  const labelId = req.params.id;
+  const priority = req.body.priority;
+
+  Label.sort(labelId, userId, priority).then(labels => {
     res.json(labels);
   });
 }
 
 module.exports = {
   indexLabelHandler,
-  showLabelHandler,
   createLabelHandler,
+  showLabelHandler,
   updateLabelHandler,
   destroyLabelHandler,
   sortLabelHandler,

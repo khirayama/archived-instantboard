@@ -20,16 +20,17 @@ const {
 
 const {
   indexTaskHandler,
-  updateTasksHandler,
   createTaskHandler,
+  showTaskHandler,
   updateTaskHandler,
   destroyTaskHandler,
+  sortTaskHandler,
 } = require('./handlers/task-handlers');
 
 const {
   indexLabelHandler,
-  showLabelHandler,
   createLabelHandler,
+  showLabelHandler,
   updateLabelHandler,
   destroyLabelHandler,
   sortLabelHandler,
@@ -83,10 +84,11 @@ router.use('/api', new express.Router()
     )
     .use('/tasks', new express.Router()
       .get('/', [requireAuthorization], indexTaskHandler)
-      .put('/', [requireAuthorization], updateTasksHandler)
       .post('/', [requireAuthorization], createTaskHandler)
+      .get('/:id', [requireAuthorization], showTaskHandler)
       .put('/:id', [requireAuthorization], updateTaskHandler)
       .delete('/:id', [requireAuthorization], destroyTaskHandler)
+      .put('/:id/sort', [requireAuthorization], sortTaskHandler)
     )
     .use('/labels', new express.Router()
       .get('/', [requireAuthorization], indexLabelHandler)

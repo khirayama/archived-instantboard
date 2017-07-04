@@ -39,5 +39,26 @@ module.exports = (sequelize, DataTypes) => {
     underscored: true,
   });
 
+  Task.createWithPriority = function(values) {
+    return new Promise(resolve => {
+      Task.count({
+        where: {
+          userId: values.userId,
+          labelId: values.labelId,
+        },
+      }).then(count => {
+        Task.create({
+          userId: values.userId,
+          labelId: values.labelId,
+          content: values.content,
+          priority: count,
+          completed: false,
+        }).then(task => {
+          resolve(task);
+        });
+      });
+    });
+  };
+
   return Task;
 };

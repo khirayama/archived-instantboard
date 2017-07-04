@@ -139,9 +139,9 @@ module.exports = (sequelize, DataTypes) => {
   };
 
   Label.createWithStatus = function (values) {
+    // Property: userId, name
     const LabelStatus = sequelize.models.LabelStatus;
 
-    // UserId, name
     return new Promise(resolve => {
       Promise.all([
         Label.create({

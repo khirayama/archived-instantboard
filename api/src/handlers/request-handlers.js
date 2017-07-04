@@ -1,4 +1,4 @@
-const {Request} = require('../models');
+const {Request, User} = require('../models');
 
 function indexRequestHandler(req, res) {
   Request.findAll({
@@ -10,33 +10,60 @@ function indexRequestHandler(req, res) {
 }
 
 function createRequestHandler(req, res) {
-  Request.create({
-    userId: req.user.id,
-    memberId: req.body.memberId,
-    labelId: req.body.labelId,
-  }).then(request => {
-    res.json(request);
+  const userId = req.user.id;
+  const labelId = req.body.labelId;
+  const memberNames = req.body.memberNames || [];
+
+  User.findAll({
+    username: memberNames,
+  }).then(users => {
+    const requests = users.map(user => {
+      return {
+        userId,
+        labelId,
+        memberId: user.id,
+      };
+    });
+    Request.bulkCreate(requests).then(requests => {
+      res.json(requests);
+    });
   });
 }
 
 function updateRequestHandler(req, res) {
-  Request.findById(req.params.id).then(request => {
-    if (request.body.status !== req.body.status) {
-      request.update({
-        status: req.body.status,
-      }).then(() => {
+  const requestId = req.params.id;
+  const status = req.body.status;
+
+  switch (status) {
+    case 'accepted': {
+      Request.accept({
+        where: {id: requestId},
+      }).then(request => {
         res.json(request);
       });
+      break;
     }
-    res.json(request);
-  });
+    case 'refused': {
+      Request.destroy({
+        where: {id: requestId},
+      }).then(request => {
+        res.json(request);
+      });
+      break;
+    }
+    default: {
+      res.json();
+    }
+  }
 }
 
 function destroyRequestHandler(req, res) {
-  Request.findById(req.params.id).then(request => {
-    request.destroy().then(destroyedRequest => {
-      res.json(destroyedRequest);
-    });
+  const requestId = req.params.id;
+
+  Request.destroy({
+    where: {id: requestId},
+  }).then(request => {
+    res.json(request);
   });
 }
 

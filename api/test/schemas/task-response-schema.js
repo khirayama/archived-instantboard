@@ -33,4 +33,13 @@ const taskResponseSchema = {
     },
   },
 };
-module.exports = taskResponseSchema;
+
+const tasksResponseSchema = {
+  type: 'array',
+  items: taskResponseSchema,
+};
+
+module.exports = {
+  taskResponseSchema,
+  tasksResponseSchema,
+};

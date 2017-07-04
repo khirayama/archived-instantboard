@@ -229,6 +229,54 @@ test.cb('destroyLabelHandler > work without error', t => {
   });
 });
 
+test.cb('destroyLabelHandler > work multi labels without error', t => {
+  const req = createRequest();
+  const res = createResponse();
+
+  res.on(label => {
+    t.true(ajv.validate(labelResponseSchema, label));
+
+    Label.findAllFromStatus({
+      where: {userId: req.user.id},
+    }).then(labels => {
+      t.true(ajv.validate(labelsResponseSchema, labels));
+      t.is(labels.length, 2);
+      t.is(labels[0].priority, 0);
+      t.is(labels[1].priority, 1);
+      t.end();
+    });
+  });
+
+  new Promise(resolve => {
+    User.create({
+      uid: uuid(),
+      provider: 'facebook',
+    }).then(user => {
+      Label.createWithStatus({
+        userId: user.id,
+        name: 'Test Label',
+      }).then(() => {
+        Label.createWithStatus({
+          userId: user.id,
+          name: 'Test Label',
+        }).then(label => {
+          Label.createWithStatus({
+            userId: user.id,
+            name: 'Test Label',
+          }).then(() => {
+            resolve({user, label});
+          });
+        });
+      });
+    });
+  }).then(({user, label}) => {
+    req.user = user;
+    req.params.id = label.id;
+
+    destroyLabelHandler(req, res);
+  });
+});
+
 test.cb('sortLabelHandler > work without error', t => {
   const req = createRequest();
   const res = createResponse();

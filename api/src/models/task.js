@@ -39,7 +39,7 @@ module.exports = (sequelize, DataTypes) => {
     underscored: true,
   });
 
-  Task.createWithPriority = function(values) {
+  Task.createWithPriority = function (values) {
     return new Promise(resolve => {
       Task.count({
         where: {

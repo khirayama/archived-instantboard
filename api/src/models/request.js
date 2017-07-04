@@ -35,27 +35,29 @@ module.exports = (sequelize, DataTypes) => {
     tableName: 'requests',
     timestamps: true,
     underscored: true,
-    instanceMethods: {
-      accept() {
-        return new Promise(resolve => {
-          this.update({status: 'accepted'}).then(() => {
-            const LabelStatus = sequelize.models.LabelStatus;
-            LabelStatus.count({
-              where: {userId: this.memberId},
-            }).then(count => {
-              LabelStatus.create({
-                userId: this.memberId,
-                labelId: this.labelId,
-                priority: count,
-                visibled: true,
-              });
-              resolve();
-            });
-          });
-        });
-      },
-    },
   });
+
+  Request.accept = function (options) {
+    const LabelStatus = sequelize.models.LabelStatus;
+
+    return new Promise(resolve => {
+      Request.update({
+        status: 'accepted',
+      }, options).then(request => {
+        LabelStatus.count({
+          where: {userId: request.memberId},
+        }).then(count => {
+          LabelStatus.create({
+            userId: request.memberId,
+            labelId: request.labelId,
+            priority: count,
+            visibled: true,
+          });
+          resolve();
+        });
+      });
+    });
+  };
 
   return Request;
 };

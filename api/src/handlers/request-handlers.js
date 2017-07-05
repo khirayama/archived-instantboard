@@ -43,16 +43,14 @@ function updateRequestHandler(req, res) {
       });
       break;
     }
-    case 'refused': {
-      Request.destroy({
-        where: {id: requestId},
+    default: {
+      Request.update({status}, {
+        where: {id: requestId}
       }).then(request => {
         res.json(request);
       });
-      break;
-    }
-    default: {
       res.json();
+      break;
     }
   }
 }

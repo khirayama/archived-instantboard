@@ -176,16 +176,19 @@ module.exports = (sequelize, DataTypes) => {
 
     return new Promise(resolve => {
       Promise.all([
-        Label.update({
-          name: values.name,
-        }, {where: {id: labelId}}),
-        LabelStatus.update({
-          // Priority: values.priority,
-          visibled: values.visibled,
-        }, {where: {userId, labelId}}),
-      ]).then(() => {
-        Label.findByIdAndUser(labelId, userId).then(label => {
-          resolve(label);
+        Label.findById(labelId),
+        LabelStatus.findOne({where: {userId, labelId}}),
+      ]).then(values_ => {
+        const label = values_[0];
+        const labelStatus = values_[1];
+
+        Promise.all([
+          label.update({name: values.name || label.name}),
+          labelStatus.update({visibled: values.visibled}),
+        ]).then(() => {
+          Label.findByIdAndUser(labelId, userId).then(label => {
+            resolve(label);
+          });
         });
       });
     });

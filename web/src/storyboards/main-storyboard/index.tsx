@@ -8,6 +8,9 @@ import {
   updateLabel,
   deleteLabel,
   sortLabel,
+  updateTask,
+  deleteTask,
+  sortTask,
 } from '../../action-creators';
 
 let sort = {
@@ -43,7 +46,7 @@ class LabelListItem extends React.Component<any, any> {
       >
         <span>{label.priority} {label.name}</span>
         <span onClick={() => this.handleClickDeleteButton()}>[DELETE]</span>
-        <span onClick={() => this.handleClickVisibleButton()}>[{(label.visibled) ? 'UNVISIBLE' : 'VISIBLE'}]</span>
+        <span onClick={() => this.handleClickVisibleButton()}>[{(label.visibled) ? ' to UNVISIBLE' : 'to VISIBLE'}]</span>
       </li>
     );
   }
@@ -55,6 +58,52 @@ class LabelList extends React.Component<any, any> {
       <ul>
         {this.props.labels.map((label: any) => {
           return <LabelListItem key={label.id} label={label} actions={this.props.actions}/>
+        })}
+      </ul>
+    );
+  }
+}
+
+class TaskListItem extends React.Component<any, any> {
+  public handleClickCompleteButton() {
+    const task = this.props.task;
+    this.props.actions.updateTask(task.id, {completed: !task.completed});
+  }
+
+  public handleClickDeleteButton() {
+    const task = this.props.task;
+    this.props.actions.deleteTask(task.id);
+  }
+
+  public handleDragEnd() {
+    this.props.actions.sortTask(sort.id, sort.to);
+    sort.id = null;
+    sort.to = null;
+  }
+
+  public render() {
+    const task = this.props.task;
+    return (
+      <li
+        draggable
+        onDragStart={() => sort.id = task.id}
+        onDragEnter={() => sort.to = task.priority}
+        onDragEnd={() => this.handleDragEnd()}
+      >
+        <span>{task.priority} {task.content}</span>
+        <span onClick={() => this.handleClickDeleteButton()}>[DELETE]</span>
+        <span onClick={() => this.handleClickCompleteButton()}>[{(task.completed) ? 'to COMPLETE' : 'to UNCOMPLETE'}]</span>
+      </li>
+    );
+  }
+}
+
+class TaskList extends React.Component<any, any> {
+  public render() {
+    return (
+      <ul>
+        {this.props.tasks.map((task: any) => {
+          return <TaskListItem key={task.id} task={task} actions={this.props.actions}/>
         })}
       </ul>
     );
@@ -79,18 +128,39 @@ export default class MainStoryboard extends Container<any, any> {
     sortLabel(dispatch, labelId, to, {accessToken: this.accessToken});
   }
 
+  public updateTask(taskId: number, task: any) {
+    const dispatch = this.props.store.dispatch.bind(this.props.store);
+    updateTask(dispatch, taskId, task, {accessToken: this.accessToken});
+  }
+
+  public deleteTask(taskId: number) {
+    const dispatch = this.props.store.dispatch.bind(this.props.store);
+    deleteTask(dispatch, taskId, {accessToken: this.accessToken});
+  }
+
+  public sortTask(taskId: number, to: number) {
+    const dispatch = this.props.store.dispatch.bind(this.props.store);
+    sortTask(dispatch, taskId, to, {accessToken: this.accessToken});
+  }
+
   public render() {
     const actions = {
       updateLabel: this.updateLabel.bind(this),
       deleteLabel: this.deleteLabel.bind(this),
       sortLabel: this.sortLabel.bind(this),
+      updateTask: this.updateTask.bind(this),
+      deleteTask: this.deleteTask.bind(this),
+      sortTask: this.sortTask.bind(this),
     };
     return (
       <section className="storyboard">
         <h1>MainStoryboard</h1>
         <div>
           <ul>
-            {this.state.tasks.map((task: any, index: number) => <li key={index}>{task.content}</li>)}
+            <TaskList
+              tasks={this.state.tasks}
+              actions={actions}
+            />
           </ul>
           <Link href="/tasks/new">New Tasks</Link>
         </div>

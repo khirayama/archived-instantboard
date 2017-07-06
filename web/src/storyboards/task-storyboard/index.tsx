@@ -14,7 +14,7 @@ export default class TaskStoryboard extends Container<any, any> {
 
     this.state = Object.assign({}, this.state, {
       content: '',
-      labelId: null,
+      labelId: (this.state.labels[0] || {}).id,
     });
   }
 

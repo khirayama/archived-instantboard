@@ -118,6 +118,56 @@ export function createTask(
   });
 }
 
+export function updateTask(
+  dispatch: (action: any) => void,
+  id: number,
+  params: {completed: boolean; },
+  options: any,
+) {
+  return new Promise((resolve, reject) => {
+    Task.update(id, params, options).then((task: any) => {
+      const action = {
+        type: '__UPDATE_TASK',
+        task,
+      };
+      dispatch(action);
+    });
+  });
+}
+
+export function deleteTask(
+  dispatch: (action: any) => void,
+  id: number,
+  options: any,
+) {
+  return new Promise((resolve, reject) => {
+    Task.delete(id, options).then((task: any) => {
+      const action = {
+        type: '__DELETE_TASK',
+        taskId: task.id,
+      };
+      dispatch(action);
+    });
+  });
+}
+
+export function sortTask(
+  dispatch: (action: any) => void,
+  id: number,
+  to: number,
+  options: any,
+) {
+  return new Promise((resolve, reject) => {
+    Task.sort(id, to, options).then(tasks => {
+      const action = {
+        type: '__SORT_TASK',
+        tasks,
+      };
+      dispatch(action);
+    });
+  });
+}
+
 // Label
 export function createLabel(
   dispatch: (action: any) => void,
@@ -158,10 +208,10 @@ export function deleteLabel(
   options: any,
 ) {
   return new Promise((resolve, reject) => {
-    Label.delete(id, options).then(labelId => {
+    Label.delete(id, options).then((label: any) => {
       const action = {
         type: '__DELETE_LABEL',
-        labelId,
+        labelId: label.id,
       };
       dispatch(action);
     });

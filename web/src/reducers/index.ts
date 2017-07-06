@@ -29,9 +29,42 @@ const reducer = (state: IState, action: any) => {
         newState.user = action.user;
         break;
       }
+      // Tasks
+      case '__CREATE_TASK': {
+        newState.tasks.push(action.task);
+        break;
+      }
+      case '__UPDATE_TASK': {
+        newState.tasks = state.tasks.map(task => {
+          if (task.id === action.task.id) {
+            return action.task;
+          }
+          return task;
+        });
+        break;
+      }
+      case '__DELETE_TASK': {
+        newState.tasks = state.tasks.filter(task => {
+          return (task.id !== action.taskId);
+        });
+        break;
+      }
+      case '__SORT_TASK': {
+        newState.tasks = action.tasks;
+        break;
+      }
       // Labels
       case '__CREATE_LABEL': {
         newState.labels.push(action.label);
+        break;
+      }
+      case '__UPDATE_LABEL': {
+        newState.labels = state.labels.map(label => {
+          if (label.id === action.label.id) {
+            return action.label;
+          }
+          return label;
+        });
         break;
       }
       case '__DELETE_LABEL': {

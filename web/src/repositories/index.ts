@@ -62,6 +62,33 @@ export const Task = {
       }).catch((err: any) => reject(err));
     });
   },
+  update: (id: number, params: {completed: boolean; }, options: IRequestOptions) => {
+    return new Promise((resolve, reject) => {
+      Task.req.put(`/${id}`, params, {
+        headers: {Authorization: `Bearer ${options.accessToken}`},
+      }).then((res: any) => {
+        resolve(res.data);
+      }).catch((err: any) => reject(err));
+    });
+  },
+  delete: (id: number, options: IRequestOptions) => {
+    return new Promise((resolve, reject) => {
+      Task.req.delete(`/${id}`, {
+        headers: {Authorization: `Bearer ${options.accessToken}`},
+      }).then((res: any) => {
+        resolve(res.data);
+      }).catch((err: any) => reject(err));
+    });
+  },
+  sort: (id: number, to: number, options: IRequestOptions) => {
+    return new Promise((resolve, reject) => {
+      Task.req.put(`/${id}/sort`, {priority: to}, {
+        headers: {Authorization: `Bearer ${options.accessToken}`},
+      }).then((res: any) => {
+        resolve(res.data);
+      }).catch((err: any) => reject(err));
+    });
+  },
 };
 
 // Label

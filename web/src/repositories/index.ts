@@ -44,10 +44,11 @@ export const Task = {
   req: axios.create({
     baseURL: 'http://localhost:3000/api/v1/tasks',
   }),
-  fetch: (options: IRequestOptions) => {
+  fetch: (params: any = {}, options: IRequestOptions) => {
     return new Promise((resolve, reject) => {
       Task.req.get('/', {
         headers: {Authorization: `Bearer ${options.accessToken}`},
+        params,
       }).then(({data}) => {
         resolve(data);
       }).catch((err: any) => reject(err));
@@ -96,10 +97,11 @@ export const Label = {
   req: axios.create({
     baseURL: 'http://localhost:3000/api/v1/labels',
   }),
-  fetch: (options: IRequestOptions) => {
+  fetch: (params: any = {}, options: IRequestOptions) => {
     return new Promise((resolve, reject) => {
       Label.req.get('/', {
         headers: {Authorization: `Bearer ${options.accessToken}`},
+        params,
       }).then(({data}) => {
         resolve(data);
       }).catch((err: any) => reject(err));
@@ -148,10 +150,11 @@ export const Request = {
   req: axios.create({
     baseURL: 'http://localhost:3000/api/v1/requests',
   }),
-  fetch: (options: IRequestOptions) => {
+  fetch: (params: any = {}, options: IRequestOptions) => {
     return new Promise((resolve, reject) => {
       Request.req.get('/', {
         headers: {Authorization: `Bearer ${options.accessToken}`},
+        params,
       }).then(({data}) => {
         resolve(data);
       }).catch((err: any) => reject(err));

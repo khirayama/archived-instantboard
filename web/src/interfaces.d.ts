@@ -12,4 +12,5 @@ interface IState {
   user: any;
   tasks: any[];
   labels: any[];
+  requests: any[];
 }

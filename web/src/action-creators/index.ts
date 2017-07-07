@@ -40,7 +40,7 @@ function mapRequest(request: any) {
   return {
     id: request.id,
     memberId: request.memberId,
-    memberId: request.labelId,
+    labelId: request.labelId,
     status: request.status,
     errors: [],
   };
@@ -50,9 +50,9 @@ export function fetchInitialData(dispatch: (action: any) => void, options: any) 
   return new Promise((resolve, reject) => {
     Promise.all([
       User.find(options),
-      Task.fetch(options),
-      Label.fetch(options),
-      Request.fetch(options),
+      Task.fetch({}, options),
+      Label.fetch({}, options),
+      Request.fetch({status: ['pending']}, options),
     ]).then((values) => {
       const user: any = values[0];
       const tasks: any = values[1];

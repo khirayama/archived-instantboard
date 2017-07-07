@@ -8,12 +8,15 @@ const reducer = (state: IState, action: any) => {
         newState.user = action.user;
         newState.tasks = action.tasks;
         newState.labels = action.labels;
+        newState.requests = action.requests;
         break;
       }
       case '__FAILURE_FETCH_INITIAL_DATA': {
         newState.isAuthenticated = action.isAuthenticated;
         newState.user = null;
         newState.tasks = [];
+        newState.labels = [];
+        newState.requests = [];
         break;
       }
       case '__CREATE_TOKEN': {

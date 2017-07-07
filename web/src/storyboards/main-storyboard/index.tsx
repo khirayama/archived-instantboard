@@ -152,13 +152,17 @@ export default class MainStoryboard extends Container<any, any> {
       deleteTask: this.deleteTask.bind(this),
       sortTask: this.sortTask.bind(this),
     };
+    const labels = this.state.labels;
+    const tasks = this.state.tasks;
+    const requests = this.state.requests;
+
     return (
       <section className="storyboard">
         <h1>MainStoryboard</h1>
         <div>
           <ul>
             <TaskList
-              tasks={this.state.tasks}
+              tasks={tasks}
               actions={actions}
             />
           </ul>
@@ -166,10 +170,13 @@ export default class MainStoryboard extends Container<any, any> {
         </div>
         <div>
           <LabelList
-            labels={this.state.labels}
+            labels={labels}
             actions={actions}
           />
           <Link href="/labels/new">New Labels</Link>
+        </div>
+        <div>
+          <ul>{requests.map((request: any) => <li>{request}</li>)}</ul>
         </div>
       </section>
     );

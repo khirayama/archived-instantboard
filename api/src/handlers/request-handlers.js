@@ -1,8 +1,13 @@
 const {Request, User} = require('../models');
 
 function indexRequestHandler(req, res) {
+  const status = req.query.status;
+
   Request.findAll({
-    where: {userId: req.user.id},
+    where: {
+      memberId: req.user.id,
+      status,
+    },
     order: [['createdAt', 'ASC']],
   }).then(requests => {
     res.json(requests);

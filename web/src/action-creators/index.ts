@@ -36,6 +36,16 @@ function mapLabel(label: any) {
   };
 }
 
+function mapRequest(request: any) {
+  return {
+    id: request.id,
+    memberId: request.memberId,
+    memberId: request.labelId,
+    status: request.status,
+    errors: [],
+  };
+}
+
 export function fetchInitialData(dispatch: (action: any) => void, options: any) {
   return new Promise((resolve, reject) => {
     Promise.all([
@@ -55,6 +65,7 @@ export function fetchInitialData(dispatch: (action: any) => void, options: any) 
         user: mapUser(user),
         tasks: tasks.map((task: any) => mapTask(task)),
         labels: labels.map((label: any) => mapLabel(label)),
+        requests: requests.map((request: any) => mapRequest(request)),
       };
       dispatch(action);
       resolve();

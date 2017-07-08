@@ -38,8 +38,6 @@
 - Link:Member
 - Button:createLabel
 - Form:Label
-  - Input:searchUser
-    - focus:memberHistroy
   - Input:Label.name
 
 ### Member

@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import {Link} from '../../libs/web-storyboard/link';
 import {BackLink} from '../../libs/web-storyboard/back-link';
 
 import Container from '../container';
@@ -34,7 +35,12 @@ export default class LabelStoryboard extends Container<any, any> {
     return (
       <section className="storyboard">
         <h1>LabelStoryboard</h1>
-        <BackLink>Back</BackLink>
+        <div>
+          <BackLink>Back</BackLink>
+        </div>
+        <div>
+          <Link href="/labels/1/members">Choose member</Link>
+        </div>
         <div>
           <input onChange={(event) => this.handleChangeNameInput(event)}></input>
         </div>

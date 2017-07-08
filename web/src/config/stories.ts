@@ -1,6 +1,6 @@
 // [LoginStoryboard]-----(show)---[NewUserStoryboard]---(temporary)---[MainStoryboard]---(temporary)---[TaskStoryboard]
 //                    |                                                    |      |
-//                    ----------------------(temporary)---------------------      |---(temporary)---[LabelStoryboard]
+//                    ----------------------(temporary)---------------------      |---(temporary)---[LabelStoryboard]---(show)---[Memberstoryboard]
 
 import {segueTypes} from '../libs/web-storyboard/constants';
 
@@ -9,6 +9,7 @@ import LoginStoryboard from '../storyboards/login-storyboard';
 import MainStoryboard from '../storyboards/main-storyboard';
 import NewUserStoryboard from '../storyboards/new-user-storyboard';
 import TaskStoryboard from '../storyboards/task-storyboard';
+import MemberStoryboard from '../storyboards/member-storyboard';
 
 import {fetchInitialData} from '../action-creators';
 
@@ -18,6 +19,7 @@ const StoryboardKeys = {
   MainStoryboard: 'Main Storyboard',
   TaskStoryboard: 'Task Storyboard',
   LabelStoryboard: 'Label Storyboard',
+  MemberStoryboard: 'MemberStoryboard Storyboard',
 };
 
 export const segues = [{
@@ -40,6 +42,10 @@ export const segues = [{
   from: StoryboardKeys.MainStoryboard,
   to: StoryboardKeys.LabelStoryboard,
   type: segueTypes.temporary,
+}, {
+  from: StoryboardKeys.LabelStoryboard,
+  to: StoryboardKeys.MemberStoryboard,
+  type: segueTypes.show,
 }];
 
 export const storyboards = [{
@@ -134,5 +140,19 @@ export const storyboards = [{
       });
     },
     title: 'Edit label | Instantboard',
+  },
+}, {
+  key: StoryboardKeys.MemberStoryboard,
+  component: MemberStoryboard,
+  path: '/labels/:id/members',
+  options: {
+    initialize: (pramas: any, args: any, payload: any) => {
+      return new Promise((resolve) => {
+        fetchInitialData(payload.dispatch, {
+          accessToken: payload.accessToken,
+        }).then(resolve);
+      });
+    },
+    title: 'Member | Instantboard',
   },
 }];

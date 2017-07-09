@@ -10,7 +10,28 @@ function indexRequestHandler(req, res) {
     },
     order: [['createdAt', 'ASC']],
   }).then(requests => {
-    res.json(requests);
+    const userIds = requests.map(request => request.userId);
+    User.findAll({
+      where: {id: userIds},
+    }).then(users => {
+      const requests_ = requests.map(request => {
+        for (let i = 0; i < users.length; i++) {
+          const user = users[i];
+          if (user.id === request.userId) {
+            return {
+              id: request.id,
+              userId: user.id,
+              username: user.username,
+              labelId: request.labelId,
+              status: request.status,
+              createdAt: request.createdAt,
+              updatedAt: request.updatedAt,
+            };
+          }
+        }
+      });
+      res.json(requests_);
+    });
   });
 }
 

@@ -64,36 +64,52 @@ app.get([
     user: null,
     tasks: [],
     labels: [],
+    requests: [],
   };
   const router = new Router(segues, storyboards);
   const store = new Store(initialState, reducer);
 
-  router.initialize(req.path, {
-    accessToken: req.cookies[ACCESS_TOKEN_KEY],
-    dispatch: store.dispatch.bind(store),
-  }).then((result: any) => {
-    const state = store.getState();
+  res.send(
+    template(
+      'Debugging',
+      ReactDOMServer.renderToString((
+        <Navigator
+        path={'/'}
+        router={router}
+        store={store}
+        />
+      )),
+      store.getState(),
+    ),
+  );
+  return;
 
-    if (!state.isAuthenticated && req.path !== '/login') {
-      res.redirect('/login');
-    } else if (state.isAuthenticated && !state.user.username && req.path !== '/users/new') {
-      res.redirect('/users/new');
-    } else {
-      res.send(
-        template(
-          result.title,
-          ReactDOMServer.renderToString((
-            <Navigator
-              path={req.path}
-              router={router}
-              store={store}
-              />
-          )),
-          store.getState(),
-        ),
-      );
-    }
-  }).catch((err: any) => logger.error(err));
+  // router.initialize(req.path, {
+  //   accessToken: req.cookies[ACCESS_TOKEN_KEY],
+  //   dispatch: store.dispatch.bind(store),
+  // }).then((result: any) => {
+  //   const state = store.getState();
+  //
+  //   if (!state.isAuthenticated && req.path !== '/login') {
+  //     res.redirect('/login');
+  //   } else if (state.isAuthenticated && !state.user.username && req.path !== '/users/new') {
+  //     res.redirect('/users/new');
+  //   } else {
+  //     res.send(
+  //       template(
+  //         result.title,
+  //         ReactDOMServer.renderToString((
+  //           <Navigator
+  //             path={req.path}
+  //             router={router}
+  //             store={store}
+  //             />
+  //         )),
+  //         store.getState(),
+  //       ),
+  //     );
+  //   }
+  // }).catch((err: any) => logger.error(err));
 });
 
 app.listen(3001, () => {

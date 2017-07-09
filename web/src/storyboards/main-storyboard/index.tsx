@@ -110,8 +110,49 @@ class TaskList extends React.Component<any, any> {
   }
 }
 
+class TabContent extends React.Component<any, any> {
+  public render() {
+    return <div>{this.props.children}</div>
+  }
+}
+
+class TabContents extends React.Component<any, any> {
+  public render() {
+    return <div>{this.props.children}</div>
+  }
+}
+
+class Tab extends React.Component<any, any> {
+  public render() {
+    return <div>{this.props.children}</div>
+  }
+}
+
+class Tabs extends React.Component<any, any> {
+  public render() {
+    return <div>{this.props.children}</div>
+  }
+}
+
+class TabNavigation extends React.Component<any, any> {
+  constructor() {
+    super();
+
+    this.state = {
+      index: 0,
+    };
+  }
+  public render() {
+    return <div>{this.props.children}</div>
+  }
+}
+
 export default class MainStoryboard extends Container<any, any> {
   public static propTypes = {};
+
+  public handleClickAddButton(event: any, tabIndex: number) {
+    console.log(tabIndex);
+  }
 
   public updateLabel(labelId: number, label: any) {
     const dispatch = this.props.store.dispatch.bind(this.props.store);
@@ -155,29 +196,51 @@ export default class MainStoryboard extends Container<any, any> {
     const labels = this.state.labels;
     const tasks = this.state.tasks;
     const requests = this.state.requests;
+    const user = this.state.user || {};
 
     return (
       <section className="storyboard">
         <h1>MainStoryboard</h1>
-        <div>
-          <ul>
-            <TaskList
-              tasks={tasks}
-              actions={actions}
-            />
-          </ul>
-          <Link href="/tasks/new">New Tasks</Link>
-        </div>
-        <div>
-          <LabelList
-            labels={labels}
-            actions={actions}
-          />
-          <Link href="/labels/new">New Labels</Link>
-        </div>
-        <div>
-          <ul>{requests.map((request: any) => <li>{request}</li>)}</ul>
-        </div>
+        <Link href="/tasks/new">New Tasks</Link>
+        <Link href="/labels/new">New Labels</Link>
+        <TabNavigation>
+          <TabContents>
+            <TabContent index={0}>
+              <TaskList
+                tasks={tasks}
+                actions={actions}
+              />
+            </TabContent>
+
+            <TabContent index={1}>
+              <LabelList
+                labels={labels}
+                actions={actions}
+              />
+            </TabContent>
+
+            <TabContent index={2}>
+              <ul>
+                {requests.map((request: any) => {
+                  return <li key={request.id}>from {request.username}</li>;
+                })}
+              </ul>
+            </TabContent>
+
+            <TabContent index={3}>
+              <div>
+                {user.username}
+              </div>
+            </TabContent>
+          </TabContents>
+          <Tabs>
+            <Tab index={0}>Tasks</Tab>
+            <Tab index={1}>Labels</Tab>
+            <Tab onClick={(event: any, tabIndex: number) => this.handleClickAddButton(event, tabIndex)}>Add</Tab>
+            <Tab index={2}>Notification</Tab>
+            <Tab index={3}>Profile</Tab>
+          </Tabs>
+        </TabNavigation>
       </section>
     );
   }

@@ -39,7 +39,7 @@ function mapLabel(label: any) {
 function mapRequest(request: any) {
   return {
     id: request.id,
-    memberId: request.memberId,
+    username: request.username,
     labelId: request.labelId,
     status: request.status,
     errors: [],

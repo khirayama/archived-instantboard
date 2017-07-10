@@ -1,9 +1,9 @@
 import {
   Label,
+  Request,
   Task,
   Token,
   User,
-  Request,
 } from '../repositories';
 
 // Utils
@@ -169,7 +169,7 @@ export function sortTask(
   options: any,
 ) {
   return new Promise((resolve, reject) => {
-    Task.sort(id, to, options).then(tasks => {
+    Task.sort(id, to, options).then((tasks) => {
       const action = {
         type: '__SORT_TASK',
         tasks,
@@ -186,7 +186,7 @@ export function createLabel(
   options: any,
 ) {
   return new Promise((resolve, reject) => {
-    Label.create(params, options).then(label => {
+    Label.create(params, options).then((label) => {
       const action = {
         type: '__CREATE_LABEL',
         label,
@@ -236,7 +236,7 @@ export function sortLabel(
   options: any,
 ) {
   return new Promise((resolve, reject) => {
-    Label.sort(id, to, options).then(labels => {
+    Label.sort(id, to, options).then((labels) => {
       const action = {
         type: '__SORT_LABEL',
         labels,

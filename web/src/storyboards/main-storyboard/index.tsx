@@ -1,3 +1,4 @@
+import * as PropTypes from 'prop-types';
 import * as React from 'react';
 
 import {Link} from '../../libs/web-storyboard/link';

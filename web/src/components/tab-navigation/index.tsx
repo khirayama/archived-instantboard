@@ -1,5 +1,5 @@
-import * as React from 'react';
 import * as PropTypes from 'prop-types';
+import * as React from 'react';
 
 export class TabContent extends React.Component<any, any> {
   private static contextTypes = {
@@ -58,7 +58,7 @@ export class TabNavigation extends React.Component<any, any> {
   private static childContextTypes = {
     getIndex: PropTypes.func,
     setIndex: PropTypes.func,
-  }
+  };
   private getChildContext() {
     return {
       getIndex: this.getIndex.bind(this),
@@ -86,4 +86,3 @@ export class TabNavigation extends React.Component<any, any> {
     return <div>{this.props.children}</div>;
   }
 }
-

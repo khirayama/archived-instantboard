@@ -38,7 +38,7 @@ const reducer = (state: IState, action: any) => {
         break;
       }
       case '__UPDATE_TASK': {
-        newState.tasks = state.tasks.map(task => {
+        newState.tasks = state.tasks.map((task) => {
           if (task.id === action.task.id) {
             return action.task;
           }
@@ -47,7 +47,7 @@ const reducer = (state: IState, action: any) => {
         break;
       }
       case '__DELETE_TASK': {
-        newState.tasks = state.tasks.filter(task => {
+        newState.tasks = state.tasks.filter((task) => {
           return (task.id !== action.taskId);
         });
         break;
@@ -62,7 +62,7 @@ const reducer = (state: IState, action: any) => {
         break;
       }
       case '__UPDATE_LABEL': {
-        newState.labels = state.labels.map(label => {
+        newState.labels = state.labels.map((label) => {
           if (label.id === action.label.id) {
             return action.label;
           }
@@ -71,7 +71,7 @@ const reducer = (state: IState, action: any) => {
         break;
       }
       case '__DELETE_LABEL': {
-        newState.labels = state.labels.filter(label => {
+        newState.labels = state.labels.filter((label) => {
           return (label.id !== action.labelId);
         });
         break;

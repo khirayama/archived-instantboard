@@ -7,9 +7,9 @@ import {segueTypes} from '../libs/web-storyboard/constants';
 import LabelStoryboard from '../storyboards/label-storyboard';
 import LoginStoryboard from '../storyboards/login-storyboard';
 import MainStoryboard from '../storyboards/main-storyboard';
+import MemberStoryboard from '../storyboards/member-storyboard';
 import NewUserStoryboard from '../storyboards/new-user-storyboard';
 import TaskStoryboard from '../storyboards/task-storyboard';
-import MemberStoryboard from '../storyboards/member-storyboard';
 
 import {fetchInitialData} from '../action-creators';
 

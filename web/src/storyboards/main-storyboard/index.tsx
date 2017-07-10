@@ -6,15 +6,23 @@ import {Link} from '../../libs/web-storyboard/link';
 import Container from '../container';
 
 import {
-  updateLabel,
+  Tab,
+  TabContent,
+  TabContents,
+  TabNavigation,
+  Tabs,
+} from '../../components/tab-navigation';
+
+import {
   deleteLabel,
-  sortLabel,
-  updateTask,
   deleteTask,
+  sortLabel,
   sortTask,
+  updateLabel,
+  updateTask,
 } from '../../action-creators';
 
-let sort = {
+const sort = {
   id: null,
   to: null,
 };
@@ -58,7 +66,7 @@ class LabelList extends React.Component<any, any> {
     return (
       <ul>
         {this.props.labels.map((label: any) => {
-          return <LabelListItem key={label.id} label={label} actions={this.props.actions}/>
+          return <LabelListItem key={label.id} label={label} actions={this.props.actions}/>;
         })}
       </ul>
     );
@@ -104,55 +112,33 @@ class TaskList extends React.Component<any, any> {
     return (
       <ul>
         {this.props.tasks.map((task: any) => {
-          return <TaskListItem key={task.id} task={task} actions={this.props.actions}/>
+          return <TaskListItem key={task.id} task={task} actions={this.props.actions}/>;
         })}
       </ul>
     );
   }
 }
 
-class TabContent extends React.Component<any, any> {
-  public render() {
-    return <div>{this.props.children}</div>
-  }
-}
-
-class TabContents extends React.Component<any, any> {
-  public render() {
-    return <div>{this.props.children}</div>
-  }
-}
-
-class Tab extends React.Component<any, any> {
-  public render() {
-    return <div>{this.props.children}</div>
-  }
-}
-
-class Tabs extends React.Component<any, any> {
-  public render() {
-    return <div>{this.props.children}</div>
-  }
-}
-
-class TabNavigation extends React.Component<any, any> {
-  constructor() {
-    super();
-
-    this.state = {
-      index: 0,
-    };
-  }
-  public render() {
-    return <div>{this.props.children}</div>
-  }
-}
-
 export default class MainStoryboard extends Container<any, any> {
   public static propTypes = {};
+  public static contextTypes = {
+    move: PropTypes.func,
+  };
 
-  public handleClickAddButton(event: any, tabIndex: number) {
-    console.log(tabIndex);
+  private tabIndex: number;
+
+  constructor(props: any) {
+    super(props);
+
+    this.tabIndex = 0;
+  }
+
+  public handleClickAddButton(event: any) {
+    if (this.tabIndex === 1) {
+      this.context.move('/labels/new');
+    } else {
+      this.context.move('/tasks/new');
+    }
   }
 
   public updateLabel(labelId: number, label: any) {
@@ -204,7 +190,9 @@ export default class MainStoryboard extends Container<any, any> {
         <h1>MainStoryboard</h1>
         <Link href="/tasks/new">New Tasks</Link>
         <Link href="/labels/new">New Labels</Link>
-        <TabNavigation>
+        <TabNavigation onChange={(index: number) => {
+          this.tabIndex = index;
+        }}>
           <TabContents>
             <TabContent index={0}>
               <TaskList
@@ -237,7 +225,7 @@ export default class MainStoryboard extends Container<any, any> {
           <Tabs>
             <Tab index={0}>Tasks</Tab>
             <Tab index={1}>Labels</Tab>
-            <Tab onClick={(event: any, tabIndex: number) => this.handleClickAddButton(event, tabIndex)}>Add</Tab>
+            <Tab><div onClick={(event: any) => this.handleClickAddButton(event)}>Add</div></Tab>
             <Tab index={2}>Notification</Tab>
             <Tab index={3}>Profile</Tab>
           </Tabs>

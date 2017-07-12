@@ -26,15 +26,19 @@ function template(title: string, content: string, state: any) {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>${title}</title>
+
     <!-- standalone for android-->
     <meta name="mobile-web-app-capable" content="yes">
     <link rel="icon" sizes="192x192" href="/images/icon-android.png">
     <link rel="manifest" href="/manifest.json">
+
     <!-- standalone for ios-->
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="Handle">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <link rel="apple-touch-icon" sizes="76x76" href="/images/icon-ios.png">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="/index.css">
     <script src="/bundle.js" defer></script>
   </head>

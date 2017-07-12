@@ -12,6 +12,9 @@ import {
   TabNavigation,
   Tabs,
 } from '../../components/tab-navigation';
+import {Icon} from '../../components/icon';
+
+import {TasksTabContent} from './tasks-tab-content';
 
 import {
   deleteLabel,
@@ -67,52 +70,6 @@ class LabelList extends React.Component<any, any> {
       <ul>
         {this.props.labels.map((label: any) => {
           return <LabelListItem key={label.id} label={label} actions={this.props.actions}/>;
-        })}
-      </ul>
-    );
-  }
-}
-
-class TaskListItem extends React.Component<any, any> {
-  public handleClickCompleteButton() {
-    const task = this.props.task;
-    this.props.actions.updateTask(task.id, {completed: !task.completed});
-  }
-
-  public handleClickDeleteButton() {
-    const task = this.props.task;
-    this.props.actions.deleteTask(task.id);
-  }
-
-  public handleDragEnd() {
-    this.props.actions.sortTask(sort.id, sort.to);
-    sort.id = null;
-    sort.to = null;
-  }
-
-  public render() {
-    const task = this.props.task;
-    return (
-      <li
-        draggable
-        onDragStart={() => sort.id = task.id}
-        onDragEnter={() => sort.to = task.priority}
-        onDragEnd={() => this.handleDragEnd()}
-      >
-        <span>{task.priority} {task.content}</span>
-        <span onClick={() => this.handleClickDeleteButton()}>[DELETE]</span>
-        <span onClick={() => this.handleClickCompleteButton()}>[{(task.completed) ? 'to COMPLETE' : 'to UNCOMPLETE'}]</span>
-      </li>
-    );
-  }
-}
-
-class TaskList extends React.Component<any, any> {
-  public render() {
-    return (
-      <ul>
-        {this.props.tasks.map((task: any) => {
-          return <TaskListItem key={task.id} task={task} actions={this.props.actions}/>;
         })}
       </ul>
     );
@@ -192,7 +149,8 @@ export default class MainStoryboard extends Container<any, any> {
         }}>
           <TabContents>
             <TabContent index={0}>
-              <TaskList
+              <TasksTabContent
+                labels={labels}
                 tasks={tasks}
                 actions={actions}
               />
@@ -220,11 +178,11 @@ export default class MainStoryboard extends Container<any, any> {
             </TabContent>
           </TabContents>
           <Tabs>
-            <Tab index={0}>Tasks</Tab>
-            <Tab index={1}>Labels</Tab>
-            <Tab><div onClick={(event: any) => this.handleClickAddButton(event)}>Add</div></Tab>
-            <Tab index={2}>Notification</Tab>
-            <Tab index={3}>Profile</Tab>
+            <Tab index={0}><Icon>view_list</Icon></Tab>
+            <Tab index={1}><Icon>label</Icon></Tab>
+            <Tab><div onClick={(event: any) => this.handleClickAddButton(event)}><Icon>add_box</Icon></div></Tab>
+            <Tab index={2}><Icon>notifications</Icon></Tab>
+            <Tab index={3}><Icon>person</Icon></Tab>
           </Tabs>
         </TabNavigation>
       </section>

@@ -187,9 +187,6 @@ export default class MainStoryboard extends Container<any, any> {
 
     return (
       <section className="storyboard">
-        <h1>MainStoryboard</h1>
-        <Link href="/tasks/new">New Tasks</Link>
-        <Link href="/labels/new">New Labels</Link>
         <TabNavigation onChange={(index: number) => {
           this.tabIndex = index;
         }}>

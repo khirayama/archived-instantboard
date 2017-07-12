@@ -34,10 +34,10 @@ export class Tab extends React.Component<any, any> {
     setIndex: PropTypes.func,
   };
   public render() {
-    const classNames = [];
+    const classNames = ['tab'];
     const index = (this.props.index !== undefined) ? this.props.index : null;
     if (index === this.context.getIndex()) {
-      classNames.push('__current');
+      classNames.push('tab__current');
     }
     return (
       <div
@@ -50,7 +50,7 @@ export class Tab extends React.Component<any, any> {
 
 export class Tabs extends React.Component<any, any> {
   public render() {
-    return <div>{this.props.children}</div>;
+    return <div className="tabs">{this.props.children}</div>;
   }
 }
 
@@ -83,6 +83,6 @@ export class TabNavigation extends React.Component<any, any> {
     }
   }
   public render() {
-    return <div>{this.props.children}</div>;
+    return <div className="tab-navigation">{this.props.children}</div>;
   }
 }

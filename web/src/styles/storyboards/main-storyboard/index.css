@@ -1,0 +1,14 @@
+.tabs {
+  border-top: solid 1px $color-divider;
+  .tab {
+    text-align: center;
+    color: $color-text-secondary;
+    .icon {
+      font-size: 36px;
+      padding: 8px 0 12px;
+    }
+    &.tab__current {
+      color: $color-text-primary;
+    }
+  }
+}

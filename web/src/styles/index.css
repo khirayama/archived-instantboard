@@ -3,3 +3,5 @@
 @import "./reset";
 @import "./colors";
 @import "./application";
+@import "./components/**/*";
+@import "./storyboards/**/*";

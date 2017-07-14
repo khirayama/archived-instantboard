@@ -4,7 +4,7 @@
   height: 100%;
 }
 
-.tabs {
+.tab-navigation--tabs {
   display: flex;
   position: absolute;
   left: 0;
@@ -12,6 +12,6 @@
   width: 100%;
 }
 
-.tab {
+.tab-navigation--tab {
   flex: 1;
 }

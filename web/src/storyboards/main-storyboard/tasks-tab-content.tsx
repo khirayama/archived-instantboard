@@ -1,6 +1,14 @@
 import * as PropTypes from 'prop-types';
 import * as React from 'react';
 
+import {
+  Tabs,
+  TabList,
+  TabListItem,
+  TabContentList,
+  TabContentListItem,
+} from '../../components/tabs';
+
 const sort = {
   id: null,
   to: null,
@@ -121,18 +129,29 @@ export class TasksTabContent extends React.Component<any, any> {
     const labels = this.props.labels;
     const actions = this.props.actions;
     return (
-      <LabelTable>
-      <Labels>
+      <Tabs>
+      <TabList>
         {labels.map((label: any, index: number) => {
-          return <Label key={label.id} index={index}>{label.name}</Label>
+          return <TabListItem key={label.id} index={index}>{label.name}</TabListItem>
         })}
-      </Labels>
+      </TabList>
 
-      <TaskList
-        tasks={tasks}
-        actions={actions}
-      />
-      </LabelTable>
+      <TabContentList>
+        {labels.map((label: any, index: number) => {
+          const groupedTasks = tasks.filter((task: any) => {
+            return (task.labelId === label.id);
+          });
+          return (
+            <TabContentListItem key={index}>
+              <TaskList
+                tasks={groupedTasks}
+                actions={actions}
+              />
+            </TabContentListItem>
+          );
+        })}
+      </TabContentList>
+      </Tabs>
     );
   }
 }

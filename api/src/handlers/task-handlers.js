@@ -1,4 +1,13 @@
 const {Label, Task} = require('../models');
+const {parseTextWithSchedule} = require('../utils/parse-text-with-schedule');
+
+function transformTask(task) {
+  const {schedule, text} = parseTextWithSchedule(task.content, new Date(task.createdAt));
+  return Object.assign({}, task, {
+    text,
+    schedule,
+  });
+}
 
 function indexTaskHandler(req, res) {
   const userId = req.user.id;
@@ -11,7 +20,7 @@ function indexTaskHandler(req, res) {
       where: {labelId: labelIds},
       order: [['priority', 'ASC']],
     }).then(tasks => {
-      res.json(tasks);
+      res.json(tasks.map(transformTask));
     });
   });
 }
@@ -26,7 +35,7 @@ function createTaskHandler(req, res) {
     labelId,
     content,
   }).then(task => {
-    res.json(task);
+    res.json(transformTask(task));
   });
 }
 
@@ -34,7 +43,7 @@ function showTaskHandler(req, res) {
   const taskId = req.params.id;
 
   Task.findById(taskId).then(task => {
-    res.json(task);
+    res.json(transformTask(task));
   });
 }
 
@@ -73,7 +82,7 @@ function updateTaskHandler(req, res) {
           completed,
           priority: count,
         }).then(() => {
-          res.json(task);
+          res.json(transformTask(task));
         });
       });
     } else {
@@ -81,7 +90,7 @@ function updateTaskHandler(req, res) {
         content: (content === undefined) ? task.content : content,
         completed: (completed === undefined) ? task.completed : completed,
       }).then(() => {
-        res.json(task);
+        res.json(transformTask(task));
       });
     }
   });
@@ -107,7 +116,7 @@ function destroyTaskHandler(req, res) {
     });
 
     task.destroy().then(destroyedTask => {
-      res.json(destroyedTask);
+      res.json(transformTask(destroyedTask));
     });
   });
 }
@@ -136,7 +145,7 @@ function sortTaskHandler(req, res) {
             where: {userId},
             order: [['priority', 'ASC']],
           }).then(tasks_ => {
-            res.json(tasks_);
+            res.json(transformTask(tasks_));
           });
         });
       });
@@ -158,7 +167,7 @@ function sortTaskHandler(req, res) {
             where: {userId},
             order: [['priority', 'ASC']],
           }).then(tasks_ => {
-            res.json(tasks_);
+            res.json(transformTask(tasks_));
           });
         });
       });

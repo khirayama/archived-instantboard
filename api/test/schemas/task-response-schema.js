@@ -3,6 +3,8 @@ const taskResponseSchema = {
   required: [
     'id',
     'content',
+    'text', // for response
+    'schedule', // for response
     'labelId',
     'priority',
     'completed',
@@ -15,6 +17,12 @@ const taskResponseSchema = {
     },
     content: {
       type: 'string',
+    },
+    text: {
+      type: 'string',
+    },
+    schedule: {
+      type: ['object', 'null'],
     },
     labelId: {
       type: 'integer',

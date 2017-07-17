@@ -1,4 +1,4 @@
-import moment from 'moment';
+const moment = require('moment');
 
 const MONTH_LIST = [
   'January',
@@ -50,13 +50,13 @@ const DAY_SHORT_LIST = [
   'Sat',
 ];
 
-export function getDay(dateText) {
+function getDay(dateText) {
   const _day = dateText.replace(/(this|next)/i, '').trim();
 
   return _day;
 }
 
-export function getDayNum(dateText) {
+function getDayNum(dateText) {
   const _day = getDay(dateText);
 
   for (let index = 0; index < DAY_LIST.length; index++) {
@@ -68,7 +68,7 @@ export function getDayNum(dateText) {
   return -1;
 }
 
-export function getScheduleItem(date) {
+function getScheduleItem(date) {
   const _year = date.year();
   const _month = date.month();
   const _date = date.date();
@@ -91,7 +91,7 @@ export function getScheduleItem(date) {
   return schedule;
 }
 
-export function splitTextToDateAndText(text) {
+function splitTextToDateAndText(text) {
   let result;
 
   const resultToday = text.match(/^today\s/i);
@@ -128,7 +128,7 @@ export function splitTextToDateAndText(text) {
   return item;
 }
 
-export function textToSchedule(dateText, referenceDate) {
+function textToSchedule(dateText, referenceDate) {
   let schedule;
   let _dayNum;
   let _date;
@@ -194,7 +194,7 @@ export function textToSchedule(dateText, referenceDate) {
   return schedule;
 }
 
-export function parseTextToItem(text, referenceDate) {
+function parseTextWithSchedule(text, referenceDate) {
   const _referenceDate = moment(referenceDate);
   const splitedItem = splitTextToDateAndText(text);
   const schedule = textToSchedule(splitedItem.date, _referenceDate) || null;
@@ -202,3 +202,7 @@ export function parseTextToItem(text, referenceDate) {
 
   return item;
 }
+
+module.exports = {
+  parseTextWithSchedule,
+};

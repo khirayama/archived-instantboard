@@ -2,8 +2,9 @@ const {Label, Task} = require('../models');
 const {parseTextWithSchedule} = require('../utils/parse-text-with-schedule');
 
 function transformTask(task) {
-  const {schedule, text} = parseTextWithSchedule(task.content, new Date(task.createdAt));
-  return Object.assign({}, task, {
+  const task_ = task.dataValues || task;
+  const {schedule, text} = parseTextWithSchedule(task_.content, new Date(task_.createdAt));
+  return Object.assign({}, task_, {
     text,
     schedule,
   });
@@ -81,16 +82,16 @@ function updateTaskHandler(req, res) {
           content,
           completed,
           priority: count,
-        }).then(() => {
-          res.json(transformTask(task));
+        }).then(task_ => {
+          res.json(transformTask(task_));
         });
       });
     } else {
       task.update({
         content: (content === undefined) ? task.content : content,
         completed: (completed === undefined) ? task.completed : completed,
-      }).then(() => {
-        res.json(transformTask(task));
+      }).then(task_ => {
+        res.json(transformTask(task_));
       });
     }
   });
@@ -145,7 +146,7 @@ function sortTaskHandler(req, res) {
             where: {userId},
             order: [['priority', 'ASC']],
           }).then(tasks_ => {
-            res.json(transformTask(tasks_));
+            res.json(tasks_.map(transformTask));
           });
         });
       });
@@ -167,7 +168,7 @@ function sortTaskHandler(req, res) {
             where: {userId},
             order: [['priority', 'ASC']],
           }).then(tasks_ => {
-            res.json(transformTask(tasks_));
+            res.json(tasks_.map(transformTask));
           });
         });
       });

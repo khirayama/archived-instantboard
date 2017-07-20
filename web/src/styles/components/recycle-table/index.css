@@ -1,14 +1,16 @@
-.tabs {
+.recycle-table {
   overflow: hidden;
 
-  .tab-list {
+  .recycle-table-list {
+    display: inline-block;
     width: 100%;
-    .tab-list-inner {
-      display: flex;
-      width: 100%;
+    overflow: scroll;
+    .recycle-table-list--inner {
+      display: inline-block;
       height: 100%;
-      .tab-list-item {
-        flex: 1;
+      .recycle-table-list-item {
+        display: inline-block;
+        height: 100%;
         cursor: pointer;
         user-select: none;
         /* &__active {} */
@@ -16,24 +18,24 @@
     }
   }
 
-  .tab-content-list {
+  .recycle-table-content-list {
     overflow: hidden;
-    .tab-content-list-inner {
+    .recycle-table-content-list--inner {
       display: flex;
       transition-timing-function: $ease-out;
       transition-duration: $time-basic;
       transition-property: transform;
       will-change: transform;
 
-      .tab-content-list-item {
+      .recycle-table-content-list-item {
         flex: 1;
-        .tab-content-list-item-inner {
+        .recycle-table-content-list-item--inner {
           width: 100%;
           height: 100%;
         }
       }
-      .tab-content-list-item__hidden {
-        .tab-content-list-item-inner {
+      .recycle-table-content-list-item__hidden {
+        .recycle-table-content-list-item--inner {
           display: none;
         }
       }

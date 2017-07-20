@@ -1,18 +1,20 @@
-.tabs {
+.recycle-table {
   width: 100%;
   height: 100%;
 
-  .tab-list {
+  .recycle-table-list {
     position: relative;
     z-index: 1;
     height: 48px;
     box-shadow: 0 1px 1px $color-ui-shadow;
 
-    .tab-list-item {
+    .recycle-table-list-item {
       position: relative;
       text-align: center;
+      padding: 12px;
       font-weight: $font-weight-bold;
       background-color: $color-white;
+      color: $color-text-secondary;
 
       &:active {
         background-color: $color-ui-active;
@@ -34,7 +36,8 @@
         will-change: width;
       }
 
-      &.tab-list-item__active {
+      &.recycle-table-list-item__active {
+        color: $color-text-primary;
         &::after {
           width: 100%;
         }
@@ -42,14 +45,14 @@
     }
   }
 
-  .tab-content-list {
+  .recycle-table-content-list {
     height: calc(100% - 48px);
     will-change: left;
 
-    .tab-content-list-inner {
+    .recycle-table-content-list--inner {
       height: 100%;
 
-      .tab-content-list-item {
+      .recycle-table-content-list-item {
         overflow: hidden;
         width: 100%;
         height: 100%;

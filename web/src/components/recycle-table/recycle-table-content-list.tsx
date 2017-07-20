@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import {THRESHOLD_DELTAX} from '../constants';
 
-export class TabContentList extends React.Component<any, any> {
+export class RecycleTableContentList extends React.Component<any, any> {
   private static childContextTypes = {
     handleTouchStart: PropTypes.func,
     handleTouchMove: PropTypes.func,
@@ -19,7 +19,7 @@ export class TabContentList extends React.Component<any, any> {
     children: PropTypes.node,
   }
 
-  private tabContentList: any;
+  private recycleTableContentList: any;
   private touch: any;
 
   constructor() {
@@ -141,21 +141,21 @@ export class TabContentList extends React.Component<any, any> {
     const diff = this._calcFilteredDiff();
 
     if (this.touch.moving && diff.x !== 0 && (Math.abs(diff.delta.x) > Math.abs(diff.delta.y)) && (Math.abs(diff.x) > Math.abs(diff.y))) {
-      this.tabContentList.classList.add('tab-content-list__moving');
-      this.tabContentList.style.transform = `translateX(calc(-${this.context.currentIndex * 100 / this.props.children.length}% + ${diff.x}px))`;
-      this.tabContentList.style.transitionProperty = 'none';
+      this.recycleTableContentList.classList.add('recycle-table-content-list__moving');
+      this.recycleTableContentList.style.transform = `translateX(calc(-${this.context.currentIndex * 100 / this.props.children.length}% + ${diff.x}px))`;
+      this.recycleTableContentList.style.transitionProperty = 'none';
     }
   }
   _updateTouchEndView() {
-    if (this.tabContentList.classList.contains('tab-content-list__moving')) {
-      this.tabContentList.classList.remove('tab-content-list__moving');
+    if (this.recycleTableContentList.classList.contains('recycle-table-content-list__moving')) {
+      this.recycleTableContentList.classList.remove('recycle-table-content-list__moving');
     }
 
-    this.tabContentList.style.transform = `translateX(calc(-${this.context.currentIndex * 100 / this.props.children.length}%))`;
-    this.tabContentList.style.transitionProperty = 'transform';
+    this.recycleTableContentList.style.transform = `translateX(calc(-${this.context.currentIndex * 100 / this.props.children.length}%))`;
+    this.recycleTableContentList.style.transitionProperty = 'transform';
   }
-  _setTabContentList(tabContentList: HTMLElement|null) {
-    this.tabContentList = tabContentList;
+  _setRecycleTableContentList(recycleTableContentList: HTMLElement|null) {
+    this.recycleTableContentList = recycleTableContentList;
   }
   render() {
     const diff = this._calcFilteredDiff();
@@ -165,11 +165,11 @@ export class TabContentList extends React.Component<any, any> {
     };
 
     return (
-      <section className="tab-content-list">
+      <section className="recycle-table-content-list">
         <section
-          className="tab-content-list-inner"
+          className="recycle-table-content-list--inner"
           style={style}
-          ref={(el) => this._setTabContentList(el)}
+          ref={(el) => this._setRecycleTableContentList(el)}
           >{this.props.children}</section>
       </section>
     );

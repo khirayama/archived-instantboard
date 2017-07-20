@@ -2,7 +2,7 @@ import * as PropTypes from 'prop-types';
 import * as React from 'react';
 import * as classNames from 'classnames';
 
-export class TabListItem extends React.Component<any, any> {
+export class RecycleTableListItem extends React.Component<any, any> {
   private static contextTypes = {
     currentIndex: PropTypes.number,
     setCurrentIndex: PropTypes.func,
@@ -26,8 +26,8 @@ export class TabListItem extends React.Component<any, any> {
     return (
       <button
         className={classNames(
-          'tab-list-item',
-          {'tab-list-item__active': (index === this.context.currentIndex)}
+          'recycle-table-list-item',
+          {'recycle-table-list-item__active': (index === this.context.currentIndex)}
         )}
         onClick={() => this._handleClick()}
         >{this.props.children}</button>

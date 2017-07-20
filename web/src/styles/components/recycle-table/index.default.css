@@ -1,9 +1,13 @@
+$height: 36px;
+
 .recycle-table {
   width: 100%;
   height: 100%;
 
   .recycle-table-list {
     position: relative;
+    height: $height;
+    vertical-align: top;
     z-index: 1;
     box-shadow: 0 1px 1px $color-ui-shadow;
 
@@ -45,14 +49,14 @@
   }
 
   .recycle-table-content-list {
-    height: calc(100% - 48px);
+    height: calc(100% - $height);
     will-change: left;
 
     .recycle-table-content-list--inner {
       height: 100%;
 
       .recycle-table-content-list-item {
-        overflow: hidden;
+        overflow: scroll;
         width: 100%;
         height: 100%;
         background: #fff;

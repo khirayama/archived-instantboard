@@ -4,10 +4,15 @@
   .recycle-table-list {
     display: inline-block;
     width: 100%;
-    overflow: scroll;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    &::-webkit-scrollbar {
+      display: none;
+    }
     .recycle-table-list--inner {
       display: inline-block;
       height: 100%;
+      overflow: hidden;
       .recycle-table-list-item {
         display: inline-block;
         height: 100%;

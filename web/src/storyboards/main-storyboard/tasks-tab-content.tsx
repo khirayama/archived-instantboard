@@ -55,7 +55,9 @@ export class TasksTabContent extends React.Component<any, any> {
                           throughLeft={true}
                           >
                           <SwipeableViewBackground position='left'><span>L</span></SwipeableViewBackground>
-                          <SwipeableViewContent>{task.content}</SwipeableViewContent>
+                          <SwipeableViewContent>
+                            <div className={classNames("task-list-item", {"task-list-item__completed": task.completed})}>{task.content}</div>
+                          </SwipeableViewContent>
                           <SwipeableViewBackground position='right'><span>R</span></SwipeableViewBackground>
                         </SwipeableView>
                       </ListItem>

@@ -1,5 +1,6 @@
 .tab-navigation-tab-list {
   /* border-top: solid 1px $color-divider; */
+  background: $color-white;
   box-shadow: 0 -1px 1px 1px $color-ui-shadow;
   .tab-navigation-tab-list-item {
     text-align: center;
@@ -11,5 +12,18 @@
     &.tab-navigation-tab-list-item__current {
       color: $color-text-primary;
     }
+  }
+}
+
+.recycle-table-content-list {
+  height: calc(100% - 56px - 36px)!important;
+}
+
+.task-list-item {
+  background: $color-white;
+  padding: 12px;
+  transition: background .1s ease-out;
+  &.task-list-item__completed {
+    background: $color-divider;
   }
 }

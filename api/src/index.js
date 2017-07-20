@@ -1,4 +1,3 @@
-const http = require('http');
 const express = require('express');
 const bodyParser = require('body-parser');
 
@@ -44,7 +43,6 @@ const {
 } = require('./handlers/request-handlers');
 
 const app = express();
-const server = http.createServer(app);
 
 const port = process.env.PORT || 3000;
 const host = process.env.HOST || '127.0.0.1';
@@ -119,4 +117,4 @@ app.use(router);
 
 // Main
 console.log('Example app listening on port 3000!');
-server.listen(port, host);
+app.listen(port);

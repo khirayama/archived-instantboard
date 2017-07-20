@@ -33,7 +33,7 @@ export class RecycleTableContentListItem extends React.Component<any, any> {
           {'recycle-table-content-list-item__hidden': isHidden}
         )}
         >
-        <section className="recycle-table-content-list-item-inner">{this.props.children}</section>
+        <section className="recycle-table-content-list-item--inner">{this.props.children}</section>
       </section>
     );
   }

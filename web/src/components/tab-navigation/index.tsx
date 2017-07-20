@@ -1,7 +1,7 @@
 import * as PropTypes from 'prop-types';
 import * as React from 'react';
 
-export class TabContent extends React.Component<any, any> {
+export class TabNavigationContentList extends React.Component<any, any> {
   private static contextTypes = {
     getIndex: PropTypes.func,
     setIndex: PropTypes.func,
@@ -9,35 +9,35 @@ export class TabContent extends React.Component<any, any> {
   public render() {
     if (this.context.getIndex() === this.props.index) {
       return (
-        <div>{this.props.children}</div>
+        <div className="tab-navigation-content-list">{this.props.children}</div>
       );
     }
     return null;
   }
 }
 
-export class TabContents extends React.Component<any, any> {
+export class TabNavigationContentListItem extends React.Component<any, any> {
   private static contextTypes = {
     getIndex: PropTypes.func,
     setIndex: PropTypes.func,
   };
   public render() {
     return (
-      <div>{this.props.children}</div>
+      <div className="tab-navigation-content-list-item">{this.props.children}</div>
     );
   }
 }
 
-export class Tab extends React.Component<any, any> {
+export class TabNavigationTabListItem extends React.Component<any, any> {
   private static contextTypes = {
     getIndex: PropTypes.func,
     setIndex: PropTypes.func,
   };
   public render() {
-    const classNames = ['tab-navigation--tab'];
+    const classNames = ['tab-navigation-tab-list-item'];
     const index = (this.props.index !== undefined) ? this.props.index : null;
     if (index === this.context.getIndex()) {
-      classNames.push('tab-navigation--tab__current');
+      classNames.push('tab-navigation-tab-list-item__current');
     }
     return (
       <div
@@ -48,9 +48,9 @@ export class Tab extends React.Component<any, any> {
   }
 }
 
-export class Tabs extends React.Component<any, any> {
+export class TabNavigationTabList extends React.Component<any, any> {
   public render() {
-    return <div className="tab-navigation--tabs">{this.props.children}</div>;
+    return <div className="tab-navigation-tab-list">{this.props.children}</div>;
   }
 }
 

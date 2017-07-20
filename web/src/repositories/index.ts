@@ -1,9 +1,11 @@
 import axios from 'axios';
 
+const API_DOMAIN = 'http://localhost:3000';
+
 // Token
 export const Token = {
   req: axios.create({
-    baseURL: 'http://localhost:3000/api/v1/tokens',
+    baseURL: `${API_DOMAIN}/api/v1/tokens`,
   }),
   create: (params: any) => {
     return new Promise((resolve, reject) => {
@@ -17,7 +19,7 @@ export const Token = {
 // User
 export const User = {
   req: axios.create({
-    baseURL: 'http://localhost:3000/api/v1/users',
+    baseURL: `${API_DOMAIN}/api/v1/users`,
   }),
   find: (options: IRequestOptions) => {
     return new Promise((resolve, reject) => {
@@ -42,7 +44,7 @@ export const User = {
 // Task
 export const Task = {
   req: axios.create({
-    baseURL: 'http://localhost:3000/api/v1/tasks',
+    baseURL: `${API_DOMAIN}/api/v1/tasks`,
   }),
   fetch: (params: any = {}, options: IRequestOptions) => {
     return new Promise((resolve, reject) => {
@@ -95,7 +97,7 @@ export const Task = {
 // Label
 export const Label = {
   req: axios.create({
-    baseURL: 'http://localhost:3000/api/v1/labels',
+    baseURL: `${API_DOMAIN}/api/v1/labels`,
   }),
   fetch: (params: any = {}, options: IRequestOptions) => {
     return new Promise((resolve, reject) => {
@@ -148,7 +150,7 @@ export const Label = {
 // Request
 export const Request = {
   req: axios.create({
-    baseURL: 'http://localhost:3000/api/v1/requests',
+    baseURL: `${API_DOMAIN}/api/v1/requests`,
   }),
   fetch: (params: any = {}, options: IRequestOptions) => {
     return new Promise((resolve, reject) => {

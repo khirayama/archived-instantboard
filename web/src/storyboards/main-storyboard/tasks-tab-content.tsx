@@ -9,56 +9,16 @@ import {
   RecycleTableContentListItem,
 } from '../../components/recycle-table';
 
-const sort = {
-  id: null,
-  to: null,
-};
+import {
+  SwipeableView,
+  SwipeableViewContent,
+  SwipeableViewBackground,
+} from '../../components/swipeable-view';
 
-class TaskListItem extends React.Component<any, any> {
-  public handleClickCompleteButton() {
-    const task = this.props.task;
-    this.props.actions.updateTask(task.id, {completed: !task.completed});
-  }
-
-  public handleClickDeleteButton() {
-    const task = this.props.task;
-    this.props.actions.deleteTask(task.id);
-  }
-
-  public handleDragEnd() {
-    this.props.actions.sortTask(sort.id, sort.to);
-    sort.id = null;
-    sort.to = null;
-  }
-
-  public render() {
-    const task = this.props.task;
-    return (
-      <li
-        draggable
-        onDragStart={() => sort.id = task.id}
-        onDragEnter={() => sort.to = task.priority}
-        onDragEnd={() => this.handleDragEnd()}
-      >
-        <span>{task.priority} {task.content}</span>
-        <span onClick={() => this.handleClickDeleteButton()}>[DELETE]</span>
-        <span onClick={() => this.handleClickCompleteButton()}>[{(task.completed) ? 'to COMPLETE' : 'to UNCOMPLETE'}]</span>
-      </li>
-    );
-  }
-}
-
-class TaskList extends React.Component<any, any> {
-  public render() {
-    return (
-      <ul>
-        {this.props.tasks.map((task: any) => {
-          return <TaskListItem key={task.id} task={task} actions={this.props.actions}/>;
-        })}
-      </ul>
-    );
-  }
-}
+import {
+  List,
+  ListItem,
+} from '../../components/list';
 
 export class TasksTabContent extends React.Component<any, any> {
   public render() {
@@ -80,10 +40,28 @@ export class TasksTabContent extends React.Component<any, any> {
             });
             return (
               <RecycleTableContentListItem key={index}>
-                <TaskList
-                  tasks={groupedTasks}
-                  actions={actions}
-                />
+                <List
+                  onSort={(from: number, to: number) => {
+                    const task = groupedTasks[from];
+                    actions.sortTask(task.id, to);
+                  }}
+                >
+                  {groupedTasks.map((task: any) => {
+                    return (
+                      <ListItem key={task.id}>
+                        <SwipeableView
+                          onSwipeLeft={() => {actions.deleteTask(task.id)}}
+                          onSwipeRight={() => {actions.updateTask(task.id, {completed: !task.completed})}}
+                          throughLeft={true}
+                          >
+                          <SwipeableViewBackground position='left'><span>L</span></SwipeableViewBackground>
+                          <SwipeableViewContent>{task.content}</SwipeableViewContent>
+                          <SwipeableViewBackground position='right'><span>R</span></SwipeableViewBackground>
+                        </SwipeableView>
+                      </ListItem>
+                    );
+                  })}
+                </List>
               </RecycleTableContentListItem>
             );
           })}

@@ -29,7 +29,7 @@
         height: 3px;
         content: '';
         transform: translateX(-50%);
-        background: $color-primary;
+        background: $color-text-primary;
         transition-timing-function: $ease-out-expo;
         transition-duration: $time-basic;
         transition-property: width;

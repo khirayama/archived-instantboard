@@ -5,13 +5,12 @@
   .recycle-table-list {
     position: relative;
     z-index: 1;
-    height: 48px;
     box-shadow: 0 1px 1px $color-ui-shadow;
 
     .recycle-table-list-item {
       position: relative;
       text-align: center;
-      padding: 12px;
+      padding: 8px 12px;
       font-weight: $font-weight-bold;
       background-color: $color-white;
       color: $color-text-secondary;

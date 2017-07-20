@@ -6,11 +6,11 @@ import {Link} from '../../libs/web-storyboard/link';
 import Container from '../container';
 
 import {
-  Tab,
-  TabContent,
-  TabContents,
   TabNavigation,
-  Tabs,
+  TabNavigationTabList,
+  TabNavigationTabListItem,
+  TabNavigationContentList,
+  TabNavigationContentListItem,
 } from '../../components/tab-navigation';
 import {Icon} from '../../components/icon';
 
@@ -147,43 +147,43 @@ export default class MainStoryboard extends Container<any, any> {
         <TabNavigation onChange={(index: number) => {
           this.tabIndex = index;
         }}>
-          <TabContents>
-            <TabContent index={0}>
+          <TabNavigationContentListItem>
+            <TabNavigationContentList index={0}>
               <TasksTabContent
                 labels={labels}
                 tasks={tasks}
                 actions={actions}
               />
-            </TabContent>
+            </TabNavigationContentList>
 
-            <TabContent index={1}>
+            <TabNavigationContentList index={1}>
               <LabelList
                 labels={labels}
                 actions={actions}
               />
-            </TabContent>
+            </TabNavigationContentList>
 
-            <TabContent index={2}>
+            <TabNavigationContentList index={2}>
               <ul>
                 {requests.map((request: any) => {
                   return <li key={request.id}>from {request.username}</li>;
                 })}
               </ul>
-            </TabContent>
+            </TabNavigationContentList>
 
-            <TabContent index={3}>
+            <TabNavigationContentList index={3}>
               <div>
                 {user.username}
               </div>
-            </TabContent>
-          </TabContents>
-          <Tabs>
-            <Tab index={0}><Icon>view_list</Icon></Tab>
-            <Tab index={1}><Icon>label</Icon></Tab>
-            <Tab><div onClick={(event: any) => this.handleClickAddButton(event)}><Icon>add_box</Icon></div></Tab>
-            <Tab index={2}><Icon>notifications</Icon></Tab>
-            <Tab index={3}><Icon>person</Icon></Tab>
-          </Tabs>
+            </TabNavigationContentList>
+          </TabNavigationContentListItem>
+          <TabNavigationTabList>
+            <TabNavigationTabListItem index={0}><Icon>view_list</Icon></TabNavigationTabListItem>
+            <TabNavigationTabListItem index={1}><Icon>label</Icon></TabNavigationTabListItem>
+            <TabNavigationTabListItem><div onClick={(event: any) => this.handleClickAddButton(event)}><Icon>add_box</Icon></div></TabNavigationTabListItem>
+            <TabNavigationTabListItem index={2}><Icon>notifications</Icon></TabNavigationTabListItem>
+            <TabNavigationTabListItem index={3}><Icon>person</Icon></TabNavigationTabListItem>
+          </TabNavigationTabList>
         </TabNavigation>
       </section>
     );

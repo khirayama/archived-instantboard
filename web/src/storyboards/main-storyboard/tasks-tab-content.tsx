@@ -2,12 +2,12 @@ import * as PropTypes from 'prop-types';
 import * as React from 'react';
 
 import {
-  Tabs,
-  TabList,
-  TabListItem,
-  TabContentList,
-  TabContentListItem,
-} from '../../components/tabs';
+  RecycleTable,
+  RecycleTableList,
+  RecycleTableListItem,
+  RecycleTableContentList,
+  RecycleTableContentListItem,
+} from '../../components/recycle-table';
 
 const sort = {
   id: null,
@@ -60,98 +60,35 @@ class TaskList extends React.Component<any, any> {
   }
 }
 
-class Label extends React.Component<any, any> {
-  private static contextTypes = {
-    getIndex: PropTypes.func,
-    setIndex: PropTypes.func,
-  };
-  public render() {
-    const classNames = ['label'];
-    const index = this.props.index;
-    if (index === this.context.getIndex()) {
-      classNames.push('label__current');
-    }
-    return (
-      <div
-        className={classNames.join(' ')}
-        onClick={(event: any) => this.context.setIndex(index)}
-      >{this.props.children}</div>
-    );
-  }
-}
-
-class Labels extends React.Component<any, any> {
-  public render() {
-    return (
-      <div className="labels">{this.props.children}</div>
-    );
-  }
-}
-
-class LabelTable extends React.Component<any, any> {
-  private static childContextTypes = {
-    getIndex: PropTypes.func,
-    setIndex: PropTypes.func,
-  };
-  private getChildContext() {
-    return {
-      getIndex: this.getIndex.bind(this),
-      setIndex: this.setIndex.bind(this),
-    };
-  }
-  constructor(props: any) {
-    super(props);
-    const initialIndex = props.initialIndex || 0;
-
-    this.state = {
-      index: initialIndex,
-    };
-  }
-  private getIndex(index: number) {
-    return this.state.index;
-  }
-  private setIndex(index: number|null) {
-    if (index !== null && this.state.index !== index) {
-      this.setState({index});
-      // this.props.onChange(index);
-    }
-  }
-  public render() {
-    return (
-      <div className="label-table">{this.props.children}</div>
-    );
-  }
-}
-
 export class TasksTabContent extends React.Component<any, any> {
   public render() {
     const tasks = this.props.tasks;
     const labels = this.props.labels;
     const actions = this.props.actions;
     return (
-      <Tabs>
-      <TabList>
-        {labels.map((label: any, index: number) => {
-          return <TabListItem key={label.id} index={index}>{label.name}</TabListItem>
-        })}
-      </TabList>
+      <RecycleTable>
+        <RecycleTableList>
+          {labels.map((label: any, index: number) => {
+            return <RecycleTableListItem key={label.id} index={index}>{label.name}</RecycleTableListItem>
+          })}
+        </RecycleTableList>
 
-      <TabContentList>
-        {labels.map((label: any, index: number) => {
-          const groupedTasks = tasks.filter((task: any) => {
-            return (task.labelId === label.id);
-          });
-          return (
-            <TabContentListItem key={index}>
-              <TaskList
-                tasks={groupedTasks}
-                actions={actions}
-              />
-            </TabContentListItem>
-          );
-        })}
-      </TabContentList>
-      </Tabs>
+        <RecycleTableContentList>
+          {labels.map((label: any, index: number) => {
+            const groupedTasks = tasks.filter((task: any) => {
+              return (task.labelId === label.id);
+            });
+            return (
+              <RecycleTableContentListItem key={index}>
+                <TaskList
+                  tasks={groupedTasks}
+                  actions={actions}
+                />
+              </RecycleTableContentListItem>
+            );
+          })}
+        </RecycleTableContentList>
+      </RecycleTable>
     );
   }
 }

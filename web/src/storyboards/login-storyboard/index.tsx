@@ -59,10 +59,30 @@ export default class LoginStoryboard extends Container<any, any> {
       });
     });
   }
+
+  public handleClickLoginAsTestUser() {
+    const dispatch = this.props.store.dispatch.bind(this.props.store);
+    const provider = 'facebook';
+    createToken(dispatch, {
+      provider,
+      uid: '123456789',
+    }).then(({accessToken, user}: {accessToken: string, user: any}) => {
+      if (accessToken) {
+        setAccessToken(accessToken);
+        if (user.username) {
+          this.context.move('/');
+        } else if (!user.username) {
+          this.context.move('/users/new');
+        }
+      }
+    });
+  }
+
   public render() {
     return (
       <section className="storyboard">
         <div onClick={() => this.handleClickLoginWithFacebook()}>Login with Facebook</div>
+        <div onClick={() => this.handleClickLoginAsTestUser()}>Login as Test User</div>
       </section>
     );
   }

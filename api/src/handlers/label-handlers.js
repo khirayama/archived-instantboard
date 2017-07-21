@@ -47,7 +47,7 @@ function destroyLabelHandler(req, res) {
   const labelId = req.params.id;
 
   Label.destroyByUser(labelId, userId).then(label => {
-    res.status(204).json(label);
+    res.json(label);
   });
 }
 

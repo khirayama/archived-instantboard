@@ -13,6 +13,7 @@ export class RecycleTable extends React.Component<any, any> {
   }
 
   private el: any;
+  private timerId: any = null;
 
   constructor(props: any) {
     super(props);
@@ -29,9 +30,14 @@ export class RecycleTable extends React.Component<any, any> {
     };
   }
 
-  _scrollToCenter(index: any) {
-    let timerId: any = null;
-    timerId = setInterval(() => {
+  componentDidUpdate() {
+    if (this.timerId === null) {
+      this._scrollToCenter(this.state.currentIndex, false);
+    }
+  }
+
+  _scrollToCenter(index: any, animate: boolean) {
+    if (!animate) {
       const el = this.el;
       const list = el.querySelector('.recycle-table-list');
       const listItems = list.querySelectorAll('.recycle-table-list-item');
@@ -39,17 +45,29 @@ export class RecycleTable extends React.Component<any, any> {
       const currentScrollLeft = list.scrollLeft;
       const scrollLeft = listItem.offsetLeft - (el.clientWidth - listItem.clientWidth) / 2;
 
-      const speed = (scrollLeft - currentScrollLeft) / 8;
-      list.scrollLeft += speed;
-      if (Math.abs(speed) < 1) {
-        clearInterval(timerId);
-      }
-    }, 1000/60);
+      list.scrollLeft = scrollLeft;
+    } else {
+      this.timerId = setInterval(() => {
+        const el = this.el;
+        const list = el.querySelector('.recycle-table-list');
+        const listItems = list.querySelectorAll('.recycle-table-list-item');
+        const listItem = listItems[index];
+        const currentScrollLeft = list.scrollLeft;
+        const scrollLeft = listItem.offsetLeft - (el.clientWidth - listItem.clientWidth) / 2;
+
+        const speed = (scrollLeft - currentScrollLeft) / 8;
+        list.scrollLeft += speed;
+        if (Math.abs(speed) < 1) {
+          clearInterval(this.timerId);
+          this.timerId = null;
+        }
+      }, 1000/60);
+    }
   }
 
   _setCurrentIndex(index: number) {
     this.setState({currentIndex: index});
-    this._scrollToCenter(index);
+    this._scrollToCenter(index, true);
   }
 
   render() {

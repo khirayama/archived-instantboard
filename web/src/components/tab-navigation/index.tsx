@@ -9,10 +9,12 @@ export class TabNavigationContentList extends React.Component<any, any> {
   public render() {
     if (this.context.getIndex() === this.props.index) {
       return (
-        <div className="tab-navigation-content-list">{this.props.children}</div>
+        <div className="tab-navigation-content-list tab-navigation-content-list__active">{this.props.children}</div>
       );
     }
-    return null;
+    return (
+      <div className="tab-navigation-content-list">{this.props.children}</div>
+    );
   }
 }
 

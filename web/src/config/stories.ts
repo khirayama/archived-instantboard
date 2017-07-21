@@ -60,9 +60,9 @@ export const storyboards = [{
   component: NewUserStoryboard,
   path: '/users/new',
   options: {
-    initialize: (pramas: any, args: any, payload: any) => {
+    initialize: (params: any, args: any, payload: any) => {
       return new Promise((resolve) => {
-        fetchInitialData(payload.dispatch, {
+        fetchInitialData({}, payload.dispatch, {
           accessToken: payload.accessToken,
         });
         resolve();
@@ -76,9 +76,9 @@ export const storyboards = [{
   component: MainStoryboard,
   path: '/',
   options: {
-    initialize: (pramas: any, args: any, payload: any) => {
+    initialize: (params: any, args: any, payload: any) => {
       return new Promise((resolve) => {
-        fetchInitialData(payload.dispatch, {
+        fetchInitialData({}, payload.dispatch, {
           accessToken: payload.accessToken,
         }).then(resolve);
       });
@@ -90,9 +90,9 @@ export const storyboards = [{
   component: TaskStoryboard,
   path: '/tasks/new',
   options: {
-    initialize: (pramas: any, args: any, payload: any) => {
+    initialize: (params: any, args: any, payload: any) => {
       return new Promise((resolve) => {
-        fetchInitialData(payload.dispatch, {
+        fetchInitialData({}, payload.dispatch, {
           accessToken: payload.accessToken,
         }).then(resolve);
       });
@@ -104,9 +104,9 @@ export const storyboards = [{
   component: TaskStoryboard,
   path: '/tasks/:id/edit',
   options: {
-    initialize: (pramas: any, args: any, payload: any) => {
+    initialize: (params: any, args: any, payload: any) => {
       return new Promise((resolve) => {
-        fetchInitialData(payload.dispatch, {
+        fetchInitialData({selectedTaskId: Number(params.id)}, payload.dispatch, {
           accessToken: payload.accessToken,
         }).then(resolve);
       });
@@ -118,9 +118,9 @@ export const storyboards = [{
   component: LabelStoryboard,
   path: '/labels/new',
   options: {
-    initialize: (pramas: any, args: any, payload: any) => {
+    initialize: (params: any, args: any, payload: any) => {
       return new Promise((resolve) => {
-        fetchInitialData(payload.dispatch, {
+        fetchInitialData({selectedTaskId: null, selectedLabelId: null}, payload.dispatch, {
           accessToken: payload.accessToken,
         }).then(resolve);
       });
@@ -132,9 +132,9 @@ export const storyboards = [{
   component: LabelStoryboard,
   path: '/labels/:id/edit',
   options: {
-    initialize: (pramas: any, args: any, payload: any) => {
+    initialize: (params: any, args: any, payload: any) => {
       return new Promise((resolve) => {
-        fetchInitialData(payload.dispatch, {
+        fetchInitialData({selectedLabelId: Number(params.id)}, payload.dispatch, {
           accessToken: payload.accessToken,
         }).then(resolve);
       });
@@ -146,9 +146,9 @@ export const storyboards = [{
   component: MemberStoryboard,
   path: '/labels/:id/members',
   options: {
-    initialize: (pramas: any, args: any, payload: any) => {
+    initialize: (params: any, args: any, payload: any) => {
       return new Promise((resolve) => {
-        fetchInitialData(payload.dispatch, {
+        fetchInitialData({selectedLabelId: Number(params.id)}, payload.dispatch, {
           accessToken: payload.accessToken,
         }).then(resolve);
       });

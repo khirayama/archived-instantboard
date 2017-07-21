@@ -9,6 +9,8 @@ const reducer = (state: IState, action: any) => {
         newState.tasks = action.tasks;
         newState.labels = action.labels;
         newState.requests = action.requests;
+        newState.selectedTaskId = (action.selectedTaskId !== undefined) ? action.selectedTaskId : state.selectedTaskId;
+        newState.selectedLabelId = (action.selectedLabelId !== undefined) ? action.selectedLabelId : state.selectedLabelId;
         break;
       }
       case '__FAILURE_FETCH_INITIAL_DATA': {
@@ -17,6 +19,8 @@ const reducer = (state: IState, action: any) => {
         newState.tasks = [];
         newState.labels = [];
         newState.requests = [];
+        newState.selectedTaskId = null;
+        newState.selectedLabelId = null;
         break;
       }
       case '__CREATE_TOKEN': {

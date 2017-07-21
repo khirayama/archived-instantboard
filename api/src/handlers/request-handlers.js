@@ -40,20 +40,26 @@ function createRequestHandler(req, res) {
   const labelId = req.body.labelId;
   const memberNames = req.body.memberNames || [];
 
-  User.findAll({
-    username: memberNames,
-  }).then(users => {
-    const requests = users.map(user => {
-      return {
-        userId,
-        labelId,
-        memberId: user.id,
-      };
+  if (memberNames.length) {
+    User.findAll({
+      where: {
+        username: memberNames,
+      },
+    }).then(users => {
+      const requests = users.map(user => {
+        return {
+          userId,
+          labelId,
+          memberId: user.id,
+        };
+      });
+      Request.bulkCreate(requests).then(requests => {
+        res.json(requests);
+      });
     });
-    Request.bulkCreate(requests).then(requests => {
-      res.json(requests);
-    });
-  });
+  } else {
+    res.json([]);
+  }
 }
 
 function updateRequestHandler(req, res) {

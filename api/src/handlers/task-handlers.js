@@ -79,8 +79,9 @@ function updateTaskHandler(req, res) {
         });
 
         task.update({
-          content,
-          completed,
+          labelId: (labelId !== undefined) ? labelId : task.labelId,
+          content: (content !== undefined) ? content : task.content,
+          completed: (completed !== undefined) ? completed : task.completed,
           priority: count,
         }).then(task_ => {
           res.json(transformTask(task_));

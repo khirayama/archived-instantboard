@@ -46,7 +46,7 @@ function mapRequest(request: any) {
   };
 }
 
-export function fetchInitialData(dispatch: (action: any) => void, options: any) {
+export function fetchInitialData(defaults: any, dispatch: (action: any) => void, options: any) {
   return new Promise((resolve, reject) => {
     Promise.all([
       User.find(options),
@@ -66,6 +66,8 @@ export function fetchInitialData(dispatch: (action: any) => void, options: any) 
         tasks: tasks.map((task: any) => mapTask(task)),
         labels: labels.map((label: any) => mapLabel(label)),
         requests: requests.map((request: any) => mapRequest(request)),
+        selectedTaskId: defaults.selectedTaskId || null,
+        selectedLabelId: defaults.selectedLabelId || null,
       };
       dispatch(action);
       resolve();
@@ -132,7 +134,7 @@ export function createTask(
 export function updateTask(
   dispatch: (action: any) => void,
   id: number,
-  params: {completed: boolean; },
+  params: {completed?: boolean; content?: string; labelId?: number;},
   options: any,
 ) {
   return new Promise((resolve, reject) => {
@@ -199,7 +201,7 @@ export function createLabel(
 export function updateLabel(
   dispatch: (action: any) => void,
   id: number,
-  params: {visibled: boolean; },
+  params: {visibled?: boolean; name?: string},
   options: any,
 ) {
   return new Promise((resolve, reject) => {
@@ -242,6 +244,19 @@ export function sortLabel(
         labels,
       };
       dispatch(action);
+    });
+  });
+}
+
+// Token
+export function createRequests(
+  dispatch: (action: any) => void,
+  params: {memberNames: string[]; labelId: number; },
+  options: any,
+) {
+  return new Promise((resolve) => {
+    Request.create(params, options).then((res: any) => {
+      console.log(res);
     });
   });
 }

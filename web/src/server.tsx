@@ -61,6 +61,7 @@ app.get([
   '/tasks/:id/edit',
   '/labels/new',
   '/labels/:id/edit',
+  '/labels/:id/members',
 ], (req, res) => {
 
   const initialState: any = {
@@ -69,6 +70,8 @@ app.get([
     tasks: [],
     labels: [],
     requests: [],
+    selectedTaskId: null,
+    selectedLabelId: null,
   };
   const router = new Router(segues, storyboards);
   const store = new Store(initialState, reducer);

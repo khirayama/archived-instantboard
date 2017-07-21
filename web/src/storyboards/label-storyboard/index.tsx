@@ -5,7 +5,7 @@ import {Link} from '../../libs/web-storyboard/link';
 
 import Container from '../container';
 
-import {createLabel} from '../../action-creators';
+import {createLabel, updateLabel} from '../../action-creators';
 
 export default class LabelStoryboard extends Container<any, any> {
   public static propTypes = {};
@@ -14,8 +14,26 @@ export default class LabelStoryboard extends Container<any, any> {
     super(props);
 
     this.state = Object.assign({}, this.state, {
+      labelId: null,
       name: '',
     });
+  }
+
+  componentDidUpdate(prevProps: any, prevState: any) {
+    if (prevState.labelId !== this.state.selectedLabelId) {
+      const labelId = this.state.selectedLabelId;
+      const label = (labelId) ? this.state.labels.filter((label: any) => label.id === labelId)[0] : null;
+      if (label) {
+        this.setState({
+          labelId,
+          name: label.name,
+        });
+      }
+    }
+  }
+
+  private isUpdate() {
+    return (this.state.labelId !== null);
   }
 
   public handleChangeNameInput(event: any) {
@@ -24,11 +42,18 @@ export default class LabelStoryboard extends Container<any, any> {
     });
   }
 
-  public handleClickCreateButton(event: any) {
+  public handleClickCreateOrUpdateButton(event: any) {
     const dispatch = this.props.store.dispatch.bind(this.props.store);
-    createLabel(dispatch, {
-      name: this.state.name,
-    }, {accessToken: this.accessToken});
+    const labelId = this.state.labelId;
+    if (labelId) {
+      updateLabel(dispatch, labelId, {
+        name: this.state.name,
+      }, {accessToken: this.accessToken});
+    } else {
+      createLabel(dispatch, {
+        name: this.state.name,
+      }, {accessToken: this.accessToken});
+    }
   }
 
   public render() {
@@ -39,12 +64,12 @@ export default class LabelStoryboard extends Container<any, any> {
           <BackLink>Back</BackLink>
         </div>
         <div>
-          <Link href="/labels/1/members">Choose member</Link>
+          <Link href={`/labels/${this.state.labelId}/members`}>Choose member</Link>
         </div>
         <div>
-          <input onChange={(event) => this.handleChangeNameInput(event)}></input>
+          <input value={this.state.name} onChange={(event) => this.handleChangeNameInput(event)}></input>
         </div>
-        <div onClick={(event) => this.handleClickCreateButton(event)}>Create label</div>
+        <div onClick={(event) => this.handleClickCreateOrUpdateButton(event)}>{(this.isUpdate() ? 'Update' : 'Create')}</div>
       </section>
     );
   }

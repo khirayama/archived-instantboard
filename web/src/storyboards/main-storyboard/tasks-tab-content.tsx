@@ -22,6 +22,10 @@ import {
 } from '../../components/list';
 
 export class TasksTabContent extends React.Component<any, any> {
+  public static contextTypes = {
+    move: PropTypes.func,
+  };
+
   public render() {
     const tasks = this.props.tasks;
     const labels = this.props.labels.filter((label: any) => label.visibled);
@@ -56,7 +60,7 @@ export class TasksTabContent extends React.Component<any, any> {
                           throughLeft={true}
                           >
                           <SwipeableViewBackground position='left'><span>L</span></SwipeableViewBackground>
-                          <SwipeableViewContent>
+                          <SwipeableViewContent onClick={() => this.context.move(`/tasks/${task.id}/edit`)}>
                             <div className={classNames("task-list-item", {"task-list-item__completed": task.completed})}>{task.content}</div>
                           </SwipeableViewContent>
                           <SwipeableViewBackground position='right'><span>R</span></SwipeableViewBackground>

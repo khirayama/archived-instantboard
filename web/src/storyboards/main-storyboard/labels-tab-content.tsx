@@ -14,6 +14,10 @@ import {
 } from '../../components/list';
 
 export class LabelsTabContent extends React.Component<any, any> {
+  public static contextTypes = {
+    move: PropTypes.func,
+  };
+
   public render() {
     const labels = this.props.labels;
     const actions = this.props.actions;
@@ -33,7 +37,7 @@ export class LabelsTabContent extends React.Component<any, any> {
                 throughLeft={true}
                 >
                 <SwipeableViewBackground position='left'><span>L</span></SwipeableViewBackground>
-                <SwipeableViewContent>
+                <SwipeableViewContent onClick={() => this.context.move(`/labels/${label.id}/edit`)}>
                   <div className={classNames("label-list-item", {"label-list-item__hidden": !label.visibled})}>{label.name}</div>
                 </SwipeableViewContent>
                 <SwipeableViewBackground position='right'><span>R</span></SwipeableViewBackground>

@@ -13,4 +13,6 @@ interface IState {
   tasks: any[];
   labels: any[];
   requests: any[];
+  selectedTaskId: any;
+  selectedLabelId: any;
 }

@@ -24,7 +24,7 @@ import {
 export class TasksTabContent extends React.Component<any, any> {
   public render() {
     const tasks = this.props.tasks;
-    const labels = this.props.labels;
+    const labels = this.props.labels.filter((label: any) => label.visibled);
     const actions = this.props.actions;
     return (
       <RecycleTable>

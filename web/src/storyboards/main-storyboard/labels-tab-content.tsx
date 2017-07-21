@@ -34,7 +34,7 @@ export class LabelsTabContent extends React.Component<any, any> {
                 >
                 <SwipeableViewBackground position='left'><span>L</span></SwipeableViewBackground>
                 <SwipeableViewContent>
-                  <div className={classNames("label-list-item", {"label-list-item__visibled": label.completed})}>{label.name}</div>
+                  <div className={classNames("label-list-item", {"label-list-item__hidden": !label.visibled})}>{label.name}</div>
                 </SwipeableViewContent>
                 <SwipeableViewBackground position='right'><span>R</span></SwipeableViewBackground>
               </SwipeableView>

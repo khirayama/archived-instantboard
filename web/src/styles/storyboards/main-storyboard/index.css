@@ -27,3 +27,12 @@
     background: $color-divider;
   }
 }
+
+.label-list-item {
+  background: $color-white;
+  padding: 12px;
+  transition: background .1s ease-out;
+  &.label-list-item__hidden {
+    background: $color-divider;
+  }
+}

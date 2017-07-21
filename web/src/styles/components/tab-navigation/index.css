@@ -19,6 +19,10 @@
 .tab-navigation-content-list {
   width: 100%;
   height: 100%;
+  display: none;
+  &__active {
+    display: inline-block;
+  }
 }
 
 .tab-navigation-content-list-item {

@@ -61,7 +61,6 @@ app.get([
   '/tasks/:id/edit',
   '/labels/new',
   '/labels/:id/edit',
-  '/labels/:id/members',
 ], (req, res) => {
 
   const initialState: any = {

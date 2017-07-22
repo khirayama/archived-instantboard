@@ -1,5 +1,16 @@
 const {Request, User} = require('../models');
 
+function _transformRequest(request) {
+  return {
+    id: request.id,
+    memberId: request.userId, // ATENTION: request.userId -> memberId
+    labelId: request.labelId,
+    status: request.status,
+    createdAt: request.createdAt,
+    updatedAt: request.updatedAt,
+  };
+}
+
 function indexRequestHandler(req, res) {
   const status = req.query.status;
 
@@ -10,55 +21,55 @@ function indexRequestHandler(req, res) {
     },
     order: [['createdAt', 'ASC']],
   }).then(requests => {
-    const userIds = requests.map(request => request.userId);
-    User.findAll({
-      where: {id: userIds},
-    }).then(users => {
-      const requests_ = requests.map(request => {
-        for (let i = 0; i < users.length; i++) {
-          const user = users[i];
-          if (user.id === request.userId) {
-            return {
-              id: request.id,
-              userId: user.id,
-              username: user.username,
-              labelId: request.labelId,
-              status: request.status,
-              createdAt: request.createdAt,
-              updatedAt: request.updatedAt,
-            };
-          }
-        }
-      });
-      res.json(requests_);
-    });
+    res.json(requests.map(_transformRequest));
   });
 }
 
 function createRequestHandler(req, res) {
   const userId = req.user.id;
   const labelId = req.body.labelId;
-  const memberNames = req.body.memberNames || [];
+  const memberId = req.body.memberId || null;
+  const memberName = req.body.memberName || null;
 
-  if (memberNames.length) {
-    User.findAll({
+  if (memberId) {
+    Request.findOrCreate({
       where: {
-        username: memberNames,
+        userId,
+        labelId,
+        memberId,
+        status: ['pending', 'accepted'],
       },
-    }).then(users => {
-      const requests = users.map(user => {
-        return {
+      defaults: {
+        userId,
+        labelId,
+        memberId,
+      },
+    }).then(request => {
+      res.json(_transformRequest(request[0]));
+    });
+  } else if (memberName) {
+    User.findOne({
+      where: {
+        username: memberName,
+      },
+    }).then(user => {
+      Request.findOrCreate({
+        where: {
           userId,
           labelId,
           memberId: user.id,
-        };
-      });
-      Request.bulkCreate(requests).then(requests => {
-        res.json(requests);
+          status: ['pending', 'accepted'],
+        },
+        defaults: {
+          userId,
+          labelId,
+          memberId: user.id,
+          status: 'pending',
+        },
+      }).then(request => {
+        res.json(_transformRequest(request[0]));
       });
     });
-  } else {
-    res.json([]);
   }
 }
 
@@ -71,7 +82,7 @@ function updateRequestHandler(req, res) {
       Request.accept({
         where: {id: requestId},
       }).then(request => {
-        res.json(request);
+        res.json(_transformRequest(request));
       });
       break;
     }
@@ -79,9 +90,8 @@ function updateRequestHandler(req, res) {
       Request.update({status}, {
         where: {id: requestId}
       }).then(request => {
-        res.json(request);
+        res.json(_transformRequest(request));
       });
-      res.json();
       break;
     }
   }
@@ -93,7 +103,7 @@ function destroyRequestHandler(req, res) {
   Request.destroy({
     where: {id: requestId},
   }).then(request => {
-    res.json(request);
+    res.json(_transformRequest(request));
   });
 }
 

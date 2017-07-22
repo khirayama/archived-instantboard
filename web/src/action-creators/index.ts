@@ -198,6 +198,28 @@ export function createLabel(
   });
 }
 
+export function createLabelWithRequest(
+  dispatch: (action: any) => void,
+  labelParams: {name: string; },
+  requestParams: {memberNames: string[]; },
+  options: any,
+) {
+  return new Promise((resolve, reject) => {
+    Label.create(labelParams, options).then((label: any) => {
+      Request.create(Object.assign({}, requestParams, {
+        labelId: label.id,
+      }), options).then(requests => {
+        console.log(requests);
+        const action = {
+          type: '__CREATE_LABEL',
+          label,
+        };
+        dispatch(action);
+      });
+    });
+  });
+}
+
 export function updateLabel(
   dispatch: (action: any) => void,
   id: number,
@@ -206,6 +228,24 @@ export function updateLabel(
 ) {
   return new Promise((resolve, reject) => {
     Label.update(id, params, options).then((label: any) => {
+      const action = {
+        type: '__UPDATE_LABEL',
+        label,
+      };
+      dispatch(action);
+    });
+  });
+}
+
+export function updateLabelWithRequest(
+  dispatch: (action: any) => void,
+  id: number,
+  labelParams: {visibled?: boolean; name?: string; },
+  requestParams: {memberNames: string[]; },
+  options: any,
+) {
+  return new Promise((resolve, reject) => {
+    Label.update(id, labelParams, options).then((label: any) => {
       const action = {
         type: '__UPDATE_LABEL',
         label,

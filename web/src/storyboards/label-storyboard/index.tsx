@@ -86,9 +86,6 @@ export default class LabelStoryboard extends Container<any, any> {
           <BackLink>Back</BackLink>
         </div>
         <div>
-          <Link href={`/labels/${this.state.labelId}/members`}>Choose member</Link>
-        </div>
-        <div>
           <h2>Name</h2>
           <input value={this.state.name} onChange={(event) => this.handleChangeNameInput(event)}></input>
           <h2>Current member</h2>

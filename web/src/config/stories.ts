@@ -1,13 +1,12 @@
 // [LoginStoryboard]-----(show)---[NewUserStoryboard]---(temporary)---[MainStoryboard]---(temporary)---[TaskStoryboard]
 //                    |                                                    |      |
-//                    ----------------------(temporary)---------------------      |---(temporary)---[LabelStoryboard]---(show)---[Memberstoryboard]
+//                    ----------------------(temporary)---------------------      |---(temporary)---[LabelStoryboard]
 
 import {segueTypes} from '../libs/web-storyboard/constants';
 
 import LabelStoryboard from '../storyboards/label-storyboard';
 import LoginStoryboard from '../storyboards/login-storyboard';
 import MainStoryboard from '../storyboards/main-storyboard';
-import MemberStoryboard from '../storyboards/member-storyboard';
 import NewUserStoryboard from '../storyboards/new-user-storyboard';
 import TaskStoryboard from '../storyboards/task-storyboard';
 
@@ -19,7 +18,6 @@ const StoryboardKeys = {
   MainStoryboard: 'Main Storyboard',
   TaskStoryboard: 'Task Storyboard',
   LabelStoryboard: 'Label Storyboard',
-  MemberStoryboard: 'MemberStoryboard Storyboard',
 };
 
 export const segues = [{
@@ -42,10 +40,6 @@ export const segues = [{
   from: StoryboardKeys.MainStoryboard,
   to: StoryboardKeys.LabelStoryboard,
   type: segueTypes.temporary,
-}, {
-  from: StoryboardKeys.LabelStoryboard,
-  to: StoryboardKeys.MemberStoryboard,
-  type: segueTypes.show,
 }];
 
 export const storyboards = [{
@@ -140,19 +134,5 @@ export const storyboards = [{
       });
     },
     title: 'Edit label | Instantboard',
-  },
-}, {
-  key: StoryboardKeys.MemberStoryboard,
-  component: MemberStoryboard,
-  path: '/labels/:id/members',
-  options: {
-    initialize: (params: any, args: any, payload: any) => {
-      return new Promise((resolve) => {
-        fetchInitialData({selectedLabelId: Number(params.id)}, payload.dispatch, {
-          accessToken: payload.accessToken,
-        }).then(resolve);
-      });
-    },
-    title: 'Member | Instantboard',
   },
 }];

@@ -65,7 +65,7 @@ export const Task = {
       }).catch((err: any) => reject(err));
     });
   },
-  update: (id: number, params: {completed: boolean; }, options: IRequestOptions) => {
+  update: (id: number, params: {completed?: boolean; content?: string; labelId?: number}, options: IRequestOptions) => {
     return new Promise((resolve, reject) => {
       Task.req.put(`/${id}`, params, {
         headers: {Authorization: `Bearer ${options.accessToken}`},
@@ -118,7 +118,7 @@ export const Label = {
       }).catch((err: any) => reject(err));
     });
   },
-  update: (id: number, params: {visibled: boolean; }, options: IRequestOptions) => {
+  update: (id: number, params: {visibled?: boolean; name?: string}, options: IRequestOptions) => {
     return new Promise((resolve, reject) => {
       Label.req.put(`/${id}`, params, {
         headers: {Authorization: `Bearer ${options.accessToken}`},
@@ -157,6 +157,15 @@ export const Request = {
       Request.req.get('/', {
         headers: {Authorization: `Bearer ${options.accessToken}`},
         params,
+      }).then(({data}) => {
+        resolve(data);
+      }).catch((err: any) => reject(err));
+    });
+  },
+  create: (params: any = {}, options: IRequestOptions) => {
+    return new Promise((resolve, reject) => {
+      Request.req.post('/', params, {
+        headers: {Authorization: `Bearer ${options.accessToken}`},
       }).then(({data}) => {
         resolve(data);
       }).catch((err: any) => reject(err));

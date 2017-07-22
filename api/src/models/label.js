@@ -1,21 +1,24 @@
-function _getMembers(labelId, requests, users) {
-  const members = [];
+function _getRequests(labelId, requests, userIds) {
+  const requests_ = [];
   for (let j = 0; j < requests.length; j++) {
     const request = requests[j];
     if (labelId === request.labelId) {
-      for (let k = 0; k < users.length; k++) {
-        const user = users[k];
-        if (user.id === request.memberId || user.id === request.userId) {
-          members.push({
-            id: user.id,
-            username: user.username,
-            requestStatus: request.status,
+      for (let k = 0; k < userIds.length; k++) {
+        const userId = userIds[k];
+        // if (userId === request.memberId || userId === request.userId) {
+        if (userId === request.memberId) {
+          requests_.push({
+            id: request.id,
+            memberId: userId, // ATENTION: request.userId -> memberId
+            status: request.status,
+            createdAt: request.createdAt,
+            updatedAt: request.updatedAt,
           });
         }
       }
     }
   }
-  return members;
+  return requests_;
 }
 
 module.exports = (sequelize, DataTypes) => {
@@ -71,30 +74,26 @@ module.exports = (sequelize, DataTypes) => {
           const labels = values[0];
           const requests = values[1];
 
-          const userIds = requests.map(request => request.memberId).filter(memberId => (Boolean(options.userId) || memberId !== options.userId));
-          User.findAll({
-            where: {id: userIds},
-          }).then(users => {
-            const labels_ = labelStatuses.map(labelStatus => {
-              let newLabel = {};
-              for (let i = 0; i < labels.length; i++) {
-                const label = labels[i];
-                if (label.id === labelStatus.labelId) {
-                  newLabel = {
-                    id: label.id,
-                    name: label.name,
-                    priority: labelStatus.priority,
-                    visibled: labelStatus.visibled,
-                    createdAt: label.createdAt,
-                    updatedAt: label.updatedAt,
-                    members: _getMembers(label.id, requests, users),
-                  };
-                }
+          const userIds = requests.map(request => request.memberId).filter(memberId => (Boolean(options.userId) || memberId !== options.userId)).filter((x, i, self) => self.indexOf(x) === i);
+          const labels_ = labelStatuses.map(labelStatus => {
+            let newLabel = {};
+            for (let i = 0; i < labels.length; i++) {
+              const label = labels[i];
+              if (label.id === labelStatus.labelId) {
+                newLabel = {
+                  id: label.id,
+                  name: label.name,
+                  priority: labelStatus.priority,
+                  visibled: labelStatus.visibled,
+                  createdAt: label.createdAt,
+                  updatedAt: label.updatedAt,
+                  requests: _getRequests(label.id, requests, userIds),
+                };
               }
-              return newLabel;
-            });
-            resolve(labels_);
+            }
+            return newLabel;
           });
+          resolve(labels_);
         });
       });
     });
@@ -119,21 +118,17 @@ module.exports = (sequelize, DataTypes) => {
         const labelStatus = values[1];
         const requests = values[2];
 
-        const userIds = requests.map(request => request.memberId).filter(memberId => (memberId !== userId));
-        User.findAll({
-          where: {id: userIds},
-        }).then(users => {
-          const newLabel = {
-            id: label.id,
-            name: label.name,
-            priority: labelStatus.priority,
-            visibled: labelStatus.visibled,
-            createdAt: labelStatus.createdAt,
-            updatedAt: labelStatus.updatedAt,
-            members: _getMembers(label.id, requests, users),
-          };
-          resolve(newLabel);
-        });
+        const userIds = requests.map(request => request.memberId).filter(memberId => (Boolean(options.userId) || memberId !== options.userId)).filter((x, i, self) => self.indexOf(x) === i);
+        const newLabel = {
+          id: label.id,
+          name: label.name,
+          priority: labelStatus.priority,
+          visibled: labelStatus.visibled,
+          createdAt: labelStatus.createdAt,
+          updatedAt: labelStatus.updatedAt,
+          requests: _getRequests(label.id, requests, userIds),
+        };
+        resolve(newLabel);
       });
     });
   };

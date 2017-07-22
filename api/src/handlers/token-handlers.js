@@ -2,6 +2,10 @@ const jwt = require('jwt-simple');
 const {SECRET_KEY} = require('../constants');
 const {User} = require('../models');
 
+function _transformToken(accessToken) {
+  return {accessToken};
+}
+
 function createTokenHandler(req, res) {
   const provider = req.body.provider;
   const uid = req.body.uid;
@@ -21,7 +25,7 @@ function createTokenHandler(req, res) {
       iat: now.getTime(),
     }, SECRET_KEY);
 
-    res.json({accessToken});
+    res.json(_transformToken(accessToken));
   });
 }
 

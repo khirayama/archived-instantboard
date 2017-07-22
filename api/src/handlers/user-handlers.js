@@ -1,6 +1,15 @@
 const {errorMessages} = require('../constants');
 const {User} = require('../models');
 
+function _transformUser(user) {
+  return {
+    id: user.id,
+    username: user.username,
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt,
+  };
+}
+
 function showCurrentUserHandler(req, res) {
   const user = req.user || null;
 
@@ -10,7 +19,7 @@ function showCurrentUserHandler(req, res) {
     });
     return;
   }
-  res.json(req.user);
+  res.json(_transformUser(req.user));
 }
 
 function updateCurrentUserHandler(req, res) {
@@ -22,7 +31,7 @@ function updateCurrentUserHandler(req, res) {
     individualHooks: true,
   }).spread((count, users) => {
     const user_ = users[0].dataValues;
-    res.status(200).json(user_);
+    res.json(_transformUser(user_));
   }).catch(err => {
     let code = 500;
     let message = errorMessages.UNKNOWN_ERROR;

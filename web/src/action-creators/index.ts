@@ -206,15 +206,15 @@ export function createLabelWithRequest(
 ) {
   return new Promise((resolve, reject) => {
     Label.create(labelParams, options).then((label: any) => {
-      Request.create(Object.assign({}, requestParams, {
-        labelId: label.id,
-      }), options).then(requests => {
-        console.log(requests);
-        const action = {
-          type: '__CREATE_LABEL',
-          label,
-        };
-        dispatch(action);
+      Promise.all(
+        requestParams.memberNames.map((memberName: string) => {
+          return Request.create({
+            labelId: label.id,
+            memberName,
+          }, options);
+        }),
+      ).then((values: any) => {
+        console.log(values);
       });
     });
   });
@@ -284,19 +284,6 @@ export function sortLabel(
         labels,
       };
       dispatch(action);
-    });
-  });
-}
-
-// Token
-export function createRequests(
-  dispatch: (action: any) => void,
-  params: {memberNames: string[]; labelId: number; },
-  options: any,
-) {
-  return new Promise((resolve) => {
-    Request.create(params, options).then((res: any) => {
-      console.log(res);
     });
   });
 }

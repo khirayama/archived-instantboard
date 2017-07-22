@@ -1,13 +1,20 @@
 const {Label, Task} = require('../models');
 const {parseTextWithSchedule} = require('../utils/parse-text-with-schedule');
 
-function transformTask(task) {
+function _transformTask(task) {
   const task_ = task.dataValues || task;
   const {schedule, text} = parseTextWithSchedule(task_.content, new Date(task_.createdAt));
-  return Object.assign({}, task_, {
+  return {
+    id: task_.id,
+    labelId: task_.labelId,
+    priority: task_.priority,
+    content: task_.content,
+    completed: task_.completed,
     text,
     schedule,
-  });
+    createdAt: task_.createdAt,
+    updatedAt: task_.updatedAt,
+  };
 }
 
 function indexTaskHandler(req, res) {
@@ -21,7 +28,7 @@ function indexTaskHandler(req, res) {
       where: {labelId: labelIds},
       order: [['priority', 'ASC']],
     }).then(tasks => {
-      res.json(tasks.map(transformTask));
+      res.json(tasks.map(_transformTask));
     });
   });
 }
@@ -36,7 +43,7 @@ function createTaskHandler(req, res) {
     labelId,
     content,
   }).then(task => {
-    res.json(transformTask(task));
+    res.json(_transformTask(task));
   });
 }
 
@@ -44,7 +51,7 @@ function showTaskHandler(req, res) {
   const taskId = req.params.id;
 
   Task.findById(taskId).then(task => {
-    res.json(transformTask(task));
+    res.json(_transformTask(task));
   });
 }
 
@@ -84,7 +91,7 @@ function updateTaskHandler(req, res) {
           completed: (completed !== undefined) ? completed : task.completed,
           priority: count,
         }).then(task_ => {
-          res.json(transformTask(task_));
+          res.json(_transformTask(task_));
         });
       });
     } else {
@@ -92,7 +99,7 @@ function updateTaskHandler(req, res) {
         content: (content === undefined) ? task.content : content,
         completed: (completed === undefined) ? task.completed : completed,
       }).then(task_ => {
-        res.json(transformTask(task_));
+        res.json(_transformTask(task_));
       });
     }
   });
@@ -118,7 +125,7 @@ function destroyTaskHandler(req, res) {
     });
 
     task.destroy().then(destroyedTask => {
-      res.json(transformTask(destroyedTask));
+      res.json(_transformTask(destroyedTask));
     });
   });
 }
@@ -147,7 +154,7 @@ function sortTaskHandler(req, res) {
             where: {userId},
             order: [['priority', 'ASC']],
           }).then(tasks_ => {
-            res.json(tasks_.map(transformTask));
+            res.json(tasks_.map(_transformTask));
           });
         });
       });
@@ -169,7 +176,7 @@ function sortTaskHandler(req, res) {
             where: {userId},
             order: [['priority', 'ASC']],
           }).then(tasks_ => {
-            res.json(tasks_.map(transformTask));
+            res.json(tasks_.map(_transformTask));
           });
         });
       });

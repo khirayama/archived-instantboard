@@ -60,12 +60,12 @@ export default class LoginStoryboard extends Container<any, any> {
     });
   }
 
-  public handleClickLoginAsTestUser() {
+  public handleClickLoginAsTestUser(uid: string) {
     const dispatch = this.props.store.dispatch.bind(this.props.store);
     const provider = 'facebook';
     createToken(dispatch, {
       provider,
-      uid: '123456789',
+      uid,
     }).then(({accessToken, user}: {accessToken: string, user: any}) => {
       if (accessToken) {
         setAccessToken(accessToken);
@@ -82,7 +82,8 @@ export default class LoginStoryboard extends Container<any, any> {
     return (
       <section className="storyboard">
         <div onClick={() => this.handleClickLoginWithFacebook()}>Login with Facebook</div>
-        <div onClick={() => this.handleClickLoginAsTestUser()}>Login as Test User</div>
+        <div onClick={() => this.handleClickLoginAsTestUser('123456789')}>Login as Test User</div>
+        <div onClick={() => this.handleClickLoginAsTestUser('987654321')}>Login as Test User 2</div>
       </section>
     );
   }

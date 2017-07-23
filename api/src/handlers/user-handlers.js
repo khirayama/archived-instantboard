@@ -1,5 +1,5 @@
 const {errorMessages} = require('../constants');
-const {User} = require('../models');
+const {User, Request} = require('../models');
 
 function _transformUser(user) {
   return {
@@ -44,7 +44,33 @@ function updateCurrentUserHandler(req, res) {
   });
 }
 
+function indexMemberHandler(req, res) {
+  const user = req.user || null;
+
+  Promise.all([
+    Request.findAll({
+      where: {userId: user.id},
+    }),
+    Request.findAll({
+      where: {memberId: user.id},
+    }),
+  ]).then(values => {
+    const sentRequests = values[0];
+    const recievedRequests = values[1];
+    const userIds = sentRequests.map(request => request.memberId);
+    const memberIds = recievedRequests.map(request => request.userId);
+    const allIds = userIds.concat(memberIds).filter(id => id !== user.id).filter((x, i, self) => self.indexOf(x) === i);
+
+    User.findAll({
+      where: {id: allIds},
+    }).then(users => {
+      res.json(users.map(_transformUser));
+    });
+  });
+}
+
 module.exports = {
   showCurrentUserHandler,
   updateCurrentUserHandler,
+  indexMemberHandler,
 };

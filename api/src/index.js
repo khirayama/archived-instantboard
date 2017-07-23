@@ -15,6 +15,7 @@ const {
 const {
   showCurrentUserHandler,
   updateCurrentUserHandler,
+  indexMemberHandler,
 } = require('./handlers/user-handlers');
 
 const {
@@ -79,6 +80,9 @@ router.use('/api', new express.Router()
     .use('/users', new express.Router()
       .get('/current', [requireAuthorization], showCurrentUserHandler)
       .put('/current', [requireAuthorization], updateCurrentUserHandler)
+    )
+    .use('/members', new express.Router()
+      .get('/', [requireAuthorization], indexMemberHandler)
     )
     .use('/tasks', new express.Router()
       .get('/', [requireAuthorization], indexTaskHandler)

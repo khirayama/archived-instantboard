@@ -61,7 +61,7 @@ export class TasksTabContent extends React.Component<any, any> {
                           >
                           <SwipeableViewBackground position="left"><span>L</span></SwipeableViewBackground>
                           <SwipeableViewContent onClick={() => this.context.move(`/tasks/${task.id}/edit`)}>
-                            <div className={classNames('task-list-item', {'task-list-item__completed': task.completed})}>{task.content}</div>
+                            <div className={classNames('task-list-item', {'task-list-item__completed': task.completed})}>{task.text}</div>
                           </SwipeableViewContent>
                           <SwipeableViewBackground position="right"><span>R</span></SwipeableViewBackground>
                         </SwipeableView>

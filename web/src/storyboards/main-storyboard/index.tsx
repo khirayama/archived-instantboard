@@ -14,8 +14,9 @@ import {
   TabNavigationTabListItem,
 } from '../../components/tab-navigation';
 
-import {LabelsTabContent} from './labels-tab-content';
 import {TasksTabContent} from './tasks-tab-content';
+import {LabelsTabContent} from './labels-tab-content';
+import {RequestsTabContent} from './requests-tab-content';
 
 import {
   deleteLabel,
@@ -24,6 +25,7 @@ import {
   sortTask,
   updateLabel,
   updateTask,
+  updateRequest,
 } from '../../action-creators';
 
 export default class MainStoryboard extends Container<any, any> {
@@ -78,6 +80,16 @@ export default class MainStoryboard extends Container<any, any> {
     sortTask(dispatch, taskId, to, {accessToken: this.accessToken});
   }
 
+  public acceptRequest(requestId: number) {
+    const dispatch = this.props.store.dispatch.bind(this.props.store);
+    updateRequest(dispatch, requestId, {status: 'accepted'}, {accessToken: this.accessToken});
+  }
+
+  public refuseRequest(requestId: number) {
+    const dispatch = this.props.store.dispatch.bind(this.props.store);
+    updateRequest(dispatch, requestId, {status: 'refused'}, {accessToken: this.accessToken});
+  }
+
   public render() {
     const actions = {
       updateLabel: this.updateLabel.bind(this),
@@ -86,11 +98,14 @@ export default class MainStoryboard extends Container<any, any> {
       updateTask: this.updateTask.bind(this),
       deleteTask: this.deleteTask.bind(this),
       sortTask: this.sortTask.bind(this),
+      acceptRequest: this.acceptRequest.bind(this),
+      refuseRequest: this.refuseRequest.bind(this),
     };
+    const user = this.state.user || {};
     const labels = this.state.labels;
     const tasks = this.state.tasks;
     const requests = this.state.requests;
-    const user = this.state.user || {};
+    const members = this.state.members;
 
     return (
       <section className="storyboard">
@@ -114,11 +129,10 @@ export default class MainStoryboard extends Container<any, any> {
             </TabNavigationContentList>
 
             <TabNavigationContentList index={2}>
-              <ul>
-                {requests.map((request: any) => {
-                  return <li key={request.id}>from {request.username}</li>;
-                })}
-              </ul>
+              <RequestsTabContent
+                requests={requests}
+                actions={actions}
+              />
             </TabNavigationContentList>
 
             <TabNavigationContentList index={3}>

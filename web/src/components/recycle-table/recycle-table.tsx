@@ -70,8 +70,10 @@ export class RecycleTable extends React.Component<any, any> {
   }
 
   _setCurrentIndex(index: number) {
-    this.setState({currentIndex: index});
-    this._scrollToCenter(index, true);
+    if (this.timerId === null) {
+      this.setState({currentIndex: index});
+      this._scrollToCenter(index, true);
+    }
   }
 
   render() {

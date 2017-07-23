@@ -41,6 +41,22 @@ export const User = {
   },
 };
 
+// Member
+export const Member = {
+  req: axios.create({
+    baseURL: `${API_DOMAIN}/api/v1/members`,
+  }),
+  fetch: (options: IRequestOptions) => {
+    return new Promise((resolve, reject) => {
+      Member.req.get('/', {
+        headers: {Authorization: `Bearer ${options.accessToken}`},
+      }).then(({data}) => {
+        resolve(data);
+      }).catch((err: any) => reject(err));
+    });
+  },
+};
+
 // Task
 export const Task = {
   req: axios.create({
@@ -168,6 +184,15 @@ export const Request = {
         headers: {Authorization: `Bearer ${options.accessToken}`},
       }).then(({data}) => {
         resolve(data);
+      }).catch((err: any) => reject(err));
+    });
+  },
+  update: (id: number, params: any = {}, options: IRequestOptions) => {
+    return new Promise((resolve, reject) => {
+      Request.req.put(`/${id}`, params, {
+        headers: {Authorization: `Bearer ${options.accessToken}`},
+      }).then((res: any) => {
+        resolve(res.data);
       }).catch((err: any) => reject(err));
     });
   },

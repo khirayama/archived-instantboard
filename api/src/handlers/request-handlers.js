@@ -1,10 +1,10 @@
-const {Request, User} = require('../models');
+const {Request, User, Label} = require('../models');
 
 function _transformRequest(request) {
   return {
     id: request.id,
-    memberId: request.userId, // ATENTION: request.userId -> memberId
-    labelId: request.labelId,
+    memberName: request.memberName,
+    labelName: request.labelName,
     status: request.status,
     createdAt: request.createdAt,
     updatedAt: request.updatedAt,
@@ -21,7 +21,38 @@ function indexRequestHandler(req, res) {
     },
     order: [['createdAt', 'ASC']],
   }).then(requests => {
-    res.json(requests.map(_transformRequest));
+    Promise.all([
+      User.findAll({
+        where: {id: requests.map(request => request.userId)},
+      }),
+      Label.findAll({
+        where: {id: requests.map(request => request.labelId)},
+      }),
+    ]).then(values => {
+      const users = values[0];
+      const labels = values[1];
+
+      const requests_ = requests.map(request => {
+        const request_ = {
+          id: request.id,
+          status: request.status,
+          createdAt: request.createdAt,
+          updatedAt: request.updatedAt,
+        };
+        users.forEach(user => {
+          if (request.userId === user.id) {
+            request_.memberName = user.username;
+          }
+        });
+        labels.forEach(label => {
+          if (request.labelId === label.id) {
+            request_.labelName = label.name;
+          }
+        });
+        return request_;
+      });
+      res.json(requests_.map(_transformRequest));
+    });
   });
 }
 
@@ -79,8 +110,9 @@ function updateRequestHandler(req, res) {
 
   switch (status) {
     case 'accepted': {
-      Request.accept({
+      Request.acceptOne({
         where: {id: requestId},
+        individualHooks: true,
       }).then(request => {
         res.json(_transformRequest(request));
       });
@@ -89,6 +121,7 @@ function updateRequestHandler(req, res) {
     default: {
       Request.update({status}, {
         where: {id: requestId},
+        individualHooks: true,
       }).then(request => {
         res.json(_transformRequest(request));
       });

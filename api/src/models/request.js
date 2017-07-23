@@ -37,15 +37,19 @@ module.exports = (sequelize, DataTypes) => {
     underscored: true,
   });
 
-  Request.accept = function (options) {
+  Request.acceptOne = function (options = {}) {
     const LabelStatus = sequelize.models.LabelStatus;
 
     return new Promise(resolve => {
       Request.update({
         status: 'accepted',
-      }, options).then(request => {
+      }, options).then(res => {
+        const requests = res[1];
+        const request = requests[0];
         LabelStatus.count({
-          where: {userId: request.memberId},
+          where: {
+            userId: request.memberId,
+          },
         }).then(count => {
           LabelStatus.create({
             userId: request.memberId,
@@ -55,8 +59,8 @@ module.exports = (sequelize, DataTypes) => {
           });
           resolve();
         });
-      });
-    });
+      }).catch(err => console.log(err));
+    }).catch(err => console.log(err));
   };
 
   return Request;

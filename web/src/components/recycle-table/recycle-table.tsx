@@ -42,24 +42,28 @@ export class RecycleTable extends React.Component<any, any> {
       const list = el.querySelector('.recycle-table-list');
       const listItems = list.querySelectorAll('.recycle-table-list-item');
       const listItem = listItems[index];
-      const currentScrollLeft = list.scrollLeft;
-      const scrollLeft = listItem.offsetLeft - (el.clientWidth - listItem.clientWidth) / 2;
+      if (listItem) {
+        const currentScrollLeft = list.scrollLeft;
+        const scrollLeft = listItem.offsetLeft - (el.clientWidth - listItem.clientWidth) / 2;
 
-      list.scrollLeft = scrollLeft;
+        list.scrollLeft = scrollLeft;
+      }
     } else {
       this.timerId = setInterval(() => {
         const el = this.el;
         const list = el.querySelector('.recycle-table-list');
         const listItems = list.querySelectorAll('.recycle-table-list-item');
         const listItem = listItems[index];
-        const currentScrollLeft = list.scrollLeft;
-        const scrollLeft = listItem.offsetLeft - (el.clientWidth - listItem.clientWidth) / 2;
+        if (listItem) {
+          const currentScrollLeft = list.scrollLeft;
+          const scrollLeft = listItem.offsetLeft - (el.clientWidth - listItem.clientWidth) / 2;
 
-        const speed = (scrollLeft - currentScrollLeft) / 8;
-        list.scrollLeft += speed;
-        if (Math.abs(speed) < 1) {
-          clearInterval(this.timerId);
-          this.timerId = null;
+          const speed = (scrollLeft - currentScrollLeft) / 8;
+          list.scrollLeft += speed;
+          if (Math.abs(speed) < 1) {
+            clearInterval(this.timerId);
+            this.timerId = null;
+          }
         }
       }, 1000 / 60);
     }

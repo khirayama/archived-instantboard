@@ -59,7 +59,6 @@ export default class Container<IContainerProps, IContainerState> extends React.C
 
     if (!Container.pollingTimerId) {
       Container.pollingTimerId = setInterval(() => {
-        console.log('polling');
         fetchInitialData(
           {},
           this.props.store.dispatch.bind(this.props.store),

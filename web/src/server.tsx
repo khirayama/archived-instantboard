@@ -63,12 +63,13 @@ app.get([
   '/labels/:id/edit',
 ], (req, res) => {
 
-  const initialState: any = {
+  const initialState: IState = {
     isAuthenticated: false,
     user: null,
     tasks: [],
     labels: [],
     requests: [],
+    members: [],
     selectedTaskId: null,
     selectedLabelId: null,
   };

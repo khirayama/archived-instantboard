@@ -5,17 +5,17 @@ import {Link} from '../../libs/web-storyboard/link';
 
 import Container from '../container';
 
+import {Icon} from '../../components/icon';
 import {
   TabNavigation,
-  TabNavigationTabList,
-  TabNavigationTabListItem,
   TabNavigationContentList,
   TabNavigationContentListItem,
+  TabNavigationTabList,
+  TabNavigationTabListItem,
 } from '../../components/tab-navigation';
-import {Icon} from '../../components/icon';
 
-import {TasksTabContent} from './tasks-tab-content';
 import {LabelsTabContent} from './labels-tab-content';
+import {TasksTabContent} from './tasks-tab-content';
 
 import {
   deleteLabel,

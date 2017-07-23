@@ -1,7 +1,7 @@
-import * as PropTypes from 'prop-types';
-import * as ReactTransitionGroup from 'react-addons-transition-group';
-import * as React from 'react';
 import * as classNames from 'classnames';
+import * as PropTypes from 'prop-types';
+import * as React from 'react';
+import * as ReactTransitionGroup from 'react-addons-transition-group';
 
 export class List extends React.Component<any, any> {
   private static propTypes = {

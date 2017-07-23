@@ -4,7 +4,7 @@ import * as React from 'react';
 export class RecycleTableList extends React.Component<any, any> {
   private static propTypes = {
     children: PropTypes.node,
-  }
+  };
 
   private recycleTableList: any;
 

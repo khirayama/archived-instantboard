@@ -1,10 +1,10 @@
+import * as classNames from 'classnames';
 import * as PropTypes from 'prop-types';
 import * as React from 'react';
-import * as classNames from 'classnames';
 
 import {
-  TRANSITION_TIME,
   THRESHOLD_DELTA,
+  TRANSITION_TIME,
   transitionProperties,
 } from '../constants';
 
@@ -50,7 +50,7 @@ export class SwipeableViewContent extends React.Component<any, any> {
 
     const distance = Math.sqrt(
       Math.pow(event.touches[0].clientX - this.touch.startX, 2) +
-      Math.pow(event.touches[0].clientY - this.touch.startY, 2)
+      Math.pow(event.touches[0].clientY - this.touch.startY, 2),
     );
 
     if (distance > 10) {

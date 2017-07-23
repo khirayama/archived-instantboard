@@ -134,7 +134,7 @@ export function createTask(
 export function updateTask(
   dispatch: (action: any) => void,
   id: number,
-  params: {completed?: boolean; content?: string; labelId?: number;},
+  params: {completed?: boolean; content?: string; labelId?: number; },
   options: any,
 ) {
   return new Promise((resolve, reject) => {

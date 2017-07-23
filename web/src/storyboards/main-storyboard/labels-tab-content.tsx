@@ -1,11 +1,11 @@
+import * as classNames from 'classnames';
 import * as PropTypes from 'prop-types';
 import * as React from 'react';
-import * as classNames from 'classnames';
 
 import {
   SwipeableView,
-  SwipeableViewContent,
   SwipeableViewBackground,
+  SwipeableViewContent,
 } from '../../components/swipeable-view';
 
 import {
@@ -32,15 +32,15 @@ export class LabelsTabContent extends React.Component<any, any> {
           return (
             <ListItem key={label.id}>
               <SwipeableView
-                onSwipeLeft={() => {actions.deleteLabel(label.id)}}
-                onSwipeRight={() => {actions.updateLabel(label.id, {visibled: !label.visibled})}}
+                onSwipeLeft={() => {actions.deleteLabel(label.id);}}
+                onSwipeRight={() => {actions.updateLabel(label.id, {visibled: !label.visibled});}}
                 throughLeft={true}
                 >
-                <SwipeableViewBackground position='left'><span>L</span></SwipeableViewBackground>
+                <SwipeableViewBackground position="left"><span>L</span></SwipeableViewBackground>
                 <SwipeableViewContent onClick={() => this.context.move(`/labels/${label.id}/edit`)}>
-                  <div className={classNames("label-list-item", {"label-list-item__hidden": !label.visibled})}>{label.name}</div>
+                  <div className={classNames('label-list-item', {'label-list-item__hidden': !label.visibled})}>{label.name}</div>
                 </SwipeableViewContent>
-                <SwipeableViewBackground position='right'><span>R</span></SwipeableViewBackground>
+                <SwipeableViewBackground position="right"><span>R</span></SwipeableViewBackground>
               </SwipeableView>
             </ListItem>
           );

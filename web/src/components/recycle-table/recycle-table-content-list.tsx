@@ -8,16 +8,16 @@ export class RecycleTableContentList extends React.Component<any, any> {
     handleTouchStart: PropTypes.func,
     handleTouchMove: PropTypes.func,
     handleTouchEnd: PropTypes.func,
-  }
+  };
 
   private static contextTypes = {
     currentIndex: PropTypes.number,
     setCurrentIndex: PropTypes.func,
-  }
+  };
 
   private static propTypes = {
     children: PropTypes.node,
-  }
+  };
 
   private recycleTableContentList: any;
   private touch: any;

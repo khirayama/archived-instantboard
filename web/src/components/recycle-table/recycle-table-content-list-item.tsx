@@ -1,6 +1,6 @@
+import * as classNames from 'classnames';
 import * as PropTypes from 'prop-types';
 import * as React from 'react';
-import * as classNames from 'classnames';
 
 export class RecycleTableContentListItem extends React.Component<any, any> {
 
@@ -9,11 +9,11 @@ export class RecycleTableContentListItem extends React.Component<any, any> {
     handleTouchMove: PropTypes.func,
     handleTouchEnd: PropTypes.func,
     currentIndex: PropTypes.number,
-  }
+  };
 
   private static propTypes = {
     children: PropTypes.node,
-  }
+  };
 
   render() {
     let isHidden = false;
@@ -29,8 +29,8 @@ export class RecycleTableContentListItem extends React.Component<any, any> {
         onTouchMove={this.context.handleTouchMove}
         onTouchEnd={this.context.handleTouchEnd}
         className={classNames(
-          "recycle-table-content-list-item",
-          {'recycle-table-content-list-item__hidden': isHidden}
+          'recycle-table-content-list-item',
+          {'recycle-table-content-list-item__hidden': isHidden},
         )}
         >
         <section className="recycle-table-content-list-item--inner">{this.props.children}</section>

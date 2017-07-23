@@ -5,12 +5,12 @@ export class RecycleTable extends React.Component<any, any> {
   private static childContextTypes = {
     currentIndex: PropTypes.number,
     setCurrentIndex: PropTypes.func,
-  }
+  };
 
   private static propTypes = {
     index: PropTypes.number,
     children: PropTypes.node,
-  }
+  };
 
   private el: any;
   private timerId: any = null;
@@ -61,7 +61,7 @@ export class RecycleTable extends React.Component<any, any> {
           clearInterval(this.timerId);
           this.timerId = null;
         }
-      }, 1000/60);
+      }, 1000 / 60);
     }
   }
 

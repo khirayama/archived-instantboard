@@ -1,11 +1,11 @@
+import * as classNames from 'classnames';
 import * as PropTypes from 'prop-types';
 import * as React from 'react';
-import * as classNames from 'classnames';
 
 import {
-  TRANSITION_TIME,
   THRESHOLD_HOLD_TIME,
   THRESHOLD_SCROLL_HEIGHT,
+  TRANSITION_TIME,
   transitionProperties,
 } from '../constants';
 
@@ -159,7 +159,7 @@ export class ListItem extends React.Component<any, any> {
 
     const distance = Math.sqrt(
       Math.pow(event.touches[0].clientX - this.pointer.startX, 2) +
-      Math.pow(event.touches[0].clientY - this.pointer.startY, 2)
+      Math.pow(event.touches[0].clientY - this.pointer.startY, 2),
     );
 
     if (distance > 10) {

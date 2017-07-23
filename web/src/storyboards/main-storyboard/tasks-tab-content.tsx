@@ -1,19 +1,19 @@
+import * as classNames from 'classnames';
 import * as PropTypes from 'prop-types';
 import * as React from 'react';
-import * as classNames from 'classnames';
 
 import {
   RecycleTable,
-  RecycleTableList,
-  RecycleTableListItem,
   RecycleTableContentList,
   RecycleTableContentListItem,
+  RecycleTableList,
+  RecycleTableListItem,
 } from '../../components/recycle-table';
 
 import {
   SwipeableView,
-  SwipeableViewContent,
   SwipeableViewBackground,
+  SwipeableViewContent,
 } from '../../components/swipeable-view';
 
 import {
@@ -34,7 +34,7 @@ export class TasksTabContent extends React.Component<any, any> {
       <RecycleTable>
         <RecycleTableList>
           {labels.map((label: any, index: number) => {
-            return <RecycleTableListItem key={label.id} index={index}>{label.name}</RecycleTableListItem>
+            return <RecycleTableListItem key={label.id} index={index}>{label.name}</RecycleTableListItem>;
           })}
         </RecycleTableList>
 
@@ -55,15 +55,15 @@ export class TasksTabContent extends React.Component<any, any> {
                     return (
                       <ListItem key={task.id}>
                         <SwipeableView
-                          onSwipeLeft={() => {actions.deleteTask(task.id)}}
-                          onSwipeRight={() => {actions.updateTask(task.id, {completed: !task.completed})}}
+                          onSwipeLeft={() => {actions.deleteTask(task.id);}}
+                          onSwipeRight={() => {actions.updateTask(task.id, {completed: !task.completed});}}
                           throughLeft={true}
                           >
-                          <SwipeableViewBackground position='left'><span>L</span></SwipeableViewBackground>
+                          <SwipeableViewBackground position="left"><span>L</span></SwipeableViewBackground>
                           <SwipeableViewContent onClick={() => this.context.move(`/tasks/${task.id}/edit`)}>
-                            <div className={classNames("task-list-item", {"task-list-item__completed": task.completed})}>{task.content}</div>
+                            <div className={classNames('task-list-item', {'task-list-item__completed': task.completed})}>{task.content}</div>
                           </SwipeableViewContent>
-                          <SwipeableViewBackground position='right'><span>R</span></SwipeableViewBackground>
+                          <SwipeableViewBackground position="right"><span>R</span></SwipeableViewBackground>
                         </SwipeableView>
                       </ListItem>
                     );

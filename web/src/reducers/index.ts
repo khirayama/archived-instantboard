@@ -9,6 +9,7 @@ const reducer = (state: IState, action: any) => {
         newState.tasks = action.tasks;
         newState.labels = action.labels;
         newState.requests = action.requests;
+        newState.members = action.members;
         newState.selectedTaskId = (action.selectedTaskId !== undefined) ? action.selectedTaskId : state.selectedTaskId;
         newState.selectedLabelId = (action.selectedLabelId !== undefined) ? action.selectedLabelId : state.selectedLabelId;
         break;

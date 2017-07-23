@@ -2,6 +2,11 @@ import * as PropTypes from 'prop-types';
 import * as React from 'react';
 
 export class RecycleTableList extends React.Component<any, any> {
+  private static contextTypes = {
+    currentIndex: PropTypes.number,
+    setCurrentIndex: PropTypes.func,
+  };
+
   private static propTypes = {
     children: PropTypes.node,
   };
@@ -13,7 +18,16 @@ export class RecycleTableList extends React.Component<any, any> {
   }
 
   componentDidUpdate() {
+    this._adjustIndex();
     this._adjustListPosition();
+  }
+
+  _adjustIndex() {
+    const el = this.recycleTableList;
+    const listItems = el.querySelectorAll('.recycle-table-list-item');
+    if (listItems.length - 1 < this.context.currentIndex) {
+      this.context.setCurrentIndex(listItems.length - 1);
+    }
   }
 
   _adjustListPosition() {
@@ -31,7 +45,7 @@ export class RecycleTableList extends React.Component<any, any> {
         width += listItems[i].clientWidth;
       }
 
-      inner.style.width = (width + paddingLeft + paddingRight + 1) + 'px';
+      inner.style.width = (width + paddingLeft + paddingRight + 3) + 'px';
       inner.style.paddingLeft = paddingLeft + 'px';
       inner.style.paddingRight = paddingRight + 'px';
     }

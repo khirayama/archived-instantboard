@@ -5,7 +5,6 @@ function _getRequests(labelId, requests, userIds) {
     if (labelId === request.labelId) {
       for (let k = 0; k < userIds.length; k++) {
         const userId = userIds[k];
-        // if (userId === request.memberId || userId === request.userId) {
         if (userId === request.memberId) {
           requests_.push({
             id: request.id,
@@ -55,10 +54,9 @@ module.exports = (sequelize, DataTypes) => {
   // public static destroyByUser
   // public static sort
 
-  Label.findAllFromStatus = function (options) {
+  Label.findAllFromStatus = function (options = {}) {
     const LabelStatus = sequelize.models.LabelStatus;
     const Request = sequelize.models.Request;
-    const User = sequelize.models.User;
 
     return new Promise(resolve => {
       LabelStatus.findAll(options).then(labelStatuses => {
@@ -94,7 +92,7 @@ module.exports = (sequelize, DataTypes) => {
             return newLabel;
           });
           resolve(labels_);
-        });
+        }).catch(err => console.log(err));
       });
     });
   };
@@ -102,7 +100,6 @@ module.exports = (sequelize, DataTypes) => {
   Label.findByIdAndUser = function (labelId, userId) {
     const LabelStatus = sequelize.models.LabelStatus;
     const Request = sequelize.models.Request;
-    const User = sequelize.models.User;
 
     return new Promise(resolve => {
       Promise.all([
@@ -118,7 +115,7 @@ module.exports = (sequelize, DataTypes) => {
         const labelStatus = values[1];
         const requests = values[2];
 
-        const userIds = requests.map(request => request.memberId).filter(memberId => (Boolean(options.userId) || memberId !== options.userId)).filter((x, i, self) => self.indexOf(x) === i);
+        const userIds = requests.map(request => request.memberId).filter(memberId => memberId !== userId).filter((x, i, self) => self.indexOf(x) === i);
         const newLabel = {
           id: label.id,
           name: label.name,
@@ -207,7 +204,7 @@ module.exports = (sequelize, DataTypes) => {
           labelStatuses.forEach(labelStatus => {
             labelStatus.update({priority: labelStatus.priority - 1});
           });
-        });
+        }).catch(err => console.log(err));
         LabelStatus.destroy({
           where: {labelId, userId},
         }).then(() => {
@@ -228,20 +225,20 @@ module.exports = (sequelize, DataTypes) => {
                   }),
                 ]).then(() => {
                   resolve(cachedLabel);
-                });
-              });
+                }).catch(err => console.log(err));
+              }).catch(err => console.log(err));
             } else {
               // If don't destroy label, remove request
               Request.destroy({
                 where: {labelId, memberId: userId},
               }).then(() => {
                 resolve(cachedLabel);
-              });
+              }).catch(err => console.log(err));
             }
-          });
-        });
-      });
-    });
+          }).catch(err => console.log(err));
+        }).catch(err => console.log(err));
+      }).catch(err => console.log(err));
+    }).catch(err => console.log(err));
   };
 
   Label.sort = function (labelId, userId, priority) {

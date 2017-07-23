@@ -3,8 +3,8 @@ const taskResponseSchema = {
   required: [
     'id',
     'content',
-    'text', // for response
-    'schedule', // for response
+    'text', // For response
+    'schedule', // For response
     'labelId',
     'priority',
     'completed',

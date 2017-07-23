@@ -88,7 +88,7 @@ function updateRequestHandler(req, res) {
     }
     default: {
       Request.update({status}, {
-        where: {id: requestId}
+        where: {id: requestId},
       }).then(request => {
         res.json(_transformRequest(request));
       });

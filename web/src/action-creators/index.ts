@@ -259,7 +259,7 @@ export function updateLabelWithRequest(
             memberName,
           }, options);
         }),
-      });
+      );
     });
   });
 }

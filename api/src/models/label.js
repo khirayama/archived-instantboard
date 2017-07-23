@@ -175,8 +175,12 @@ module.exports = (sequelize, DataTypes) => {
         const labelStatus = values_[1];
 
         Promise.all([
-          label.update({name: values.name || label.name}),
-          labelStatus.update({visibled: values.visibled}),
+          label.update({
+            name: (values.name === undefined) ? label.name : values.name,
+          }),
+          labelStatus.update({
+            visibled: (values.visibled === undefined) ? labelStatus.visibled : values.visibled,
+          }),
         ]).then(() => {
           Label.findByIdAndUser(labelId, userId).then(label => {
             resolve(label);

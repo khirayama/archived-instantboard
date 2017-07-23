@@ -6,7 +6,7 @@ function _transformLabel(label) {
     name: label.name,
     priority: label.priority,
     visibled: label.visibled,
-    requests: label.requests,
+    members: label.members,
     createdAt: label.createdAt,
     updatedAt: label.updatedAt,
   };

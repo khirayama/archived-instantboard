@@ -1,17 +1,19 @@
-function _getRequests(labelId, requests, userIds) {
+function _getMembers(label, requests, users) {
   const requests_ = [];
   for (let j = 0; j < requests.length; j++) {
     const request = requests[j];
-    if (labelId === request.labelId) {
-      for (let k = 0; k < userIds.length; k++) {
-        const userId = userIds[k];
-        if (userId === request.memberId) {
+    if (label.id === request.labelId) {
+      for (let k = 0; k < users.length; k++) {
+        const user = users[k];
+        if (user.id === request.memberId) {
           requests_.push({
-            id: request.id,
-            memberId: userId, // ATENTION: request.userId -> memberId
+            name: user.username,
             status: request.status,
-            createdAt: request.createdAt,
-            updatedAt: request.updatedAt,
+          });
+        } else if (user.id === label.userId) {
+          requests_.push({
+            name: user.username,
+            status: 'accepted',
           });
         }
       }
@@ -57,6 +59,7 @@ module.exports = (sequelize, DataTypes) => {
   Label.findAllFromStatus = function (options = {}) {
     const LabelStatus = sequelize.models.LabelStatus;
     const Request = sequelize.models.Request;
+    const User = sequelize.models.User;
 
     return new Promise(resolve => {
       LabelStatus.findAll(options).then(labelStatuses => {
@@ -72,26 +75,33 @@ module.exports = (sequelize, DataTypes) => {
           const labels = values[0];
           const requests = values[1];
 
-          const userIds = requests.map(request => request.memberId).filter(memberId => (Boolean(options.userId) || memberId !== options.userId)).filter((x, i, self) => self.indexOf(x) === i);
-          const labels_ = labelStatuses.map(labelStatus => {
-            let newLabel = {};
-            for (let i = 0; i < labels.length; i++) {
-              const label = labels[i];
-              if (label.id === labelStatus.labelId) {
-                newLabel = {
-                  id: label.id,
-                  name: label.name,
-                  priority: labelStatus.priority,
-                  visibled: labelStatus.visibled,
-                  createdAt: label.createdAt,
-                  updatedAt: label.updatedAt,
-                  requests: _getRequests(label.id, requests, userIds),
-                };
+          const userIds = [].concat(
+            requests.map(request => request.memberId),
+            requests.map(request => request.userId)
+          );
+          User.findAll({
+            where: {id: userIds},
+          }).then(users => {
+            const labels_ = labelStatuses.map(labelStatus => {
+              let newLabel = {};
+              for (let i = 0; i < labels.length; i++) {
+                const label = labels[i];
+                if (label.id === labelStatus.labelId) {
+                  newLabel = {
+                    id: label.id,
+                    name: label.name,
+                    priority: labelStatus.priority,
+                    visibled: labelStatus.visibled,
+                    createdAt: label.createdAt,
+                    updatedAt: label.updatedAt,
+                    members: _getMembers(label, requests, users),
+                  };
+                }
               }
-            }
-            return newLabel;
+              return newLabel;
+            });
+            resolve(labels_);
           });
-          resolve(labels_);
         }).catch(err => console.log(err));
       });
     });
@@ -100,6 +110,7 @@ module.exports = (sequelize, DataTypes) => {
   Label.findByIdAndUser = function (labelId, userId) {
     const LabelStatus = sequelize.models.LabelStatus;
     const Request = sequelize.models.Request;
+    const User = sequelize.models.User;
 
     return new Promise(resolve => {
       Promise.all([
@@ -115,17 +126,23 @@ module.exports = (sequelize, DataTypes) => {
         const labelStatus = values[1];
         const requests = values[2];
 
-        const userIds = requests.map(request => request.memberId).filter(memberId => memberId !== userId).filter((x, i, self) => self.indexOf(x) === i);
-        const newLabel = {
-          id: label.id,
-          name: label.name,
-          priority: labelStatus.priority,
-          visibled: labelStatus.visibled,
-          createdAt: labelStatus.createdAt,
-          updatedAt: labelStatus.updatedAt,
-          requests: _getRequests(label.id, requests, userIds),
-        };
-        resolve(newLabel);
+        const userIds = [].concat(
+          requests.map(request => request.memberId),
+          requests.map(request => request.userId)
+        );
+        User.findAll({
+          where: {id: userIds},
+        }).then(users => {
+          resolve({
+            id: label.id,
+            name: label.name,
+            priority: labelStatus.priority,
+            visibled: labelStatus.visibled,
+            createdAt: label.createdAt,
+            updatedAt: label.updatedAt,
+            members: _getMembers(label, requests, users),
+          });
+        });
       });
     });
   };

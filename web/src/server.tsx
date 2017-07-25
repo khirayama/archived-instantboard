@@ -89,7 +89,6 @@ app.get([
       store.getState(),
     ),
   );
-  return;
 
   // router.initialize(req.path, {
   //   accessToken: req.cookies[ACCESS_TOKEN_KEY],

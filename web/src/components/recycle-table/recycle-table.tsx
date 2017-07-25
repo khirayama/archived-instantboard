@@ -39,6 +39,10 @@ export class RecycleTable extends React.Component<any, any> {
   _scrollToCenter(index: any, animate: boolean) {
     if (!animate) {
       const el = this.el;
+      if (el === null) {
+        return;
+      }
+
       const list = el.querySelector('.recycle-table-list');
       const listItems = list.querySelectorAll('.recycle-table-list-item');
       const listItem = listItems[index];
@@ -51,6 +55,10 @@ export class RecycleTable extends React.Component<any, any> {
     } else {
       this.timerId = setInterval(() => {
         const el = this.el;
+        if (el === null) {
+          return;
+        }
+
         const list = el.querySelector('.recycle-table-list');
         const listItems = list.querySelectorAll('.recycle-table-list-item');
         const listItem = listItems[index];

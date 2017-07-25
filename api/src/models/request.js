@@ -51,11 +51,17 @@ module.exports = (sequelize, DataTypes) => {
             userId: request.memberId,
           },
         }).then(count => {
-          LabelStatus.create({
-            userId: request.memberId,
-            labelId: request.labelId,
-            priority: count,
-            visibled: true,
+          LabelStatus.findOrCreate({
+            where: {
+              userId: request.memberId,
+              labelId: request.labelId,
+            },
+            defaults: {
+              userId: request.memberId,
+              labelId: request.labelId,
+              priority: count,
+              visibled: true,
+            }
           });
           resolve();
         });

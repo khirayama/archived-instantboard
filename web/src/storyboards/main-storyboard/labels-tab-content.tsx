@@ -13,6 +13,8 @@ import {
   ListItem,
 } from '../../components/list';
 
+import {Icon} from '../../components/icon';
+
 export class LabelsTabContent extends React.Component<any, any> {
   public static contextTypes = {
     move: PropTypes.func,
@@ -23,6 +25,7 @@ export class LabelsTabContent extends React.Component<any, any> {
     const actions = this.props.actions;
     return (
       <List
+        className="label-list"
         onSort={(from: number, to: number) => {
           const label = labels[from];
           actions.sortLabel(label.id, to);
@@ -36,11 +39,21 @@ export class LabelsTabContent extends React.Component<any, any> {
                 onSwipeRight={() => {actions.updateLabel(label.id, {visibled: !label.visibled});}}
                 throughLeft={true}
                 >
-                <SwipeableViewBackground position="left"><span>L</span></SwipeableViewBackground>
-                <SwipeableViewContent onClick={() => this.context.move(`/labels/${label.id}/edit`)}>
-                  <div className={classNames('label-list-item', {'label-list-item__hidden': !label.visibled})}>{label.name}</div>
+                <SwipeableViewBackground position="left">
+                  {(label.visibled) ?
+                    (<Icon>visibility_off</Icon>) :
+                    (<Icon>visibility</Icon>)
+                  }
+                </SwipeableViewBackground>
+                <SwipeableViewContent
+                  onClick={() => this.context.move(`/labels/${label.id}/edit`)}
+                  className={classNames('label-list-item', {'label-list-item__unvisibled': !label.visibled})}
+                  >
+                  <div>{label.name}</div>
                 </SwipeableViewContent>
-                <SwipeableViewBackground position="right"><span>R</span></SwipeableViewBackground>
+                <SwipeableViewBackground position="right">
+                  <Icon>delete</Icon>
+                </SwipeableViewBackground>
               </SwipeableView>
             </ListItem>
           );

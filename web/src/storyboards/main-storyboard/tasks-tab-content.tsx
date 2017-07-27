@@ -21,6 +21,9 @@ import {
   ListItem,
 } from '../../components/list';
 
+import {Icon} from '../../components/icon';
+import {LinkText} from '../../components/link-text';
+
 export class TasksTabContent extends React.Component<any, any> {
   public static contextTypes = {
     move: PropTypes.func,
@@ -46,6 +49,7 @@ export class TasksTabContent extends React.Component<any, any> {
             return (
               <RecycleTableContentListItem key={index}>
                 <List
+                  className="task-list"
                   onSort={(from: number, to: number) => {
                     const task = groupedTasks[from];
                     actions.sortTask(task.id, to);
@@ -59,11 +63,33 @@ export class TasksTabContent extends React.Component<any, any> {
                           onSwipeRight={() => {actions.updateTask(task.id, {completed: !task.completed});}}
                           throughLeft={true}
                           >
-                          <SwipeableViewBackground position="left"><span>L</span></SwipeableViewBackground>
-                          <SwipeableViewContent onClick={() => this.context.move(`/tasks/${task.id}/edit`)}>
-                            <div className={classNames('task-list-item', {'task-list-item__completed': task.completed})}>{task.text}</div>
+                          <SwipeableViewBackground position="left">
+                            <Icon>check</Icon>
+                          </SwipeableViewBackground>
+                          <SwipeableViewContent
+                            onClick={() => this.context.move(`/tasks/${task.id}/edit`)}
+                            className={classNames('task-list-item', {'task-list-item__completed': task.completed})}
+                            >
+                            {(task.schedule) ? (
+                              <span className="task-list-item-content-schedule-container">
+                                <span className={`task-list-item-content-schedule task-list-item-content-schedule__${task.schedule.shortMonthName.toLowerCase()}`}>
+                                  <span className="task-list-item-content-schedule-month">
+                                    {task.schedule.shortMonthName}
+                                  </span>
+                                  <span className="task-list-item-content-schedule-date">
+                                    {task.schedule.date}
+                                  </span>
+                                  <span className="task-list-item-content-schedule-day">
+                                    {task.schedule.shortDayName}
+                                  </span>
+                                </span>
+                              </span>
+                            ) : null}
+                            <span className="task-list-item-content-text"><LinkText>{task.text}</LinkText></span>
                           </SwipeableViewContent>
-                          <SwipeableViewBackground position="right"><span>R</span></SwipeableViewBackground>
+                          <SwipeableViewBackground position="right">
+                            <Icon>delete</Icon>
+                          </SwipeableViewBackground>
                         </SwipeableView>
                       </ListItem>
                     );

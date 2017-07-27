@@ -8,20 +8,26 @@ export class RequestsTabContent extends React.Component<any, any> {
     const actions = this.props.actions;
 
     return (
-      <ul>
-        {this.props.requests.map((request: any) => {
-          return (
-            <li key={request.id}>
-              <strong>{request.labelName}</strong>
-              From {request.memberName}
-              <div>
-                <div onClick={() => {actions.acceptRequest(request.id)}}>Accept</div>
-                <div onClick={() => {actions.refuseRequest(request.id)}}>Refuse</div>
-              </div>
-            </li>
-          );
-        })}
-      </ul>
+      <div>
+      {(requests.length) ? (
+        <ul>
+          {requests.map((request: any) => {
+            return (
+              <li key={request.id}>
+                <strong>{request.labelName}</strong>
+                From {request.memberName}
+                <div>
+                  <div onClick={() => {actions.acceptRequest(request.id)}}>Accept</div>
+                  <div onClick={() => {actions.refuseRequest(request.id)}}>Refuse</div>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      ) : (
+        <p>No notifications</p>
+      )}
+      </div>
     );
   }
 }

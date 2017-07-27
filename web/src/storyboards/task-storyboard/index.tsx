@@ -42,13 +42,13 @@ export default class TaskStoryboard extends Container<any, any> {
 
   public handleChangeLabelSelect(event: any) {
     this.setState({
-      labelId: event.currentTarget.value.trim(),
+      labelId: event.currentTarget.value,
     });
   }
 
   public handleChangeContentInput(event: any) {
     this.setState({
-      content: event.currentTarget.value.trim(),
+      content: event.currentTarget.value,
     });
   }
 
@@ -58,12 +58,12 @@ export default class TaskStoryboard extends Container<any, any> {
     if (this.isUpdate()) {
       updateTask(dispatch, taskId, {
         labelId: this.state.labelId,
-        content: this.state.content,
+        content: this.state.content.trim(),
       }, {accessToken: this.accessToken});
     } else {
       createTask(dispatch, {
         labelId: this.state.labelId,
-        content: this.state.content,
+        content: this.state.content.trim(),
       }, {accessToken: this.accessToken});
     }
   }

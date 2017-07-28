@@ -23,7 +23,7 @@ export class LabelsTabContent extends React.Component<any, any> {
   public render() {
     const labels = this.props.labels;
     const actions = this.props.actions;
-    return (
+    return (labels.length) ? (
       <List
         className="label-list"
         onSort={(from: number, to: number) => {
@@ -59,6 +59,10 @@ export class LabelsTabContent extends React.Component<any, any> {
           );
         })}
       </List>
+    ) : (
+      <div className="no-label-content">
+        <p>No labels</p>
+      </div>
     );
   }
 }

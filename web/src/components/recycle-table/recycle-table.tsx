@@ -66,9 +66,15 @@ export class RecycleTable extends React.Component<any, any> {
           const currentScrollLeft = list.scrollLeft;
           const scrollLeft = listItem.offsetLeft - (el.clientWidth - listItem.clientWidth) / 2;
 
-          const speed = (scrollLeft - currentScrollLeft) / 8;
-          list.scrollLeft += speed;
-          if (Math.abs(speed) < 1) {
+          const num = 5;
+          const speed = (scrollLeft - currentScrollLeft) / num;
+          if (speed < 0) {
+            list.scrollLeft += Math.min(speed, -1);
+          } else {
+            list.scrollLeft += Math.max(speed, 1);
+          }
+          if (Math.abs(list.scrollLeft - scrollLeft) < 1) {
+            list.scrollLeft = scrollLeft;
             clearInterval(this.timerId);
             this.timerId = null;
           }

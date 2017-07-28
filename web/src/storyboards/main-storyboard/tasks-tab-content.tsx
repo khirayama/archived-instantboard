@@ -48,53 +48,59 @@ export class TasksTabContent extends React.Component<any, any> {
             });
             return (
               <RecycleTableContentListItem key={index}>
-                <List
-                  className="task-list"
-                  onSort={(from: number, to: number) => {
-                    const task = groupedTasks[from];
-                    actions.sortTask(task.id, to);
-                  }}
-                >
+                {(groupedTasks.length) ? (
+                  <List
+                    className="task-list"
+                    onSort={(from: number, to: number) => {
+                      const task = groupedTasks[from];
+                      actions.sortTask(task.id, to);
+                    }}
+                  >
                   {groupedTasks.map((task: any) => {
-                    return (
-                      <ListItem key={task.id}>
-                        <SwipeableView
-                          onSwipeLeft={() => {actions.deleteTask(task.id); }}
-                          onSwipeRight={() => {actions.updateTask(task.id, {completed: !task.completed}); }}
-                          throughLeft={true}
-                          >
-                          <SwipeableViewBackground position="left">
-                            <Icon>check</Icon>
-                          </SwipeableViewBackground>
-                          <SwipeableViewContent
-                            onClick={() => this.context.move(`/tasks/${task.id}/edit`)}
-                            className={classNames('task-list-item', {'task-list-item__completed': task.completed})}
+                      return (
+                        <ListItem key={task.id}>
+                          <SwipeableView
+                            onSwipeLeft={() => {actions.deleteTask(task.id); }}
+                            onSwipeRight={() => {actions.updateTask(task.id, {completed: !task.completed}); }}
+                            throughLeft={true}
                             >
-                            {(task.schedule) ? (
-                              <span className="task-list-item-content-schedule-container">
-                                <span className={`task-list-item-content-schedule task-list-item-content-schedule__${task.schedule.shortMonthName.toLowerCase()}`}>
-                                  <span className="task-list-item-content-schedule-month">
-                                    {task.schedule.shortMonthName}
-                                  </span>
-                                  <span className="task-list-item-content-schedule-date">
-                                    {task.schedule.date}
-                                  </span>
-                                  <span className="task-list-item-content-schedule-day">
-                                    {task.schedule.shortDayName}
+                            <SwipeableViewBackground position="left">
+                              <Icon>check</Icon>
+                            </SwipeableViewBackground>
+                            <SwipeableViewContent
+                              onClick={() => this.context.move(`/tasks/${task.id}/edit`)}
+                              className={classNames('task-list-item', {'task-list-item__completed': task.completed})}
+                              >
+                              {(task.schedule) ? (
+                                <span className="task-list-item-content-schedule-container">
+                                  <span className={`task-list-item-content-schedule task-list-item-content-schedule__${task.schedule.shortMonthName.toLowerCase()}`}>
+                                    <span className="task-list-item-content-schedule-month">
+                                      {task.schedule.shortMonthName}
+                                    </span>
+                                    <span className="task-list-item-content-schedule-date">
+                                      {task.schedule.date}
+                                    </span>
+                                    <span className="task-list-item-content-schedule-day">
+                                      {task.schedule.shortDayName}
+                                    </span>
                                   </span>
                                 </span>
-                              </span>
-                            ) : null}
-                            <span className="task-list-item-content-text"><LinkText>{task.text}</LinkText></span>
-                          </SwipeableViewContent>
-                          <SwipeableViewBackground position="right">
-                            <Icon>delete</Icon>
-                          </SwipeableViewBackground>
-                        </SwipeableView>
-                      </ListItem>
-                    );
-                  })}
-                </List>
+                              ) : null}
+                              <span className="task-list-item-content-text"><LinkText>{task.text}</LinkText></span>
+                            </SwipeableViewContent>
+                            <SwipeableViewBackground position="right">
+                              <Icon>delete</Icon>
+                            </SwipeableViewBackground>
+                          </SwipeableView>
+                        </ListItem>
+                      );
+                    })}
+                  </List>
+                ) : (
+                  <div className="no-task-content">
+                    <p>No tasks</p>
+                  </div>
+                )}
               </RecycleTableContentListItem>
             );
           })}

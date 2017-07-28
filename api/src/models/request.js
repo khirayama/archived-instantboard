@@ -61,7 +61,7 @@ module.exports = (sequelize, DataTypes) => {
               labelId: request.labelId,
               priority: count,
               visibled: true,
-            }
+            },
           });
           resolve();
         });

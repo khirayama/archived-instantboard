@@ -59,8 +59,8 @@ export class TasksTabContent extends React.Component<any, any> {
                     return (
                       <ListItem key={task.id}>
                         <SwipeableView
-                          onSwipeLeft={() => {actions.deleteTask(task.id);}}
-                          onSwipeRight={() => {actions.updateTask(task.id, {completed: !task.completed});}}
+                          onSwipeLeft={() => {actions.deleteTask(task.id); }}
+                          onSwipeRight={() => {actions.updateTask(task.id, {completed: !task.completed}); }}
                           throughLeft={true}
                           >
                           <SwipeableViewBackground position="left">

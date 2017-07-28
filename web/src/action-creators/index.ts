@@ -1,10 +1,10 @@
 import {
   Label,
+  Member,
   Request,
   Task,
   Token,
   User,
-  Member,
 } from '../repositories';
 
 // Utils

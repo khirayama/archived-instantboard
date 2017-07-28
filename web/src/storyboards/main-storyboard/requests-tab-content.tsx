@@ -17,8 +17,8 @@ export class RequestsTabContent extends React.Component<any, any> {
                 <strong>{request.labelName}</strong>
                 From {request.memberName}
                 <div>
-                  <div onClick={() => {actions.acceptRequest(request.id)}}>Accept</div>
-                  <div onClick={() => {actions.refuseRequest(request.id)}}>Refuse</div>
+                  <div onClick={() => {actions.acceptRequest(request.id);}}>Accept</div>
+                  <div onClick={() => {actions.refuseRequest(request.id);}}>Refuse</div>
                 </div>
               </li>
             );

@@ -14,9 +14,9 @@ import {
   TabNavigationTabListItem,
 } from '../../components/tab-navigation';
 
-import {TasksTabContent} from './tasks-tab-content';
 import {LabelsTabContent} from './labels-tab-content';
 import {RequestsTabContent} from './requests-tab-content';
+import {TasksTabContent} from './tasks-tab-content';
 
 import {
   deleteLabel,
@@ -24,8 +24,8 @@ import {
   sortLabel,
   sortTask,
   updateLabel,
-  updateTask,
   updateRequest,
+  updateTask,
 } from '../../action-creators';
 
 export default class MainStoryboard extends Container<any, any> {

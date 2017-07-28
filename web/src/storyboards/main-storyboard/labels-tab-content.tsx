@@ -35,8 +35,8 @@ export class LabelsTabContent extends React.Component<any, any> {
           return (
             <ListItem key={label.id}>
               <SwipeableView
-                onSwipeLeft={() => {actions.deleteLabel(label.id);}}
-                onSwipeRight={() => {actions.updateLabel(label.id, {visibled: !label.visibled});}}
+                onSwipeLeft={() => {actions.deleteLabel(label.id); }}
+                onSwipeRight={() => {actions.updateLabel(label.id, {visibled: !label.visibled}); }}
                 throughLeft={true}
                 >
                 <SwipeableViewBackground position="left">

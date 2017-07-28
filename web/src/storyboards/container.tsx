@@ -1,8 +1,8 @@
 import * as PropTypes from 'prop-types';
 import * as React from 'react';
 
-import {extractAccessToken} from '../utils';
 import {fetchInitialData} from '../action-creators';
+import {extractAccessToken} from '../utils';
 
 function isBrowser() {
   return typeof window === 'object';
@@ -62,7 +62,7 @@ export default class Container<IContainerProps, IContainerState> extends React.C
         fetchInitialData(
           {},
           this.props.store.dispatch.bind(this.props.store),
-          {accessToken: this.accessToken}
+          {accessToken: this.accessToken},
         );
       }, 1000 * 5);
     }

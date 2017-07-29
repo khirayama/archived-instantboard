@@ -81,7 +81,7 @@ export default class LoginStoryboard extends Container<any, any> {
   public render() {
     return (
       <section className="login-storyboard storyboard">
-        <section className="login-content">
+        <section className="login-storyboard--content">
           <h1 className="login-heading">Welcome to Instantboard</h1>
           <p className="login-description">Make your life simple.</p>
           <div className="login-button login-button__facebook" onClick={() => this.handleClickLoginWithFacebook()}>Log in with Facebook</div>

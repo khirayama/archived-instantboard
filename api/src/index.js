@@ -15,6 +15,7 @@ const {
 const {
   showCurrentUserHandler,
   updateCurrentUserHandler,
+  destroyCurrentUserHandler,
   indexMemberHandler,
 } = require('./handlers/user-handlers');
 
@@ -80,6 +81,7 @@ router.use('/api', new express.Router()
     .use('/users', new express.Router()
       .get('/current', [requireAuthorization], showCurrentUserHandler)
       .put('/current', [requireAuthorization], updateCurrentUserHandler)
+      .delete('/current', [requireAuthorization], destroyCurrentUserHandler)
     )
     .use('/members', new express.Router()
       .get('/', [requireAuthorization], indexMemberHandler)

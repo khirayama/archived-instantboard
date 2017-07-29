@@ -1,5 +1,5 @@
 const {errorMessages} = require('../constants');
-const {User, Request} = require('../models');
+const {User, Request, LabelStatus} = require('../models');
 
 function _transformUser(user) {
   return {
@@ -44,6 +44,24 @@ function updateCurrentUserHandler(req, res) {
   });
 }
 
+function destroyCurrentUserHandler(req, res) {
+  const userId = req.user.id;
+
+  // Leave: Label, Request, Task
+  // Remove: LabelStatus
+  LabelStatus.destroy({
+    where: {userId},
+  }).then(() => {
+    User.destroy({
+      where: {
+        id: userId,
+      },
+    }).then(() => {
+      res.json();
+    });
+  });
+}
+
 function indexMemberHandler(req, res) {
   const user = req.user || null;
 
@@ -72,5 +90,6 @@ function indexMemberHandler(req, res) {
 module.exports = {
   showCurrentUserHandler,
   updateCurrentUserHandler,
+  destroyCurrentUserHandler,
   indexMemberHandler,
 };

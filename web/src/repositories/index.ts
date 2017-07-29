@@ -48,6 +48,16 @@ export const User = {
       }).catch((err: any) => reject(err));
     });
   },
+  valid: (params: any, options: IRequestOptions) => {
+    return new Promise((resolve, reject) => {
+      User.req.get('/valid', {
+        headers: {Authorization: `Bearer ${options.accessToken}`},
+        params,
+      }).then(({data}) => {
+        resolve(data);
+      }).catch((err: any) => reject(err));
+    });
+  },
 };
 
 // Member

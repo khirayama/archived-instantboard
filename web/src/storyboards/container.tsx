@@ -2,7 +2,10 @@ import * as PropTypes from 'prop-types';
 import * as React from 'react';
 
 import {fetchInitialData} from '../action-creators';
-import {extractAccessToken} from '../utils';
+import {
+  clearAccessToken,
+  extractAccessToken,
+} from '../utils';
 
 function isBrowser() {
   return typeof window === 'object';
@@ -57,7 +60,7 @@ export default class Container<IContainerProps, IContainerState> extends React.C
     const store = this.props.store;
     store.addChangeListener(this.updateState);
 
-    if (isBrowser() && !Container.pollingTimerId) {
+    if (isBrowser() && !Container.pollingTimerId && this.accessToken) {
       Container.pollingTimerId = setInterval(() => {
         fetchInitialData(
           {},
@@ -76,5 +79,11 @@ export default class Container<IContainerProps, IContainerState> extends React.C
     const store = this.props.store;
 
     this.setState(store.getState());
+  }
+
+  public clearAccessToken() {
+    clearAccessToken();
+    this.accessToken = null;
+    clearInterval(Container.pollingTimerId);
   }
 }

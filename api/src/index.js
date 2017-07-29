@@ -13,6 +13,7 @@ const {
 } = require('./handlers/token-handlers');
 
 const {
+  validUserHandler,
   showCurrentUserHandler,
   updateCurrentUserHandler,
   destroyCurrentUserHandler,
@@ -79,6 +80,7 @@ router.use('/api', new express.Router()
       .post('/', createTokenHandler)
     )
     .use('/users', new express.Router()
+      .get('/valid', [requireAuthorization], validUserHandler)
       .get('/current', [requireAuthorization], showCurrentUserHandler)
       .put('/current', [requireAuthorization], updateCurrentUserHandler)
       .delete('/current', [requireAuthorization], destroyCurrentUserHandler)

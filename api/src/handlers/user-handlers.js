@@ -10,6 +10,21 @@ function _transformUser(user) {
   };
 }
 
+function validUserHandler(req, res) {
+  const username = req.query.username;
+
+  User.findOne({
+    where: {username}
+  }).then(user => {
+    if (user) {
+      const message = errorMessages.ALREADY_EXISTED_USER;
+      res.json({isValid: false, message});
+    } else {
+      res.json({isValid: true, message: null});
+    }
+  });
+}
+
 function showCurrentUserHandler(req, res) {
   const user = req.user || null;
 
@@ -88,6 +103,7 @@ function indexMemberHandler(req, res) {
 }
 
 module.exports = {
+  validUserHandler,
   showCurrentUserHandler,
   updateCurrentUserHandler,
   destroyCurrentUserHandler,

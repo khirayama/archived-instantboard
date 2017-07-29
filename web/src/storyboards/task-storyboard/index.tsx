@@ -17,6 +17,7 @@ export default class TaskStoryboard extends Container<any, any> {
       content: '',
       labelId: (this.state.labels[0]) ? this.state.labels[0].id : null,
     });
+    this.isPolling = true;
   }
 
   componentDidUpdate(prevProps: any, prevState: any) {

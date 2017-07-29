@@ -22,6 +22,7 @@ export default class LabelStoryboard extends Container<any, any> {
       memberName: '',
       memberNames: [],
     });
+    this.isPolling = true;
   }
 
   componentDidUpdate(prevProps: any, prevState: any) {

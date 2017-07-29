@@ -43,6 +43,7 @@ export default class MainStoryboard extends Container<any, any> {
     super(props);
 
     this.tabIndex = 0;
+    this.isPolling = true;
   }
 
   public handleClickAddButton(event: any) {

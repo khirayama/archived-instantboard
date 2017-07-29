@@ -16,9 +16,18 @@ export class UserTabContent extends React.Component<any, any> {
       <section>
         <div>
           <Icon>person</Icon>
-          {user.username}
-          <Icon>edit</Icon>
+          <div>
+            <input
+              value={user.username}
+              onBlur={(event: any) => {
+                actions.updateUser(this.state.username.trim());
+              }}
+            />
+            <Icon>edit</Icon>
+          </div>
         </div>
+        <div onClick={() => actions.logout()}>Logout</div>
+        <div onClick={() => actions.deleteUser()}>Delete account</div>
       </section>
     );
   }

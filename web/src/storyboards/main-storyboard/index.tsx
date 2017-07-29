@@ -27,6 +27,8 @@ import {
   updateLabel,
   updateRequest,
   updateTask,
+  updateUser,
+  deleteUser,
 } from '../../action-creators';
 
 export default class MainStoryboard extends Container<any, any> {
@@ -91,6 +93,11 @@ export default class MainStoryboard extends Container<any, any> {
     updateRequest(dispatch, requestId, {status: 'refused'}, {accessToken: this.accessToken});
   }
 
+  public updateUser(username: string) {
+    const dispatch = this.props.store.dispatch.bind(this.props.store);
+    updateUser(dispatch, {username}, {accessToken: this.accessToken});
+  }
+
   public render() {
     const actions = {
       updateLabel: this.updateLabel.bind(this),
@@ -101,6 +108,19 @@ export default class MainStoryboard extends Container<any, any> {
       sortTask: this.sortTask.bind(this),
       acceptRequest: this.acceptRequest.bind(this),
       refuseRequest: this.refuseRequest.bind(this),
+      updateUser: this.updateUser.bind(this),
+      deleteUser: () => {
+        const dispatch = this.props.store.dispatch.bind(this.props.store);
+        deleteUser(dispatch, {accessToken: this.accessToken}).then(() => {
+          console.log('ok');
+          this.clearAccessToken();
+          this.context.move('/login');
+        });
+      },
+      logout: () => {
+        this.clearAccessToken();
+        this.context.move('/login');
+      },
     };
     const user = this.state.user || {};
     const labels = this.state.labels;

@@ -126,6 +126,16 @@ export function updateUser(dispatch: (action: any) => void, params: {username: s
   });
 }
 
+export function deleteUser(dispatch: (action: any) => void, options: any) {
+  return new Promise((resolve, reject) => {
+    User.delete(options).then((user) => {
+      resolve();
+    }).catch(() => {
+      reject();
+    });
+  });
+}
+
 // Task
 export function createTask(
   dispatch: (action: any) => void,

@@ -39,6 +39,15 @@ export const User = {
       }).catch((err: any) => reject(err));
     });
   },
+  delete: (options: IRequestOptions) => {
+    return new Promise((resolve, reject) => {
+      User.req.delete('/current', {
+        headers: {Authorization: `Bearer ${options.accessToken}`},
+      }).then(({data}) => {
+        resolve(data);
+      }).catch((err: any) => reject(err));
+    });
+  },
 };
 
 // Member

@@ -151,7 +151,7 @@ export default class MainStoryboard extends Container<any, any> {
     const members = this.state.members;
 
     return (
-      <section className="storyboard">
+      <section className="main-storyboard storyboard">
         <TabNavigation
           initialIndex={loadTabIndex()}
           onChange={(index: number) => {

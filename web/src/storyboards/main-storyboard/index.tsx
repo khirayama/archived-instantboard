@@ -17,6 +17,7 @@ import {
 import {LabelsTabContent} from './labels-tab-content';
 import {RequestsTabContent} from './requests-tab-content';
 import {TasksTabContent} from './tasks-tab-content';
+import {UserTabContent} from './user-tab-content';
 
 import {
   deleteLabel,
@@ -153,9 +154,10 @@ export default class MainStoryboard extends Container<any, any> {
             </TabNavigationContentList>
 
             <TabNavigationContentList index={3}>
-              <div>
-                {user.username}
-              </div>
+              <UserTabContent
+                user={user}
+                actions={actions}
+              />
             </TabNavigationContentList>
           </TabNavigationContentListItem>
           <TabNavigationTabList>

@@ -99,35 +99,6 @@ export default class MainStoryboard extends Container<any, any> {
   }
 
   public render() {
-    const actions = {
-      updateLabel: this.updateLabel.bind(this),
-      deleteLabel: this.deleteLabel.bind(this),
-      sortLabel: this.sortLabel.bind(this),
-      updateTask: this.updateTask.bind(this),
-      deleteTask: this.deleteTask.bind(this),
-      sortTask: this.sortTask.bind(this),
-      acceptRequest: this.acceptRequest.bind(this),
-      refuseRequest: this.refuseRequest.bind(this),
-      updateUser: this.updateUser.bind(this),
-      deleteUser: () => {
-        const dispatch = this.props.store.dispatch.bind(this.props.store);
-        deleteUser(dispatch, {accessToken: this.accessToken}).then(() => {
-          console.log('ok');
-          this.clearAccessToken();
-          this.context.move('/login');
-        });
-      },
-      logout: () => {
-        this.clearAccessToken();
-        this.context.move('/login');
-      },
-    };
-    const user = this.state.user || {};
-    const labels = this.state.labels;
-    const tasks = this.state.tasks;
-    const requests = this.state.requests;
-    const members = this.state.members;
-
     function loadTabIndex(): number {
       let index = 0;
       if (typeof window === 'object' && window.sessionStorage) {
@@ -141,6 +112,43 @@ export default class MainStoryboard extends Container<any, any> {
         window.sessionStorage.setItem('_tab_navigatgion_index', String(index));
       }
     }
+
+    function clearTabIndex(): void {
+      if (typeof window === 'object' && window.sessionStorage) {
+        window.sessionStorage.setItem('_tab_navigatgion_index', String(0));
+      }
+    }
+
+    const actions = {
+      updateLabel: this.updateLabel.bind(this),
+      deleteLabel: this.deleteLabel.bind(this),
+      sortLabel: this.sortLabel.bind(this),
+      updateTask: this.updateTask.bind(this),
+      deleteTask: this.deleteTask.bind(this),
+      sortTask: this.sortTask.bind(this),
+      acceptRequest: this.acceptRequest.bind(this),
+      refuseRequest: this.refuseRequest.bind(this),
+      updateUser: this.updateUser.bind(this),
+      deleteUser: () => {
+        clearTabIndex();
+        const dispatch = this.props.store.dispatch.bind(this.props.store);
+        deleteUser(dispatch, {accessToken: this.accessToken}).then(() => {
+          console.log('ok');
+          this.clearAccessToken();
+          this.context.move('/login');
+        });
+      },
+      logout: () => {
+        clearTabIndex();
+        this.clearAccessToken();
+        this.context.move('/login');
+      },
+    };
+    const user = this.state.user || {};
+    const labels = this.state.labels;
+    const tasks = this.state.tasks;
+    const requests = this.state.requests;
+    const members = this.state.members;
 
     return (
       <section className="storyboard">

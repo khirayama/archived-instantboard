@@ -12,7 +12,7 @@ function mapUser(user: any) {
   return {
     id: user.id,
     username: user.username,
-    errors: [],
+    errors: user.errors || [],
   };
 }
 
@@ -106,6 +106,27 @@ export function createToken(dispatch: (action: any) => void, params: {provider: 
 }
 
 // User
+export function validUser(dispatch: (action: any) => void, params: {username: string; }, options: any) {
+  return new Promise((resolve, reject) => {
+    User.valid(params, options).then((payload: any) => {
+      if (!payload.isValid) {
+        const action = {
+          type: '__FAILURE_UPDATE_USER',
+          user: mapUser(Object.assign({}, params, {errors: ['Sorry, already existed.']})),
+        };
+        dispatch(action);
+      } else {
+        const action = {
+          type: '__UPDATE_USER',
+          user: mapUser({}),
+        };
+        dispatch(action);
+      }
+      resolve();
+    });
+  });
+}
+
 export function updateUser(dispatch: (action: any) => void, params: {username: string; }, options: any) {
   return new Promise((resolve, reject) => {
     User.update(params, options).then((user) => {
@@ -118,7 +139,7 @@ export function updateUser(dispatch: (action: any) => void, params: {username: s
     }).catch(() => {
       const action = {
         type: '__FAILURE_UPDATE_USER',
-        user: mapUser(Object.assign({}, params, {errors: ['Already existed']})),
+        user: mapUser(Object.assign({}, params, {errors: ['Sorry, already existed.']})),
       };
       dispatch(action);
       reject();

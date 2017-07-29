@@ -107,11 +107,28 @@ export default class MainStoryboard extends Container<any, any> {
     const requests = this.state.requests;
     const members = this.state.members;
 
+    function loadTabIndex(): number {
+      let index = 0;
+      if (typeof window === 'object' && window.sessionStorage) {
+        index = Number(window.sessionStorage.getItem('_tab_navigatgion_index'));
+      }
+      return index;
+    }
+
+    function saveTabIndex(index: number): void {
+      if (typeof window === 'object' && window.sessionStorage) {
+        window.sessionStorage.setItem('_tab_navigatgion_index', String(index));
+      }
+    }
+
     return (
       <section className="storyboard">
-        <TabNavigation onChange={(index: number) => {
-          this.tabIndex = index;
-        }}>
+        <TabNavigation
+          initialIndex={loadTabIndex()}
+          onChange={(index: number) => {
+            this.tabIndex = index;
+            saveTabIndex(index);
+          }}>
           <TabNavigationContentListItem>
             <TabNavigationContentList index={0}>
               <TasksTabContent

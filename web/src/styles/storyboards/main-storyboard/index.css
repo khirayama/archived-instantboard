@@ -212,15 +212,53 @@ $height-recycle-table-content-list: 36px;
   position: relative;
   width: 100%;
   height: 100%;
-  p {
+  .no-task-content--inner {
     position: absolute;
     top: 45%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 2rem;
-    color: $color-text-secondary;
     text-align: center;
-    font-weight: bold;
+    .no-task-content--title {
+      font-size: 2rem;
+      color: $color-text-secondary;
+      font-weight: bold;
+    }
+    .no-task-content--description {
+      font-size: 1.2rem;
+      color: $color-text-secondary;
+      p {
+        display: inline-block;
+      }
+      .icon {
+        vertical-align: text-top;
+      }
+    }
+  }
+}
+
+.no-label-and-task-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  .no-label-and-task-content--inner {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    p {
+      font-size: 2rem;
+      color: $color-text-secondary;
+      font-weight: bold;
+    }
+    .create-label-button {
+      display: inline-block;
+      padding: 4px 8px;
+      text-align: center;
+      border-radius: $radius;
+      background-color: $color-primary;
+      color: $color-white;
+    }
   }
 }
 

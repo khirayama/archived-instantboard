@@ -33,7 +33,7 @@ export class TasksTabContent extends React.Component<any, any> {
     const tasks = this.props.tasks;
     const labels = this.props.labels.filter((label: any) => label.visibled);
     const actions = this.props.actions;
-    return (
+    return (labels.length) ? (
       <RecycleTable>
         <RecycleTableList>
           {labels.map((label: any, index: number) => {
@@ -98,7 +98,13 @@ export class TasksTabContent extends React.Component<any, any> {
                   </List>
                 ) : (
                   <div className="no-task-content">
-                    <p>No tasks</p>
+                    <div className="no-task-content--inner">
+                      <p className="no-task-content--title">No tasks</p>
+                      <div className="no-task-content--description">
+                        <Icon>arrow_downward</Icon>
+                        <p>Add task from </p>
+                        <Icon>add_box</Icon></div>
+                    </div>
                   </div>
                 )}
               </RecycleTableContentListItem>
@@ -106,6 +112,13 @@ export class TasksTabContent extends React.Component<any, any> {
           })}
         </RecycleTableContentList>
       </RecycleTable>
+    ) : (
+      <div className="no-label-and-task-content">
+        <div className="no-label-and-task-content--inner">
+          <p>Let's create label!</p>
+          <div className="create-label-button" onClick={() => this.context.move('/labels/new')}>Create label</div>
+        </div>
+      </div>
     );
   }
 }

@@ -80,10 +80,14 @@ export default class LoginStoryboard extends Container<any, any> {
 
   public render() {
     return (
-      <section className="storyboard">
-        <div onClick={() => this.handleClickLoginWithFacebook()}>Login with Facebook</div>
-        <div onClick={() => this.handleClickLoginAsTestUser('123456789')}>Login as Test User</div>
-        <div onClick={() => this.handleClickLoginAsTestUser('987654321')}>Login as Test User 2</div>
+      <section className="login-storyboard storyboard">
+        <section className="login-content">
+          <h1 className="login-heading">Welcome to Instantboard</h1>
+          <p className="login-description">Make your life simple.</p>
+          <div className="login-button login-button__facebook" onClick={() => this.handleClickLoginWithFacebook()}>Log in with Facebook</div>
+          <div className="login-button" onClick={() => this.handleClickLoginAsTestUser('123456789')}>Log in as Test User</div>
+          <div className="login-button" onClick={() => this.handleClickLoginAsTestUser('987654321')}>Log in as Test User 2</div>
+        </section>
       </section>
     );
   }

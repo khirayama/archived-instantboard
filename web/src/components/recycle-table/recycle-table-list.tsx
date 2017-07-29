@@ -45,9 +45,11 @@ export class RecycleTableList extends React.Component<any, any> {
         width += listItems[i].clientWidth;
       }
 
-      inner.style.width = (width + paddingLeft + paddingRight + 3) + 'px';
-      inner.style.paddingLeft = paddingLeft + 'px';
-      inner.style.paddingRight = paddingRight + 'px';
+      if (width && paddingLeft && paddingRight) {
+        inner.style.width = (width + paddingLeft + paddingRight + 3) + 'px';
+        inner.style.paddingLeft = paddingLeft + 'px';
+        inner.style.paddingRight = paddingRight + 'px';
+      }
     }
   }
 

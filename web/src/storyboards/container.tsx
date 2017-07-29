@@ -31,6 +31,8 @@ export default class Container<IContainerProps, IContainerState> extends React.C
 
   private updateState: any;
 
+  public isPolling: boolean = false;
+
   private static pollingTimerId: any;
 
   constructor(props: any) {
@@ -60,7 +62,7 @@ export default class Container<IContainerProps, IContainerState> extends React.C
     const store = this.props.store;
     store.addChangeListener(this.updateState);
 
-    if (isBrowser() && !Container.pollingTimerId && this.accessToken) {
+    if (isBrowser() && !Container.pollingTimerId && this.accessToken && this.isPolling) {
       Container.pollingTimerId = setInterval(() => {
         fetchInitialData(
           {},

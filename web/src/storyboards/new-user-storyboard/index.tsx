@@ -1,6 +1,6 @@
+import * as classNames from 'classnames';
 import * as PropTypes from 'prop-types';
 import * as React from 'react';
-import * as classNames from 'classnames';
 
 import {
   updateUser,
@@ -62,7 +62,7 @@ export default class NewUserStoryboard extends Container<any, any> {
             placeholder="My screen name"
           />
           <p className="error-messages">{errors.join(', ')}</p>
-          <div className={classNames("start-app-button", {"start-app-button__disabled": !this.state.username.trim() || errors.length})} onClick={() => {this.handleClickRegisterButton(); }}>Start app</div>
+          <div className={classNames('start-app-button', {'start-app-button__disabled': !this.state.username.trim() || errors.length})} onClick={() => {this.handleClickRegisterButton(); }}>Start app</div>
         </section>
       </section>
     );

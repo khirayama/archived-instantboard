@@ -22,13 +22,13 @@ import {UserTabContent} from './user-tab-content';
 import {
   deleteLabel,
   deleteTask,
+  deleteUser,
   sortLabel,
   sortTask,
   updateLabel,
   updateRequest,
   updateTask,
   updateUser,
-  deleteUser,
 } from '../../action-creators';
 
 export default class MainStoryboard extends Container<any, any> {

@@ -14,7 +14,7 @@ function validUserHandler(req, res) {
   const username = req.query.username;
 
   User.findOne({
-    where: {username}
+    where: {username},
   }).then(user => {
     if (user) {
       const message = errorMessages.ALREADY_EXISTED_USER;
